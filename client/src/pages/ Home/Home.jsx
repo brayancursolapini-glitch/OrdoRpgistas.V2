@@ -3,14 +3,10 @@ import {
 } from "framer-motion";
 
 import {
-    ArrowRight,
-    BookOpen,
-    Crown,
-    Map,
-    Shield,
     Sparkles,
-    Swords,
-    Users,
+    ArrowRight,
+    Sword,
+    Shield,
 } from "lucide-react";
 
 import SideMenu
@@ -19,26 +15,14 @@ import SideMenu
 import ThemeSwitcher
     from "../../components/ThemeSwitcher/ThemeSwitcher";
 
-import ThemeParticles
-    from "../../components/ThemeParticles/ThemeParticles";
-
-import AmbientAudio
-    from "../../components/AmbientAudio/AmbientAudio";
-
 import {
     useTheme,
 } from "../../context/ThemeContext";
 
-import {
-    useUser,
-} from "../../context/UserContext";
-
 import "./Home.css";
 
 
-export default function Home({
-    onLogout,
-}) {
+export default function Home() {
 
     const {
         theme,
@@ -46,19 +30,16 @@ export default function Home({
     } = useTheme();
 
 
-    const {
-        user,
-    } = useUser();
-
-
     const isDnd =
         theme === "dnd";
 
 
-    const homeBackground =
-        isDnd
-            ? `${import.meta.env.BASE_URL}assets/Home-dnd.jpg`
-            : `${import.meta.env.BASE_URL}assets/Home-ordem.jpg`;
+    const dndBackground =
+        `${import.meta.env.BASE_URL}images/Home-dnd.jpg`;
+
+
+    const ordemBackground =
+        `${import.meta.env.BASE_URL}images/Home-ordem.jpg`;
 
 
     const currentSystem =
@@ -66,13 +47,13 @@ export default function Home({
             ? {
                 name: "DUNGEONS & DRAGONS",
                 description:
-                    "Reinos, aventuras e lendas aguardam.",
-                icon: Swords,
+                    "Reinos, aventuras e lendas.",
+                icon: Sword,
             }
             : {
                 name: "ORDEM PARANORMAL",
                 description:
-                    "A realidade não é o que parece.",
+                    "O paranormal observa.",
                 icon: Shield,
             };
 
@@ -81,55 +62,22 @@ export default function Home({
         currentSystem.icon;
 
 
-    const quickActions = [
-        {
-            icon: Users,
-            title: "Personagens",
-            text: "Crie e organize suas fichas.",
-        },
-        {
-            icon: Crown,
-            title: "Campanhas",
-            text: "Reúna sua mesa e conte histórias.",
-        },
-        {
-            icon: Map,
-            title: "Mapas",
-            text: "Prepare cenários para suas aventuras.",
-        },
-        {
-            icon: BookOpen,
-            title: "Livros",
-            text: "Acesse regras e conteúdos do sistema.",
-        },
-    ];
-
-
     return (
 
         <main
-            className={`home home-${theme}`}
-            style={{
-                "--home-background":
-                    `url("${homeBackground}")`,
-            }}
+            className={`home ${theme}`}
         >
 
-            <div className="home-background" />
-
-            <div className="home-background-overlay" />
-
-            <ThemeParticles amount={42} />
+            <SideMenu />
 
 
-            <SideMenu
-                onLogout={onLogout}
-            />
+            <header
+                className="home-header"
+            >
 
-
-            <header className="home-header">
-
-                <div className="home-brand">
+                <div
+                    className="home-logo"
+                >
 
                     <span>
                         ORDO
@@ -142,264 +90,305 @@ export default function Home({
                 </div>
 
 
-                <div className="home-header-actions">
+                <div
+                    className="home-header-actions"
+                >
 
                     <ThemeSwitcher />
-
-                    <AmbientAudio />
 
                 </div>
 
             </header>
 
 
-            <section className="home-layout">
+            <section
+                className="home-worlds"
+            >
 
-                <motion.div
-                    className="home-main"
-                    initial={{
-                        opacity: 0,
-                        y: 24,
-                    }}
-                    animate={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    transition={{
-                        duration: .65,
-                    }}
-                >
+                <button
+                    type="button"
 
-                    <span className="home-eyebrow">
-                        BEM-VINDO,
-                        {" "}
-                        {user?.username ||
-                            user?.name ||
-                            "AVENTUREIRO"}
-                    </span>
-
-
-                    <h1>
-                        O seu próximo
-                        <strong>
-                            mundo começa agora.
-                        </strong>
-                    </h1>
-
-
-                    <p className="home-description">
-
-                        Escolha o sistema, organize sua mesa
-                        e construa histórias que podem durar
-                        uma única noite ou se tornar uma lenda.
-
-                    </p>
-
-
-                    <div className="home-system-card">
-
-                        <div className="home-system-icon">
-
-                            <SystemIcon
-                                size={28}
-                            />
-
-                        </div>
-
-
-                        <div>
-
-                            <small>
-                                SISTEMA ATUAL
-                            </small>
-
-                            <strong>
-                                {currentSystem.name}
-                            </strong>
-
-                            <span>
-                                {currentSystem.description}
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <button
-                        type="button"
-                        className="home-enter-button"
-                    >
-
-                        Entrar na aventura
-
-                        <ArrowRight
-                            size={19}
-                        />
-
-                    </button>
-
-                </motion.div>
-
-
-                <motion.aside
-                    className="home-systems"
-                    initial={{
-                        opacity: 0,
-                        x: 30,
-                    }}
-                    animate={{
-                        opacity: 1,
-                        x: 0,
-                    }}
-                    transition={{
-                        duration: .7,
-                        delay: .1,
-                    }}
-                >
-
-                    <span className="home-panel-title">
-                        ESCOLHA O SEU MUNDO
-                    </span>
-
-
-                    <button
-                        type="button"
-                        className={`home-world-card ${
+                    className={
+                        `home-world home-world-dnd ${
                             isDnd
                                 ? "selected"
                                 : ""
-                        }`}
-                        onClick={() => {
-                            setTheme("dnd");
-                        }}
+                        }`
+                    }
+
+                    style={{
+                        backgroundImage:
+                            `url("${dndBackground}")`,
+                    }}
+
+                    onClick={() => {
+
+                        setTheme("dnd");
+
+                    }}
+                >
+
+                    <div
+                        className="home-world-overlay"
+                    />
+
+
+                    <div
+                        className="home-world-content"
                     >
 
-                        <span className="home-world-card-number">
-                            01
+                        <span
+                            className="home-world-label"
+                        >
+
+                            UM MUNDO DE AVENTURAS
+
                         </span>
 
-                        <strong>
-                            DUNGEONS & DRAGONS
-                        </strong>
 
-                        <small>
-                            Fantasia, reinos e aventura.
-                        </small>
+                        <h2>
 
-                    </button>
+                            DUNGEONS
+                            <br />
+                            & DRAGONS
+
+                        </h2>
 
 
-                    <button
-                        type="button"
-                        className={`home-world-card ${
+                        <p>
+
+                            Reinos, aventuras e
+                            lendas aguardam.
+
+                        </p>
+
+
+                        <span
+                            className="home-world-status"
+                        >
+
+                            {isDnd
+                                ? "SISTEMA ATIVO"
+                                : "SELECIONAR SISTEMA"}
+
+                        </span>
+
+                    </div>
+
+                </button>
+
+
+                <button
+                    type="button"
+
+                    className={
+                        `home-world home-world-ordem ${
                             !isDnd
                                 ? "selected"
                                 : ""
-                        }`}
-                        onClick={() => {
-                            setTheme("ordem");
-                        }}
+                        }`
+                    }
+
+                    style={{
+                        backgroundImage:
+                            `url("${ordemBackground}")`,
+                    }}
+
+                    onClick={() => {
+
+                        setTheme("ordem");
+
+                    }}
+                >
+
+                    <div
+                        className="home-world-overlay"
+                    />
+
+
+                    <div
+                        className="home-world-content"
                     >
 
-                        <span className="home-world-card-number">
-                            02
+                        <span
+                            className="home-world-label"
+                        >
+
+                            A REALIDADE NÃO É O QUE PARECE
+
                         </span>
 
-                        <strong>
-                            ORDEM PARANORMAL
-                        </strong>
 
-                        <small>
-                            Mistério, horror e paranormal.
-                        </small>
+                        <h2>
 
-                    </button>
+                            ORDEM
+                            <br />
+                            PARANORMAL
 
-                </motion.aside>
+                        </h2>
+
+
+                        <p>
+
+                            O paranormal observa
+                            cada movimento.
+
+                        </p>
+
+
+                        <span
+                            className="home-world-status"
+                        >
+
+                            {!isDnd
+                                ? "SISTEMA ATIVO"
+                                : "SELECIONAR SISTEMA"}
+
+                        </span>
+
+                    </div>
+
+                </button>
 
             </section>
 
 
-            <section className="home-quick-section">
+            <motion.section
+                className="home-hero"
 
-                <div className="home-quick-heading">
+                initial={{
+                    opacity: 0,
+                    y: 30,
+                }}
 
-                    <div>
+                animate={{
+                    opacity: 1,
+                    y: 0,
+                }}
 
-                        <span>
-                            COMEÇAR
-                        </span>
+                transition={{
+                    duration: 0.7,
+                    ease: "easeOut",
+                }}
+            >
 
-                        <h2>
-                            Tudo para sua mesa.
-                        </h2>
-
-                    </div>
-
+                <div
+                    className="home-hero-symbol"
+                >
 
                     <Sparkles
-                        size={26}
+                        size={24}
                     />
 
                 </div>
 
 
-                <div className="home-quick-grid">
+                <span
+                    className="home-hero-eyebrow"
+                >
 
-                    {quickActions.map(
-                        action => {
+                    SEU MUNDO ESTÁ PRONTO
 
-                            const Icon =
-                                action.icon;
+                </span>
 
-                            return (
 
-                                <button
-                                    key={action.title}
-                                    type="button"
-                                    className="home-quick-card"
-                                >
+                <h1>
 
-                                    <Icon
-                                        size={23}
-                                    />
+                    ORDO
 
-                                    <strong>
-                                        {action.title}
-                                    </strong>
+                    <strong>
+                        RPGISTAS
+                    </strong>
 
-                                    <span>
-                                        {action.text}
-                                    </span>
+                </h1>
 
-                                </button>
 
-                            );
+                <p
+                    className="home-hero-description"
+                >
 
-                        }
-                    )}
+                    Escolha um sistema,
+                    reúna sua mesa e
+                    comece uma nova história.
+
+                </p>
+
+
+                <div
+                    className="home-current-system"
+                >
+
+                    <div
+                        className="home-current-icon"
+                    >
+
+                        <SystemIcon
+                            size={22}
+                        />
+
+                    </div>
+
+
+                    <div
+                        className="home-current-info"
+                    >
+
+                        <small>
+                            SISTEMA ATUAL
+                        </small>
+
+                        <strong>
+                            {currentSystem.name}
+                        </strong>
+
+                        <span>
+                            {currentSystem.description}
+                        </span>
+
+                    </div>
 
                 </div>
 
-            </section>
+
+                <button
+                    type="button"
+                    className="home-enter-button"
+                >
+
+                    <span>
+                        Entrar na aventura
+                    </span>
+
+                    <ArrowRight
+                        size={18}
+                    />
+
+                </button>
+
+            </motion.section>
 
 
-            <footer className="home-footer">
+            <div
+                className="home-bottom-info"
+            >
 
                 <span>
                     ORDO RPGISTAS
                 </span>
 
                 <span>
-                    SISTEMA ATIVO:
-                    {" "}
+                    •
+                </span>
+
+                <span>
+
                     {isDnd
                         ? "D&D"
                         : "ORDEM PARANORMAL"}
+
                 </span>
 
-            </footer>
+            </div>
 
         </main>
 
