@@ -1,0 +1,215 @@
+.home {
+
+    position: relative;
+
+    width: 100%;
+    min-height: 100vh;
+
+    overflow: hidden;
+
+    background-size: cover;
+    background-position: center;
+
+    color: #ffffff;
+
+}
+
+
+.home::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(3, 6, 12, 0.78),
+            rgba(3, 6, 12, 0.35),
+            rgba(3, 6, 12, 0.72)
+        );
+
+    pointer-events: none;
+
+}
+
+
+.home-header {
+
+    position: relative;
+
+    z-index: 10;
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+
+        24px
+        32px;
+
+}
+
+
+.home-logo {
+
+    display: flex;
+
+    flex-direction: column;
+
+    font-size: 0.8rem;
+
+    letter-spacing: 0.2em;
+
+}
+
+
+.home-logo strong {
+
+    font-size: 1.2rem;
+
+    color: #c084fc;
+
+}
+
+
+.home-content {
+
+    position: relative;
+
+    z-index: 5;
+
+    min-height: 80vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+
+}
+
+
+.home-system-label {
+
+    margin-bottom: 18px;
+
+    font-size: 0.7rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.25em;
+
+    color: rgba(
+        255,
+        255,
+        255,
+        0.75
+    );
+
+}
+
+
+.home-content h1 {
+
+    margin: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    font-size:
+
+        clamp(
+            2.5rem,
+            7vw,
+            6rem
+        );
+
+    font-weight: 300;
+
+}
+
+
+.home-content h1 strong {
+
+    font-weight: 800;
+
+}
+
+
+.home-dnd h1 strong {
+
+    color: #e6c56a;
+
+}
+
+
+.home-ordem h1 strong {
+
+    color: #c084fc;
+
+}
+
+
+.home-content p {
+
+    max-width: 560px;
+
+    margin-top: 25px;
+
+    font-size: 1rem;
+
+    line-height: 1.8;
+
+    color:
+
+        rgba(
+            255,
+            255,
+            255,
+            0.75
+        );
+
+}
+
+
+@media (
+    max-width: 768px
+) {
+
+    .home-header {
+
+        padding:
+
+            18px
+            20px;
+
+    }
+
+
+    .home-content {
+
+        min-height: 75vh;
+
+        padding:
+
+            20px;
+
+    }
+
+}
