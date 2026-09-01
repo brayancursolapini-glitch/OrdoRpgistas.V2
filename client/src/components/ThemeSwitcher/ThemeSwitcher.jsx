@@ -1,6 +1,8 @@
 import {
+
     Moon,
-    Swords,
+    Sword,
+
 } from "lucide-react";
 
 import {
@@ -13,8 +15,10 @@ import "./ThemeSwitcher.css";
 export default function ThemeSwitcher() {
 
     const {
+
         theme,
         toggleTheme,
+
     } = useTheme();
 
 
@@ -25,27 +29,51 @@ export default function ThemeSwitcher() {
     return (
 
         <button
+
             type="button"
-            className={`theme-switcher ${
-                isDnd
-                    ? "theme-switcher-dnd"
-                    : "theme-switcher-ordem"
-            }`}
-            onClick={toggleTheme}
+
+            className={`
+                theme-switcher
+                ${theme}
+            `}
+
+            onClick={
+                toggleTheme
+            }
+
             aria-label="Trocar sistema"
+
         >
 
-            <span className="theme-switcher-icon">
+            <span
+                className="theme-switcher-icon"
+            >
+
                 {isDnd
-                    ? <Swords size={17} />
-                    : <Moon size={17} />
+                    ? <Sword size={16} />
+                    : <Moon size={16} />
                 }
+
             </span>
 
-            <span className="theme-switcher-text">
-                {isDnd
-                    ? "D&D"
-                    : "ORDEM"}
+
+            <span
+                className="theme-switcher-text"
+            >
+
+                <small>
+                    SISTEMA
+                </small>
+
+                <strong>
+
+                    {isDnd
+                        ? "D&D"
+                        : "ORDEM"
+                    }
+
+                </strong>
+
             </span>
 
         </button>
