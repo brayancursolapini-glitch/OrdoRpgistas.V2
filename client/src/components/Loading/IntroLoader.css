@@ -1,0 +1,98 @@
+.intro-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    color: #fff;
+    background: #050509;
+    transition: opacity .5s ease, visibility .5s ease;
+}
+
+.intro-loader-leaving {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.intro-loader-background {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 25% 30%, rgba(124,58,237,.24), transparent 34%),
+        radial-gradient(circle at 75% 70%, rgba(190,24,93,.18), transparent 34%);
+}
+
+.intro-loader-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: introAppear .8s ease;
+}
+
+.intro-loader-icon {
+    margin-bottom: 20px;
+    color: #c084fc;
+    filter: drop-shadow(0 0 18px rgba(192,132,252,.75));
+    animation: introFloat 2s ease-in-out infinite;
+}
+
+.intro-loader-small {
+    font-size: .68rem;
+    letter-spacing: .32em;
+    color: rgba(255,255,255,.6);
+}
+
+.intro-loader h1 {
+    margin: 14px 0 10px;
+    font-size: clamp(2.8rem, 9vw, 5.5rem);
+    line-height: .86;
+    letter-spacing: .08em;
+    font-weight: 300;
+}
+
+.intro-loader h1 strong {
+    display: block;
+    margin-top: 8px;
+    font-weight: 800;
+    color: #c084fc;
+}
+
+.intro-loader p {
+    margin: 18px 0 0;
+    color: rgba(255,255,255,.65);
+}
+
+.intro-loader-line {
+    width: min(240px, 70vw);
+    height: 2px;
+    overflow: hidden;
+    background: rgba(255,255,255,.12);
+}
+
+.intro-loader-line span {
+    display: block;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #c084fc, transparent);
+    animation: loadingLine 1.3s ease-in-out infinite;
+}
+
+@keyframes introAppear {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes introFloat {
+    0%,100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-8px) rotate(8deg); }
+}
+
+@keyframes loadingLine {
+    from { transform: translateX(-150%); }
+    to { transform: translateX(350%); }
+}
