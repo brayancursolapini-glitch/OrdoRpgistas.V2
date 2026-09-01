@@ -35,9 +35,16 @@ jobs:
         uses: actions/setup-node@v4
 
         with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: client/package-lock.json
+          node-version: "24"
+
+
+      - name: Show environment
+        run: |
+          node --version
+          npm --version
+          pwd
+          ls -la
+          ls -la client
 
 
       - name: Install dependencies
@@ -56,7 +63,7 @@ jobs:
         uses: actions/configure-pages@v5
 
 
-      - name: Upload GitHub Pages artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
 
         with:
@@ -65,18 +72,18 @@ jobs:
 
   deploy:
 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
 
     runs-on: ubuntu-latest
 
-    needs: build
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
 
     steps:
 
       - name: Deploy to GitHub Pages
         id: deployment
-
         uses: actions/deploy-pages@v4
