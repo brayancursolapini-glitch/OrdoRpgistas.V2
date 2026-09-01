@@ -3,26 +3,39 @@ import {
 } from "react";
 
 import {
+
     ArrowLeft,
     UserPlus,
+
 } from "lucide-react";
 
 import {
     useUser,
 } from "../../context/UserContext";
 
+import MagicalButton
+    from "../../components/Buttons/MagicalButton";
+
 import "./Cadastro.css";
 
 
 export default function Cadastro({
+
     onBack,
     onLogin,
     onRegisterSuccess,
+
 }) {
 
     const {
-        login,
+        register,
     } = useUser();
+
+
+    const [
+        name,
+        setName,
+    ] = useState("");
 
 
     const [
@@ -30,10 +43,12 @@ export default function Cadastro({
         setUsername,
     ] = useState("");
 
+
     const [
         email,
         setEmail,
     ] = useState("");
+
 
     const [
         password,
@@ -46,70 +61,133 @@ export default function Cadastro({
         event.preventDefault();
 
 
-        login({
-            username: username.trim(),
-            email: email.trim(),
+        register({
+
+            name,
+            username,
+            email,
+
         });
 
 
-        onRegisterSuccess?.();
+        if (onRegisterSuccess) {
+
+            onRegisterSuccess();
+
+        }
 
     }
 
 
     return (
 
-        <main className="cadastro-page">
+        <main
+            className="register-page"
+        >
 
-            <button
-                type="button"
-                className="cadastro-back"
-                onClick={onBack}
+            <div
+                className="register-background"
+            />
+
+
+            <section
+                className="register-card"
             >
 
-                <ArrowLeft size={18} />
-                Voltar
+                <button
 
-            </button>
+                    type="button"
+
+                    className="register-back"
+
+                    onClick={onBack}
+
+                >
+
+                    <ArrowLeft
+                        size={18}
+                    />
+
+                    Voltar
+
+                </button>
 
 
-            <section className="cadastro-card">
+                <div
+                    className="register-icon"
+                >
 
-                <div className="cadastro-symbol">
-                    <UserPlus size={30} />
+                    <UserPlus
+                        size={26}
+                    />
+
                 </div>
 
-                <span className="cadastro-eyebrow">
-                    SUA JORNADA COMEÇA AQUI
+
+                <span
+                    className="register-eyebrow"
+                >
+
+                    COMECE SUA JORNADA
+
                 </span>
 
+
                 <h1>
-                    Criar conta no
-                    <strong> Ordo RPGistas</strong>
+
+                    Crie sua conta
+                    <strong>
+                        RPGista
+                    </strong>
+
                 </h1>
 
-                <p>
-                    Escolha sua identidade e entre no seu mundo.
-                </p>
 
+                <form
+                    onSubmit={handleSubmit}
+                >
 
-                <form onSubmit={handleSubmit}>
+                    <label>
+
+                        Nome
+
+                        <input
+
+                            value={name}
+
+                            onChange={event => {
+
+                                setName(
+                                    event.target.value
+                                );
+
+                            }}
+
+                            required
+
+                        />
+
+                    </label>
+
 
                     <label>
 
                         Nome de usuário
 
                         <input
-                            type="text"
-                            required
-                            minLength="3"
+
                             value={username}
+
                             onChange={event => {
+
                                 setUsername(
                                     event.target.value
                                 );
+
                             }}
-                            placeholder="Este nome será sua identidade"
+
+                            required
+
                         />
 
                     </label>
@@ -120,15 +198,21 @@ export default function Cadastro({
                         E-mail
 
                         <input
+
                             type="email"
-                            required
+
                             value={email}
+
                             onChange={event => {
+
                                 setEmail(
                                     event.target.value
                                 );
+
                             }}
-                            placeholder="voce@email.com"
+
+                            required
+
                         />
 
                     </label>
@@ -139,49 +223,56 @@ export default function Cadastro({
                         Senha
 
                         <input
+
                             type="password"
-                            required
-                            minLength="3"
+
                             value={password}
+
                             onChange={event => {
+
                                 setPassword(
                                     event.target.value
                                 );
+
                             }}
-                            placeholder="Crie uma senha"
+
+                            required
+
                         />
 
                     </label>
 
 
-                    <p className="cadastro-warning">
-                        Nesta versão, os dados são armazenados
-                        apenas no navegador para teste da interface.
-                    </p>
-
-
-                    <button
+                    <MagicalButton
                         type="submit"
-                        className="cadastro-submit"
                     >
+
                         Criar minha conta
-                    </button>
+
+                    </MagicalButton>
 
                 </form>
 
 
-                <div className="cadastro-footer">
+                <p
+                    className="register-switch"
+                >
 
                     Já possui uma conta?
 
                     <button
+
                         type="button"
+
                         onClick={onLogin}
+
                     >
+
                         Entrar
+
                     </button>
 
-                </div>
+                </p>
 
             </section>
 
