@@ -8,97 +8,79 @@ import {
 } from "react";
 
 
-const UserContext =
+const ThemeContext =
     createContext(null);
 
 
-export function UserProvider({
+export function ThemeProvider({
     children,
 }) {
 
     const [
-        user,
-        setUser,
+        theme,
+        setTheme,
     ] = useState(() => {
 
-        try {
-
-            const savedUser =
-                localStorage.getItem(
-                    "ordo-rpgistas-user"
-                );
+        const savedTheme =
+            localStorage.getItem(
+                "ordo-rpgistas-theme"
+            );
 
 
-            return savedUser
-                ? JSON.parse(savedUser)
-                : null;
+        if (
+            savedTheme === "dnd" ||
+            savedTheme === "ordem"
+        ) {
 
-        }
-
-        catch {
-
-            return null;
+            return savedTheme;
 
         }
+
+
+        return "dnd";
 
     });
 
 
     useEffect(() => {
 
-        if (user) {
+        localStorage.setItem(
+            "ordo-rpgistas-theme",
+            theme
+        );
 
-            localStorage.setItem(
-                "ordo-rpgistas-user",
-                JSON.stringify(user)
-            );
 
-        }
-
-        else {
-
-            localStorage.removeItem(
-                "ordo-rpgistas-user"
-            );
-
-        }
+        document.documentElement.setAttribute(
+            "data-theme",
+            theme
+        );
 
     }, [
-        user,
+        theme,
     ]);
 
 
-    function login(userData) {
+    function toggleTheme() {
 
-        setUser(userData);
-
-    }
-
-
-    function register(userData) {
-
-        setUser(userData);
-
-    }
-
-
-    function logout() {
-
-        setUser(null);
+        setTheme(
+            currentTheme =>
+                currentTheme === "dnd"
+                    ? "ordem"
+                    : "dnd"
+        );
 
     }
 
 
     return (
 
-        <UserContext.Provider
+        <ThemeContext.Provider
 
             value={{
 
-                user,
-                login,
-                register,
-                logout,
+                theme,
+                setTheme,
+                toggleTheme,
 
             }}
 
@@ -106,25 +88,25 @@ export function UserProvider({
 
             {children}
 
-        </UserContext.Provider>
+        </ThemeContext.Provider>
 
     );
 
 }
 
 
-export function useUser() {
+export function useTheme() {
 
     const context =
         useContext(
-            UserContext
+            ThemeContext
         );
 
 
     if (!context) {
 
         throw new Error(
-            "useUser deve ser usado dentro de UserProvider."
+            "useTheme deve ser usado dentro de ThemeProvider."
         );
 
     }
