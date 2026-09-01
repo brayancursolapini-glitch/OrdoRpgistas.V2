@@ -1,12 +1,16 @@
 import {
+
     motion,
+
 } from "framer-motion";
 
 import {
-    Sparkles,
+
     ArrowRight,
-    Sword,
     Shield,
+    Sparkles,
+    Sword,
+
 } from "lucide-react";
 
 import SideMenu
@@ -14,6 +18,9 @@ import SideMenu
 
 import ThemeSwitcher
     from "../../components/ThemeSwitcher/ThemeSwitcher";
+
+import ThemeParticles
+    from "../../components/ThemeParticles/ThemeParticles";
 
 import {
     useTheme,
@@ -25,8 +32,10 @@ import "./Home.css";
 export default function Home() {
 
     const {
+
         theme,
         setTheme,
+
     } = useTheme();
 
 
@@ -45,16 +54,28 @@ export default function Home() {
     const currentSystem =
         isDnd
             ? {
-                name: "DUNGEONS & DRAGONS",
+
+                name:
+                    "DUNGEONS & DRAGONS",
+
                 description:
                     "Reinos, aventuras e lendas.",
-                icon: Sword,
+
+                icon:
+                    Sword,
+
             }
             : {
-                name: "ORDEM PARANORMAL",
+
+                name:
+                    "ORDEM PARANORMAL",
+
                 description:
                     "O paranormal observa.",
-                icon: Shield,
+
+                icon:
+                    Shield,
+
             };
 
 
@@ -65,8 +86,16 @@ export default function Home() {
     return (
 
         <main
-            className={`home ${theme}`}
+
+            className={`
+                home
+                home-${theme}
+            `}
+
         >
+
+            <ThemeParticles />
+
 
             <SideMenu />
 
@@ -90,13 +119,7 @@ export default function Home() {
                 </div>
 
 
-                <div
-                    className="home-header-actions"
-                >
-
-                    <ThemeSwitcher />
-
-                </div>
+                <ThemeSwitcher />
 
             </header>
 
@@ -106,19 +129,24 @@ export default function Home() {
             >
 
                 <button
+
                     type="button"
 
-                    className={
-                        `home-world home-world-dnd ${
+                    className={`
+                        home-world
+                        home-world-dnd
+                        ${
                             isDnd
                                 ? "selected"
                                 : ""
-                        }`
-                    }
+                        }
+                    `}
 
                     style={{
+
                         backgroundImage:
-                            `url("${dndBackground}")`,
+                            `url(${dndBackground})`,
+
                     }}
 
                     onClick={() => {
@@ -126,6 +154,7 @@ export default function Home() {
                         setTheme("dnd");
 
                     }}
+
                 >
 
                     <div
@@ -137,14 +166,9 @@ export default function Home() {
                         className="home-world-content"
                     >
 
-                        <span
-                            className="home-world-label"
-                        >
-
+                        <span>
                             UM MUNDO DE AVENTURAS
-
                         </span>
-
 
                         <h2>
 
@@ -154,24 +178,12 @@ export default function Home() {
 
                         </h2>
 
-
                         <p>
 
-                            Reinos, aventuras e
-                            lendas aguardam.
+                            Reinos, aventuras
+                            e lendas aguardam.
 
                         </p>
-
-
-                        <span
-                            className="home-world-status"
-                        >
-
-                            {isDnd
-                                ? "SISTEMA ATIVO"
-                                : "SELECIONAR SISTEMA"}
-
-                        </span>
 
                     </div>
 
@@ -179,19 +191,24 @@ export default function Home() {
 
 
                 <button
+
                     type="button"
 
-                    className={
-                        `home-world home-world-ordem ${
+                    className={`
+                        home-world
+                        home-world-ordem
+                        ${
                             !isDnd
                                 ? "selected"
                                 : ""
-                        }`
-                    }
+                        }
+                    `}
 
                     style={{
+
                         backgroundImage:
-                            `url("${ordemBackground}")`,
+                            `url(${ordemBackground})`,
+
                     }}
 
                     onClick={() => {
@@ -199,6 +216,7 @@ export default function Home() {
                         setTheme("ordem");
 
                     }}
+
                 >
 
                     <div
@@ -210,14 +228,9 @@ export default function Home() {
                         className="home-world-content"
                     >
 
-                        <span
-                            className="home-world-label"
-                        >
-
+                        <span>
                             A REALIDADE NÃO É O QUE PARECE
-
                         </span>
-
 
                         <h2>
 
@@ -227,24 +240,12 @@ export default function Home() {
 
                         </h2>
 
-
                         <p>
 
                             O paranormal observa
                             cada movimento.
 
                         </p>
-
-
-                        <span
-                            className="home-world-status"
-                        >
-
-                            {!isDnd
-                                ? "SISTEMA ATIVO"
-                                : "SELECIONAR SISTEMA"}
-
-                        </span>
 
                     </div>
 
@@ -254,33 +255,45 @@ export default function Home() {
 
 
             <motion.section
+
                 className="home-hero"
 
                 initial={{
-                    opacity: 0,
-                    y: 30,
+
+                    opacity:
+                        0,
+
+                    y:
+                        30,
+
                 }}
 
                 animate={{
-                    opacity: 1,
-                    y: 0,
+
+                    opacity:
+                        1,
+
+                    y:
+                        0,
+
                 }}
 
                 transition={{
-                    duration: 0.7,
-                    ease: "easeOut",
+
+                    duration:
+                        0.7,
+
+                    ease:
+                        "easeOut",
+
                 }}
+
             >
 
-                <div
+                <Sparkles
+                    size={24}
                     className="home-hero-symbol"
-                >
-
-                    <Sparkles
-                        size={24}
-                    />
-
-                </div>
+                />
 
 
                 <span
@@ -303,9 +316,7 @@ export default function Home() {
                 </h1>
 
 
-                <p
-                    className="home-hero-description"
-                >
+                <p>
 
                     Escolha um sistema,
                     reúna sua mesa e
@@ -329,20 +340,26 @@ export default function Home() {
                     </div>
 
 
-                    <div
-                        className="home-current-info"
-                    >
+                    <div>
 
                         <small>
                             SISTEMA ATUAL
                         </small>
 
                         <strong>
-                            {currentSystem.name}
+
+                            {
+                                currentSystem.name
+                            }
+
                         </strong>
 
                         <span>
-                            {currentSystem.description}
+
+                            {
+                                currentSystem.description
+                            }
+
                         </span>
 
                     </div>
@@ -351,13 +368,14 @@ export default function Home() {
 
 
                 <button
+
                     type="button"
+
                     className="home-enter-button"
+
                 >
 
-                    <span>
-                        Entrar na aventura
-                    </span>
+                    Entrar na aventura
 
                     <ArrowRight
                         size={18}
@@ -384,7 +402,8 @@ export default function Home() {
 
                     {isDnd
                         ? "D&D"
-                        : "ORDEM PARANORMAL"}
+                        : "ORDEM PARANORMAL"
+                    }
 
                 </span>
 
