@@ -1,9 +1,12 @@
 import {
+
     createContext,
     useContext,
     useEffect,
     useState,
+
 } from "react";
+
 
 const UserContext =
     createContext(null);
@@ -25,11 +28,14 @@ export function UserProvider({
                     "ordo-rpgistas-user"
                 );
 
+
             return savedUser
                 ? JSON.parse(savedUser)
                 : null;
 
-        } catch {
+        }
+
+        catch {
 
             return null;
 
@@ -40,25 +46,21 @@ export function UserProvider({
 
     useEffect(() => {
 
-        try {
+        if (user) {
 
-            if (user) {
+            localStorage.setItem(
+                "ordo-rpgistas-user",
+                JSON.stringify(user)
+            );
 
-                localStorage.setItem(
-                    "ordo-rpgistas-user",
-                    JSON.stringify(user)
-                );
+        }
 
-            } else {
+        else {
 
-                localStorage.removeItem(
-                    "ordo-rpgistas-user"
-                );
+            localStorage.removeItem(
+                "ordo-rpgistas-user"
+            );
 
-            }
-
-        } catch {
-            // Ignora.
         }
 
     }, [
@@ -67,6 +69,13 @@ export function UserProvider({
 
 
     function login(userData) {
+
+        setUser(userData);
+
+    }
+
+
+    function register(userData) {
 
         setUser(userData);
 
@@ -83,11 +92,16 @@ export function UserProvider({
     return (
 
         <UserContext.Provider
+
             value={{
+
                 user,
                 login,
+                register,
                 logout,
+
             }}
+
         >
 
             {children}
