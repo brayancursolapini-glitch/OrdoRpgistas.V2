@@ -1,21 +1,36 @@
 import "./MagicalButton.css";
 
+
 export default function MagicalButton({
+
     children,
-    variant = "primary",
+    onClick,
+    type = "button",
     className = "",
-    ...props
+
 }) {
 
     return (
 
         <button
-            {...props}
-            className={`magical-button magical-button-${variant} ${className}`}
+
+            type={type}
+
+            onClick={onClick}
+
+            className={`
+                magical-button
+                ${className}
+            `}
+
         >
 
-            <span>
+            <span
+                className="magical-button-content"
+            >
+
                 {children}
+
             </span>
 
         </button>
