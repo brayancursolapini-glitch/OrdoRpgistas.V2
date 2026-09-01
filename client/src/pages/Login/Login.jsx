@@ -3,21 +3,28 @@ import {
 } from "react";
 
 import {
+
     ArrowLeft,
     LogIn,
+
 } from "lucide-react";
 
 import {
     useUser,
 } from "../../context/UserContext";
 
+import MagicalButton
+    from "../../components/Buttons/MagicalButton";
+
 import "./Login.css";
 
 
 export default function Login({
+
     onBack,
     onRegister,
     onLoginSuccess,
+
 }) {
 
     const {
@@ -30,10 +37,12 @@ export default function Login({
         setUsername,
     ] = useState("");
 
+
     const [
         email,
         setEmail,
     ] = useState("");
+
 
     const [
         password,
@@ -46,74 +55,121 @@ export default function Login({
         event.preventDefault();
 
 
-        const finalName =
-            username.trim() ||
-            email.trim().split("@")[0] ||
-            "RPGista";
+        const userData = {
+
+            name:
+                username.trim() ||
+                email.split("@")[0],
+
+            username:
+                username.trim() ||
+                email.split("@")[0],
+
+            email,
+
+        };
 
 
-        login({
-            username: finalName,
-            email: email.trim(),
-        });
+        login(userData);
 
 
-        onLoginSuccess?.();
+        if (onLoginSuccess) {
+
+            onLoginSuccess();
+
+        }
 
     }
 
 
     return (
 
-        <main className="auth-page">
+        <main
+            className="auth-page"
+        >
 
-            <button
-                type="button"
-                className="auth-back"
-                onClick={onBack}
+            <div
+                className="auth-background"
+            />
+
+
+            <section
+                className="auth-card"
             >
 
-                <ArrowLeft size={18} />
-                Voltar
+                <button
 
-            </button>
+                    type="button"
+
+                    className="auth-back"
+
+                    onClick={onBack}
+
+                >
+
+                    <ArrowLeft
+                        size={18}
+                    />
+
+                    Voltar
+
+                </button>
 
 
-            <section className="auth-card">
+                <div
+                    className="auth-icon"
+                >
 
-                <div className="auth-symbol">
-                    <LogIn size={30} />
+                    <LogIn
+                        size={26}
+                    />
+
                 </div>
 
-                <span className="auth-eyebrow">
+
+                <span
+                    className="auth-eyebrow"
+                >
+
                     BEM-VINDO DE VOLTA
+
                 </span>
 
+
                 <h1>
+
                     Entrar no
-                    <strong> Ordo RPGistas</strong>
+                    <strong>
+                        Ordo RPGistas
+                    </strong>
+
                 </h1>
 
-                <p>
-                    Continue sua aventura.
-                </p>
 
-
-                <form onSubmit={handleSubmit}>
+                <form
+                    onSubmit={handleSubmit}
+                >
 
                     <label>
 
                         Nome de usuário
 
                         <input
+
                             type="text"
+
                             value={username}
+
                             onChange={event => {
+
                                 setUsername(
                                     event.target.value
                                 );
+
                             }}
-                            placeholder="Seu nome de aventureiro"
+
+                            required
+
                         />
 
                     </label>
@@ -124,15 +180,21 @@ export default function Login({
                         E-mail
 
                         <input
+
                             type="email"
-                            required
+
                             value={email}
+
                             onChange={event => {
+
                                 setEmail(
                                     event.target.value
                                 );
+
                             }}
-                            placeholder="voce@email.com"
+
+                            required
+
                         />
 
                     </label>
@@ -143,43 +205,56 @@ export default function Login({
                         Senha
 
                         <input
+
                             type="password"
-                            required
-                            minLength="3"
+
                             value={password}
+
                             onChange={event => {
+
                                 setPassword(
                                     event.target.value
                                 );
+
                             }}
-                            placeholder="Sua senha"
+
+                            required
+
                         />
 
                     </label>
 
 
-                    <button
+                    <MagicalButton
                         type="submit"
-                        className="auth-submit"
                     >
+
                         Entrar na aventura
-                    </button>
+
+                    </MagicalButton>
 
                 </form>
 
 
-                <div className="auth-footer">
+                <p
+                    className="auth-switch"
+                >
 
                     Ainda não possui uma conta?
 
                     <button
+
                         type="button"
+
                         onClick={onRegister}
+
                     >
+
                         Criar conta
+
                     </button>
 
-                </div>
+                </p>
 
             </section>
 
