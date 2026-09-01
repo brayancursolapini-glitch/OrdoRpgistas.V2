@@ -1,12 +1,16 @@
 import {
+
     createContext,
     useContext,
     useEffect,
     useState,
+
 } from "react";
+
 
 const ThemeContext =
     createContext(null);
+
 
 export function ThemeProvider({
     children,
@@ -17,23 +21,21 @@ export function ThemeProvider({
         setTheme,
     ] = useState(() => {
 
-        try {
+        const savedTheme =
+            localStorage.getItem(
+                "ordo-rpgistas-theme"
+            );
 
-            const savedTheme =
-                localStorage.getItem(
-                    "ordo-rpgistas-theme"
-                );
 
-            if (
-                savedTheme === "dnd" ||
-                savedTheme === "ordem"
-            ) {
-                return savedTheme;
-            }
+        if (
+            savedTheme === "dnd" ||
+            savedTheme === "ordem"
+        ) {
 
-        } catch {
-            // Ambiente sem localStorage.
+            return savedTheme;
+
         }
+
 
         return "dnd";
 
@@ -42,16 +44,11 @@ export function ThemeProvider({
 
     useEffect(() => {
 
-        try {
+        localStorage.setItem(
+            "ordo-rpgistas-theme",
+            theme
+        );
 
-            localStorage.setItem(
-                "ordo-rpgistas-theme",
-                theme
-            );
-
-        } catch {
-            // Ignora.
-        }
 
         document.documentElement.setAttribute(
             "data-theme",
@@ -78,11 +75,15 @@ export function ThemeProvider({
     return (
 
         <ThemeContext.Provider
+
             value={{
+
                 theme,
                 setTheme,
                 toggleTheme,
+
             }}
+
         >
 
             {children}
