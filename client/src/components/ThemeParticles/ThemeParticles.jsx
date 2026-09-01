@@ -1,69 +1,57 @@
 import {
-    useMemo,
-} from "react";
-
-import {
     useTheme,
 } from "../../context/ThemeContext";
 
 import "./ThemeParticles.css";
 
 
-export default function ThemeParticles({
-    amount = 34,
-}) {
+export default function ThemeParticles() {
 
     const {
         theme,
     } = useTheme();
 
 
-    const particles =
-        useMemo(() => {
-
-            return Array.from(
-                {
-                    length: amount,
-                },
-                (_, index) => ({
-                    id: index,
-                    left: `${(index * 37) % 100}%`,
-                    top: `${(index * 61) % 100}%`,
-                    delay: `${(index % 11) * .45}s`,
-                    duration: `${6 + (index % 6)}s`,
-                    size: `${2 + (index % 4)}px`,
-                })
-            );
-
-        }, [
-            amount,
-        ]);
-
-
     return (
 
         <div
-            className={`theme-particles theme-particles-${theme}`}
+
+            className={`
+                theme-particles
+                theme-particles-${theme}
+            `}
+
             aria-hidden="true"
+
         >
 
-            {particles.map(
-                particle => (
+            {Array.from({
 
-                    <span
-                        key={particle.id}
-                        style={{
-                            left: particle.left,
-                            top: particle.top,
-                            width: particle.size,
-                            height: particle.size,
-                            animationDelay: particle.delay,
-                            animationDuration: particle.duration,
-                        }}
-                    />
+                length:
+                    28,
 
-                )
-            )}
+            }).map((_, index) => (
+
+                <span
+
+                    key={index}
+
+                    style={{
+
+                        left:
+                            `${(index * 37) % 100}%`,
+
+                        animationDelay:
+                            `${(index % 9) * 0.6}s`,
+
+                        animationDuration:
+                            `${7 + (index % 6)}s`,
+
+                    }}
+
+                />
+
+            ))}
 
         </div>
 
