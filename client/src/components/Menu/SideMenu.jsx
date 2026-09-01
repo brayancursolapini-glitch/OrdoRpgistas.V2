@@ -3,7 +3,9 @@ import {
 } from "react";
 
 import {
+
     BookOpen,
+    ChevronLeft,
     Crown,
     DoorOpen,
     Map,
@@ -12,7 +14,7 @@ import {
     Shield,
     UserRound,
     Users,
-    X,
+
 } from "lucide-react";
 
 import {
@@ -23,18 +25,24 @@ import "./SideMenu.css";
 
 
 export default function SideMenu({
+
     onLogout,
+
 }) {
 
     const [
+
         open,
         setOpen,
+
     ] = useState(false);
 
 
     const {
+
         user,
         logout,
+
     } = useUser();
 
 
@@ -42,7 +50,12 @@ export default function SideMenu({
 
         logout();
 
-        onLogout?.();
+
+        if (onLogout) {
+
+            onLogout();
+
+        }
 
     }
 
@@ -50,47 +63,78 @@ export default function SideMenu({
     return (
 
         <aside
-            className={`side-menu ${
-                open
-                    ? "side-menu-open"
-                    : ""
-            }`}
+
+            className={`
+                side-menu
+                ${
+                    open
+                        ? "side-menu-open"
+                        : ""
+                }
+            `}
+
         >
 
             <button
+
                 type="button"
+
                 className="side-menu-toggle"
+
                 onClick={() => {
+
                     setOpen(
-                        current => !current
+                        current =>
+                            !current
                     );
+
                 }}
+
                 aria-label="Abrir menu"
+
             >
 
                 {open
-                    ? <X size={21} />
-                    : <Menu size={21} />
+                    ? <ChevronLeft size={20} />
+                    : <Menu size={20} />
                 }
 
             </button>
 
 
-            <div className="side-menu-content">
+            <div
+                className="side-menu-content"
+            >
 
-                <div className="side-menu-profile">
+                <div
+                    className="side-menu-profile"
+                >
 
-                    <div className="side-menu-avatar">
-                        <UserRound size={22} />
+                    <div
+                        className="side-menu-avatar"
+                    >
+
+                        <UserRound
+                            size={22}
+                        />
+
                     </div>
 
-                    <div className="side-menu-user">
+
+                    <div
+                        className="side-menu-user"
+                    >
 
                         <strong>
-                            {user?.username ||
+
+                            {
                                 user?.name ||
-                                "RPGista"}
+                                user?.username ||
+                                "RPGista"
+                            }
+
                         </strong>
+
 
                         <span>
                             Aventureiro
@@ -101,51 +145,101 @@ export default function SideMenu({
                 </div>
 
 
-                <nav className="side-menu-navigation">
+                <nav
+                    className="side-menu-navigation"
+                >
 
                     <button type="button">
+
                         <Users size={19} />
-                        <span>Personagens</span>
+
+                        <span>
+                            Personagens
+                        </span>
+
                     </button>
 
+
                     <button type="button">
+
                         <Crown size={19} />
-                        <span>Campanhas</span>
+
+                        <span>
+                            Campanhas
+                        </span>
+
                     </button>
 
+
                     <button type="button">
+
                         <Map size={19} />
-                        <span>Mapas</span>
+
+                        <span>
+                            Mapas
+                        </span>
+
                     </button>
 
+
                     <button type="button">
+
                         <BookOpen size={19} />
-                        <span>Livros</span>
+
+                        <span>
+                            Livros
+                        </span>
+
                     </button>
 
+
                     <button type="button">
+
                         <Shield size={19} />
-                        <span>Escudo do Mestre</span>
+
+                        <span>
+                            Escudo do Mestre
+                        </span>
+
                     </button>
 
+
                     <button type="button">
+
                         <Search size={19} />
-                        <span>Procurar jogadores</span>
+
+                        <span>
+                            Procurar jogadores
+                        </span>
+
                     </button>
 
                 </nav>
 
 
-                <div className="side-menu-bottom">
+                <div
+                    className="side-menu-bottom"
+                >
 
                     <button
+
                         type="button"
+
                         className="side-menu-logout"
-                        onClick={handleLogout}
+
+                        onClick={
+                            handleLogout
+                        }
+
                     >
 
-                        <DoorOpen size={19} />
-                        <span>Sair</span>
+                        <DoorOpen
+                            size={19}
+                        />
+
+                        <span>
+                            Sair
+                        </span>
 
                     </button>
 
