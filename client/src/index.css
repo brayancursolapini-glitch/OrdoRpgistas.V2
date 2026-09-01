@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    background: #050509;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background: #050509;
+    color: #ffffff;
+    font-family: Inter, system-ui, Arial, sans-serif;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    border: none;
+}
+
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid #c084fc;
+    outline-offset: 3px;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+::selection {
+    background: rgba(192, 132, 252, 0.35);
+}
