@@ -13,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
@@ -63,8 +63,6 @@ jobs:
     needs: build
 
     runs-on: ubuntu-latest
-
-    name: Deploy
 
     steps:
 
