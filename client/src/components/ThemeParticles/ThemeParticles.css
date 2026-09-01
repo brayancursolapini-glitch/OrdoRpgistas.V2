@@ -1,0 +1,38 @@
+.theme-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.theme-particles span {
+    position: absolute;
+    border-radius: 50%;
+    opacity: .45;
+    animation-name: themeParticle;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+.theme-particles-dnd span {
+    background: #fbbf24;
+    box-shadow: 0 0 12px rgba(251,191,36,.8);
+}
+
+.theme-particles-ordem span {
+    background: #c084fc;
+    box-shadow: 0 0 14px rgba(192,132,252,.9);
+}
+
+@keyframes themeParticle {
+    0%,100% {
+        transform: translate3d(0,0,0) scale(.8);
+        opacity: .15;
+    }
+
+    50% {
+        transform: translate3d(25px,-70px,0) scale(1.25);
+        opacity: .8;
+    }
+}
