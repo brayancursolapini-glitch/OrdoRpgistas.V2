@@ -5,6 +5,9 @@ import {
 import IntroLoader
     from "./components/Loading/IntroLoader";
 
+import ThemeAudio
+    from "./components/Audio/ThemeAudio";
+
 import Landing
     from "./pages/Landing/Landing";
 
@@ -37,110 +40,14 @@ export default function App() {
         return (
 
             <IntroLoader
+
                 onComplete={() => {
 
                     setLoading(false);
 
                 }}
-            />
-
-        );
-
-    }
-
-
-    if (currentPage === "landing") {
-
-        return (
-
-            <Landing
-
-                onLogin={() => {
-
-                    setCurrentPage("login");
-
-                }}
-
-                onRegister={() => {
-
-                    setCurrentPage("cadastro");
-
-                }}
 
             />
-
-        );
-
-    }
-
-
-    if (currentPage === "login") {
-
-        return (
-
-            <Login
-
-                onBack={() => {
-
-                    setCurrentPage("landing");
-
-                }}
-
-                onRegister={() => {
-
-                    setCurrentPage("cadastro");
-
-                }}
-
-                onLoginSuccess={() => {
-
-                    setCurrentPage("home");
-
-                }}
-
-            />
-
-        );
-
-    }
-
-
-    if (currentPage === "cadastro") {
-
-        return (
-
-            <Cadastro
-
-                onBack={() => {
-
-                    setCurrentPage("landing");
-
-                }}
-
-                onLogin={() => {
-
-                    setCurrentPage("login");
-
-                }}
-
-                onRegisterSuccess={() => {
-
-                    setCurrentPage("home");
-
-                }}
-
-            />
-
-        );
-
-    }
-
-
-    if (currentPage === "home") {
-
-        return (
-
-            <Home />
 
         );
 
@@ -149,21 +56,93 @@ export default function App() {
 
     return (
 
-        <Landing
+        <>
 
-            onLogin={() => {
+            <ThemeAudio />
 
-                setCurrentPage("login");
 
-            }}
+            {currentPage === "landing" && (
 
-            onRegister={() => {
+                <Landing
 
-                setCurrentPage("cadastro");
+                    onLogin={() => {
 
-            }}
+                        setCurrentPage("login");
 
-        />
+                    }}
+
+                    onRegister={() => {
+
+                        setCurrentPage("cadastro");
+
+                    }}
+
+                />
+
+            )}
+
+
+            {currentPage === "login" && (
+
+                <Login
+
+                    onBack={() => {
+
+                        setCurrentPage("landing");
+
+                    }}
+
+                    onRegister={() => {
+
+                        setCurrentPage("cadastro");
+
+                    }}
+
+                    onLoginSuccess={() => {
+
+                        setCurrentPage("home");
+
+                    }}
+
+                />
+
+            )}
+
+
+            {currentPage === "cadastro" && (
+
+                <Cadastro
+
+                    onBack={() => {
+
+                        setCurrentPage("landing");
+
+                    }}
+
+                    onLogin={() => {
+
+                        setCurrentPage("login");
+
+                    }}
+
+                    onRegisterSuccess={() => {
+
+                        setCurrentPage("home");
+
+                    }}
+
+                />
+
+            )}
+
+
+            {currentPage === "home" && (
+
+                <Home />
+
+            )}
+
+        </>
 
     );
 
