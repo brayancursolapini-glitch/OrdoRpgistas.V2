@@ -15,24 +15,26 @@ import {
 import "./index.css";
 
 
-ReactDOM.createRoot(
+ReactDOM
+    .createRoot(
+        document.getElementById(
+            "root"
+        )
+    )
+    .render(
 
-    document.getElementById("root")
+        <React.StrictMode>
 
-).render(
+            <ThemeProvider>
 
-    <React.StrictMode>
+                <UserProvider>
 
-        <ThemeProvider>
+                    <App />
 
-            <UserProvider>
+                </UserProvider>
 
-                <App />
+            </ThemeProvider>
 
-            </UserProvider>
+        </React.StrictMode>
 
-        </ThemeProvider>
-
-    </React.StrictMode>
-
-);
+    );
