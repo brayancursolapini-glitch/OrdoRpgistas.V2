@@ -1,29 +1,49 @@
-import { useState } from "react";
+import {
+    useState,
+} from "react";
 
-import IntroLoader from "./components/Loading/IntroLoader";
+import IntroLoader
+    from "./components/Loading/IntroLoader";
 
-import Landing from "./pages/Landing/Landing";
-import Login from "./pages/Login/Login";
-import Cadastro from "./pages/Cadastro/Cadastro";
-import Home from "./pages/Home/Home";
+import Landing
+    from "./pages/Landing/Landing";
+
+import Login
+    from "./pages/Login/Login";
+
+import Cadastro
+    from "./pages/Cadastro/Cadastro";
+
+import Home
+    from "./pages/Home/Home";
+
 
 export default function App() {
 
-    const [loading, setLoading] =
-        useState(true);
+    const [
+        currentPage,
+        setCurrentPage,
+    ] = useState("landing");
 
-    const [currentPage, setCurrentPage] =
-        useState("landing");
+
+    const [
+        loading,
+        setLoading,
+    ] = useState(true);
 
 
     if (loading) {
 
         return (
+
             <IntroLoader
                 onComplete={() => {
+
                     setLoading(false);
+
                 }}
             />
+
         );
 
     }
@@ -32,14 +52,23 @@ export default function App() {
     if (currentPage === "landing") {
 
         return (
+
             <Landing
+
                 onLogin={() => {
+
                     setCurrentPage("login");
+
                 }}
+
                 onRegister={() => {
+
                     setCurrentPage("cadastro");
+
                 }}
+
             />
+
         );
 
     }
@@ -48,17 +77,29 @@ export default function App() {
     if (currentPage === "login") {
 
         return (
+
             <Login
+
                 onBack={() => {
+
                     setCurrentPage("landing");
+
                 }}
+
                 onRegister={() => {
+
                     setCurrentPage("cadastro");
+
                 }}
+
                 onLoginSuccess={() => {
+
                     setCurrentPage("home");
+
                 }}
+
             />
+
         );
 
     }
@@ -67,17 +108,29 @@ export default function App() {
     if (currentPage === "cadastro") {
 
         return (
+
             <Cadastro
+
                 onBack={() => {
+
                     setCurrentPage("landing");
+
                 }}
+
                 onLogin={() => {
+
                     setCurrentPage("login");
+
                 }}
+
                 onRegisterSuccess={() => {
+
                     setCurrentPage("home");
+
                 }}
+
             />
+
         );
 
     }
@@ -86,25 +139,32 @@ export default function App() {
     if (currentPage === "home") {
 
         return (
-            <Home
-                onLogout={() => {
-                    setCurrentPage("landing");
-                }}
-            />
+
+            <Home />
+
         );
 
     }
 
 
     return (
+
         <Landing
+
             onLogin={() => {
+
                 setCurrentPage("login");
+
             }}
+
             onRegister={() => {
+
                 setCurrentPage("cadastro");
+
             }}
+
         />
+
     );
 
 }
