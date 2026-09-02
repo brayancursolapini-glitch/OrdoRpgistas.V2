@@ -5,9 +5,6 @@ import {
 import IntroLoader
     from "./components/Loading/IntroLoader";
 
-import ThemeAudio
-    from "./components/Audio/ThemeAudio";
-
 import Landing
     from "./pages/Landing/Landing";
 
@@ -26,13 +23,17 @@ export default function App() {
     const [
         currentPage,
         setCurrentPage,
-    ] = useState("landing");
+    ] = useState(
+        "landing"
+    );
 
 
     const [
         loading,
         setLoading,
-    ] = useState(true);
+    ] = useState(
+        true
+    );
 
 
     if (loading) {
@@ -54,95 +55,163 @@ export default function App() {
     }
 
 
+    if (
+        currentPage ===
+        "landing"
+    ) {
+
+        return (
+
+            <Landing
+
+                onLogin={() => {
+
+                    setCurrentPage(
+                        "login"
+                    );
+
+                }}
+
+                onRegister={() => {
+
+                    setCurrentPage(
+                        "cadastro"
+                    );
+
+                }}
+
+            />
+
+        );
+
+    }
+
+
+    if (
+        currentPage ===
+        "login"
+    ) {
+
+        return (
+
+            <Login
+
+                onBack={() => {
+
+                    setCurrentPage(
+                        "landing"
+                    );
+
+                }}
+
+                onRegister={() => {
+
+                    setCurrentPage(
+                        "cadastro"
+                    );
+
+                }}
+
+                onLoginSuccess={() => {
+
+                    setCurrentPage(
+                        "home"
+                    );
+
+                }}
+
+            />
+
+        );
+
+    }
+
+
+    if (
+        currentPage ===
+        "cadastro"
+    ) {
+
+        return (
+
+            <Cadastro
+
+                onBack={() => {
+
+                    setCurrentPage(
+                        "landing"
+                    );
+
+                }}
+
+                onLogin={() => {
+
+                    setCurrentPage(
+                        "login"
+                    );
+
+                }}
+
+                onRegisterSuccess={() => {
+
+                    setCurrentPage(
+                        "home"
+                    );
+
+                }}
+
+            />
+
+        );
+
+    }
+
+
+    if (
+        currentPage ===
+        "home"
+    ) {
+
+        return (
+
+            <Home
+
+                onLogout={() => {
+
+                    setCurrentPage(
+                        "landing"
+                    );
+
+                }}
+
+            />
+
+        );
+
+    }
+
+
     return (
 
-        <>
+        <Landing
 
-            <ThemeAudio />
+            onLogin={() => {
 
+                setCurrentPage(
+                    "login"
+                );
 
-            {currentPage === "landing" && (
+            }}
 
-                <Landing
+            onRegister={() => {
 
-                    onLogin={() => {
+                setCurrentPage(
+                    "cadastro"
+                );
 
-                        setCurrentPage("login");
+            }}
 
-                    }}
-
-                    onRegister={() => {
-
-                        setCurrentPage("cadastro");
-
-                    }}
-
-                />
-
-            )}
-
-
-            {currentPage === "login" && (
-
-                <Login
-
-                    onBack={() => {
-
-                        setCurrentPage("landing");
-
-                    }}
-
-                    onRegister={() => {
-
-                        setCurrentPage("cadastro");
-
-                    }}
-
-                    onLoginSuccess={() => {
-
-                        setCurrentPage("home");
-
-                    }}
-
-                />
-
-            )}
-
-
-            {currentPage === "cadastro" && (
-
-                <Cadastro
-
-                    onBack={() => {
-
-                        setCurrentPage("landing");
-
-                    }}
-
-                    onLogin={() => {
-
-                        setCurrentPage("login");
-
-                    }}
-
-                    onRegisterSuccess={() => {
-
-                        setCurrentPage("home");
-
-                    }}
-
-                />
-
-            )}
-
-
-            {currentPage === "home" && (
-
-                <Home />
-
-            )}
-
-        </>
+        />
 
     );
 
