@@ -3,10 +3,8 @@ import {
 } from "react";
 
 import {
-
     ArrowLeft,
     UserPlus,
-
 } from "lucide-react";
 
 import {
@@ -22,7 +20,9 @@ import "./Cadastro.css";
 export default function Cadastro({
 
     onBack,
+
     onLogin,
+
     onRegisterSuccess,
 
 }) {
@@ -33,48 +33,90 @@ export default function Cadastro({
 
 
     const [
-        name,
-        setName,
-    ] = useState("");
+        form,
+        setForm,
+    ] = useState({
+
+        name:
+            "",
+
+        username:
+            "",
+
+        email:
+            "",
+
+        password:
+            "",
+
+    });
 
 
     const [
-        username,
-        setUsername,
-    ] = useState("");
+        error,
+        setError,
+    ] = useState(
+        ""
+    );
 
 
-    const [
-        email,
-        setEmail,
-    ] = useState("");
+    function updateField(
+        field,
+        value
+    ) {
+
+        setForm(
+            current => ({
+
+                ...current,
+
+                [field]:
+                    value,
+
+            })
+        );
+
+    }
 
 
-    const [
-        password,
-        setPassword,
-    ] = useState("");
-
-
-    function handleSubmit(event) {
+    function handleSubmit(
+        event
+    ) {
 
         event.preventDefault();
 
 
+        if (
+            !form.name.trim() ||
+            !form.username.trim() ||
+            !form.email.trim() ||
+            !form.password.trim()
+        ) {
+
+            setError(
+                "Preencha todos os campos."
+            );
+
+            return;
+
+        }
+
+
         register({
 
-            name,
-            username,
-            email,
+            name:
+                form.name.trim(),
+
+            username:
+                form.username.trim(),
+
+            email:
+                form.email.trim(),
 
         });
 
 
-        if (onRegisterSuccess) {
-
-            onRegisterSuccess();
-
-        }
+        onRegisterSuccess();
 
     }
 
@@ -82,25 +124,22 @@ export default function Cadastro({
     return (
 
         <main
-            className="register-page"
+            className="cadastro-page"
         >
 
-            <div
-                className="register-background"
-            />
-
-
             <section
-                className="register-card"
+                className="cadastro-card"
             >
 
                 <button
 
                     type="button"
 
-                    className="register-back"
+                    className="cadastro-back"
 
-                    onClick={onBack}
+                    onClick={
+                        onBack
+                    }
 
                 >
 
@@ -113,38 +152,39 @@ export default function Cadastro({
                 </button>
 
 
-                <div
-                    className="register-icon"
-                >
-
-                    <UserPlus
-                        size={26}
-                    />
-
-                </div>
+                <UserPlus
+                    className="cadastro-icon"
+                    size={32}
+                />
 
 
-                <span
-                    className="register-eyebrow"
-                >
+                <span>
 
-                    COMECE SUA JORNADA
+                    INICIE SUA JORNADA
 
                 </span>
 
 
                 <h1>
 
-                    Crie sua conta
-                    <strong>
-                        RPGista
-                    </strong>
+                    Criar conta
 
                 </h1>
 
 
+                <p>
+
+                    Seu nome de usuário será
+                    sua identidade dentro do
+                    Ordo RPGistas.
+
+                </p>
+
+
                 <form
-                    onSubmit={handleSubmit}
+                    onSubmit={
+                        handleSubmit
+                    }
                 >
 
                     <label>
@@ -153,17 +193,22 @@ export default function Cadastro({
 
                         <input
 
-                            value={name}
+                            value={
+                                form.name
+                            }
 
-                            onChange={event => {
+                            onChange={
+                                event => {
 
-                                setName(
-                                    event.target.value
-                                );
+                                    updateField(
+                                        "name",
+                                        event.target.value
+                                    );
 
-                            }}
+                                }
+                            }
 
-                            required
+                            placeholder="Seu nome"
 
                         />
 
@@ -176,17 +221,22 @@ export default function Cadastro({
 
                         <input
 
-                            value={username}
+                            value={
+                                form.username
+                            }
 
-                            onChange={event => {
+                            onChange={
+                                event => {
 
-                                setUsername(
-                                    event.target.value
-                                );
+                                    updateField(
+                                        "username",
+                                        event.target.value
+                                    );
 
-                            }}
+                                }
+                            }
 
-                            required
+                            placeholder="Ex: MestreBrayan"
 
                         />
 
@@ -195,23 +245,28 @@ export default function Cadastro({
 
                     <label>
 
-                        E-mail
+                        Email
 
                         <input
 
                             type="email"
 
-                            value={email}
+                            value={
+                                form.email
+                            }
 
-                            onChange={event => {
+                            onChange={
+                                event => {
 
-                                setEmail(
-                                    event.target.value
-                                );
+                                    updateField(
+                                        "email",
+                                        event.target.value
+                                    );
 
-                            }}
+                                }
+                            }
 
-                            required
+                            placeholder="seu@email.com"
 
                         />
 
@@ -226,21 +281,43 @@ export default function Cadastro({
 
                             type="password"
 
-                            value={password}
+                            value={
+                                form.password
+                            }
 
-                            onChange={event => {
+                            onChange={
+                                event => {
 
-                                setPassword(
-                                    event.target.value
-                                );
+                                    updateField(
+                                        "password",
+                                        event.target.value
+                                    );
 
-                            }}
+                                }
+                            }
 
-                            required
+                            placeholder="Crie uma senha"
 
                         />
 
                     </label>
+
+
+                    {
+
+                        error && (
+
+                            <p
+                                className="cadastro-error"
+                            >
+
+                                {error}
+
+                            </p>
+
+                        )
+
+                    }
 
 
                     <MagicalButton
@@ -255,7 +332,7 @@ export default function Cadastro({
 
 
                 <p
-                    className="register-switch"
+                    className="cadastro-login"
                 >
 
                     Já possui uma conta?
@@ -264,7 +341,9 @@ export default function Cadastro({
 
                         type="button"
 
-                        onClick={onLogin}
+                        onClick={
+                            onLogin
+                        }
 
                     >
 
