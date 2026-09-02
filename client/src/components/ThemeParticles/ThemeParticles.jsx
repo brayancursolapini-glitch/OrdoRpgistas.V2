@@ -1,15 +1,70 @@
 import {
+    useMemo,
+} from "react";
+
+import {
     useTheme,
 } from "../../context/ThemeContext";
 
 import "./ThemeParticles.css";
 
 
-export default function ThemeParticles() {
+export default function ThemeParticles({
+
+    amount = 35,
+
+    variant,
+
+}) {
 
     const {
         theme,
     } = useTheme();
+
+
+    const currentVariant =
+        variant ||
+        theme;
+
+
+    const particles =
+        useMemo(() => {
+
+            return Array
+                .from(
+                    {
+                        length:
+                            amount,
+                    },
+                    (
+                        _,
+                        index
+                    ) => ({
+
+                        id:
+                            index,
+
+                        left:
+                            `${Math.random() * 100}%`,
+
+                        top:
+                            `${Math.random() * 100}%`,
+
+                        delay:
+                            `${Math.random() * -10}s`,
+
+                        duration:
+                            `${8 + Math.random() * 12}s`,
+
+                        size:
+                            `${2 + Math.random() * 5}px`,
+
+                    })
+                );
+
+        }, [
+            amount,
+        ]);
 
 
     return (
@@ -18,40 +73,50 @@ export default function ThemeParticles() {
 
             className={`
                 theme-particles
-                theme-particles-${theme}
+                theme-particles-${currentVariant}
             `}
 
             aria-hidden="true"
 
         >
 
-            {Array.from({
+            {
 
-                length:
-                    28,
+                particles.map(
+                    particle => (
 
-            }).map((_, index) => (
+                        <span
 
-                <span
+                            key={
+                                particle.id
+                            }
 
-                    key={index}
+                            style={{
+                                left:
+                                    particle.left,
 
-                    style={{
+                                top:
+                                    particle.top,
 
-                        left:
-                            `${(index * 37) % 100}%`,
+                                animationDelay:
+                                    particle.delay,
 
-                        animationDelay:
-                            `${(index % 9) * 0.6}s`,
+                                animationDuration:
+                                    particle.duration,
 
-                        animationDuration:
-                            `${7 + (index % 6)}s`,
+                                width:
+                                    particle.size,
 
-                    }}
+                                height:
+                                    particle.size,
+                            }}
 
-                />
+                        />
 
-            ))}
+                    )
+                )
+
+            }
 
         </div>
 
