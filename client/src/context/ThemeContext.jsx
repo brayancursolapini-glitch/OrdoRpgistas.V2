@@ -1,15 +1,15 @@
 import {
-
     createContext,
     useContext,
     useEffect,
     useState,
-
 } from "react";
 
 
 const ThemeContext =
-    createContext(null);
+    createContext(
+        null
+    );
 
 
 export function ThemeProvider({
@@ -50,10 +50,12 @@ export function ThemeProvider({
         );
 
 
-        document.documentElement.setAttribute(
-            "data-theme",
-            theme
-        );
+        document
+            .documentElement
+            .setAttribute(
+                "data-theme",
+                theme
+            );
 
     }, [
         theme,
@@ -63,10 +65,15 @@ export function ThemeProvider({
     function toggleTheme() {
 
         setTheme(
-            currentTheme =>
-                currentTheme === "dnd"
-                    ? "ordem"
-                    : "dnd"
+            currentTheme => {
+
+                return (
+                    currentTheme === "dnd"
+                        ? "ordem"
+                        : "dnd"
+                );
+
+            }
         );
 
     }
@@ -77,11 +84,9 @@ export function ThemeProvider({
         <ThemeContext.Provider
 
             value={{
-
                 theme,
                 setTheme,
                 toggleTheme,
-
             }}
 
         >
