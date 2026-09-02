@@ -1,8 +1,6 @@
 import {
-
     useEffect,
     useRef,
-
 } from "react";
 
 import {
@@ -18,53 +16,49 @@ export default function ThemeAudio() {
 
 
     const audioRef =
-        useRef(null);
+        useRef(
+            null
+        );
 
 
     useEffect(() => {
 
-        const audio =
-            audioRef.current;
-
-
-        if (!audio) {
+        if (
+            !audioRef.current
+        ) {
 
             return;
 
         }
 
 
-        const audioSource =
+        const audio =
+            audioRef.current;
+
+
+        audio.pause();
+
+
+        audio.currentTime =
+            0;
+
+
+        audio.src =
             theme === "dnd"
                 ? `${import.meta.env.BASE_URL}audio/dnd-ambient.mp3`
                 : `${import.meta.env.BASE_URL}audio/ordem-ambient.mp3`;
 
 
-        if (
-            audio.src !==
-            new URL(
-                audioSource,
-                window.location.origin
-            ).href
-        ) {
-
-            audio.src =
-                audioSource;
-
-        }
+        audio.load();
 
 
-        audio.volume =
-            0.18;
-
-
-        audio.play()
+        audio
+            .play()
             .catch(() => {
 
                 /*
-                O navegador pode bloquear
-                autoplay até a primeira
-                interação do usuário.
+                    O navegador pode bloquear
+                    autoplay até existir interação.
                 */
 
             });
@@ -78,7 +72,9 @@ export default function ThemeAudio() {
 
         <audio
 
-            ref={audioRef}
+            ref={
+                audioRef
+            }
 
             loop
 
