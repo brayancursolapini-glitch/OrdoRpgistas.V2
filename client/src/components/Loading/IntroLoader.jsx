@@ -1,14 +1,10 @@
 import {
-
     useEffect,
     useState,
-
 } from "react";
 
 import {
-
     Sparkles,
-
 } from "lucide-react";
 
 import "./IntroLoader.css";
@@ -17,6 +13,7 @@ import "./IntroLoader.css";
 export default function IntroLoader({
 
     onComplete,
+
     duration = 2400,
 
 }) {
@@ -24,7 +21,9 @@ export default function IntroLoader({
     const [
         leaving,
         setLeaving,
-    ] = useState(false);
+    ] = useState(
+        false
+    );
 
 
     useEffect(() => {
@@ -32,7 +31,9 @@ export default function IntroLoader({
         const exitTimer =
             setTimeout(() => {
 
-                setLeaving(true);
+                setLeaving(
+                    true
+                );
 
             }, duration);
 
@@ -40,7 +41,9 @@ export default function IntroLoader({
         const completeTimer =
             setTimeout(() => {
 
-                if (onComplete) {
+                if (
+                    onComplete
+                ) {
 
                     onComplete();
 
@@ -51,9 +54,13 @@ export default function IntroLoader({
 
         return () => {
 
-            clearTimeout(exitTimer);
+            clearTimeout(
+                exitTimer
+            );
 
-            clearTimeout(completeTimer);
+            clearTimeout(
+                completeTimer
+            );
 
         };
 
@@ -127,7 +134,8 @@ export default function IntroLoader({
 
                 <p>
 
-                    Onde histórias ganham vida.
+                    Onde histórias
+                    ganham vida.
 
                 </p>
 
