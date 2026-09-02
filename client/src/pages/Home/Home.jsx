@@ -3,23 +3,10 @@ import {
 } from "framer-motion";
 
 import {
-
     Sparkles,
-
     ArrowRight,
-
     Sword,
-
     Shield,
-
-    Users,
-
-    Crown,
-
-    Map,
-
-    BookOpen,
-
 } from "lucide-react";
 
 import SideMenu
@@ -41,18 +28,11 @@ import {
 import "./Home.css";
 
 
-export default function Home({
-
-    onLogout,
-
-}) {
+export default function Home() {
 
     const {
-
         theme,
-
         setTheme,
-
     } = useTheme();
 
 
@@ -60,18 +40,15 @@ export default function Home({
         theme === "dnd";
 
 
-    const dndBackground =
-        `${import.meta.env.BASE_URL}images/Home-dnd.jpg`;
-
-
-    const ordemBackground =
-        `${import.meta.env.BASE_URL}images/Home-ordem.jpg`;
+    const backgroundImage =
+        isDnd
+            ? `${import.meta.env.BASE_URL}images/Home-dnd.jpg`
+            : `${import.meta.env.BASE_URL}images/Home-ordem.jpg`;
 
 
     const currentSystem =
         isDnd
             ? {
-
                 name:
                     "DUNGEONS & DRAGONS",
 
@@ -80,10 +57,8 @@ export default function Home({
 
                 icon:
                     Sword,
-
             }
             : {
-
                 name:
                     "ORDEM PARANORMAL",
 
@@ -92,7 +67,6 @@ export default function Home({
 
                 icon:
                     Shield,
-
             };
 
 
@@ -100,139 +74,43 @@ export default function Home({
         currentSystem.icon;
 
 
-    const features = [
-
-        {
-
-            icon:
-                Users,
-
-            title:
-                "Personagens",
-
-            text:
-                "Crie e gerencie seus aventureiros.",
-
-        },
-
-        {
-
-            icon:
-                Crown,
-
-            title:
-                "Campanhas",
-
-            text:
-                "Reúna sua mesa e conte histórias.",
-
-        },
-
-        {
-
-            icon:
-                Map,
-
-            title:
-                "Mapas",
-
-            text:
-                "Explore mundos e batalhas.",
-
-        },
-
-        {
-
-            icon:
-                BookOpen,
-
-            title:
-                "Livros",
-
-            text:
-                "Acesse regras e conteúdos.",
-
-        },
-
-    ];
-
-
-    function handleNavigation(
-        destination
-    ) {
-
-        console.log(
-            "Navegação futura:",
-            destination
-        );
-
-    }
-
-
     return (
 
         <main
-
-            className={`
-                home
-                home-${theme}
-            `}
-
+            className={
+                `home home-${theme}`
+            }
+            style={{
+                backgroundImage:
+                    `url(${backgroundImage})`,
+            }}
         >
+
+            {/* ÁUDIO */}
 
             <ThemeAudio />
 
 
+            {/* PARTÍCULAS */}
+
+            <ThemeParticles />
+
+
+            {/* OVERLAY */}
+
             <div
-                className="home-background"
-            >
-
-                <div
-
-                    className={`
-                        home-background-image
-                        ${
-                            isDnd
-                                ? "home-background-dnd"
-                                : "home-background-ordem"
-                    }
-                    `}
-
-                    style={{
-                        backgroundImage:
-                            `url(${
-                                isDnd
-                                    ? dndBackground
-                                    : ordemBackground
-                            })`,
-                    }}
-
-                />
-
-                <div
-                    className="home-background-overlay"
-                />
-
-            </div>
-
-
-            <ThemeParticles
-                amount={55}
+                className="home-background-overlay"
             />
 
 
-            <SideMenu
+            {/* MENU */}
 
-                onNavigate={
-                    handleNavigation
-                }
+            <SideMenu />
 
-                onLogout={
-                    onLogout
-                }
 
-            />
-
+            {/* =====================================
+                TOPO
+            ===================================== */}
 
             <header
                 className="home-header"
@@ -243,11 +121,15 @@ export default function Home({
                 >
 
                     <span>
+
                         ORDO
+
                     </span>
 
                     <strong>
+
                         RPGISTAS
+
                     </strong>
 
                 </div>
@@ -258,327 +140,234 @@ export default function Home({
             </header>
 
 
-            <section
-                className="home-main"
+            {/* =====================================
+                HERO
+            ===================================== */}
+
+            <motion.section
+                className="home-hero"
+                initial={{
+                    opacity: 0,
+                    y: 35,
+                }}
+                animate={{
+                    opacity: 1,
+                    y: 0,
+                }}
+                transition={{
+                    duration: 0.8,
+                    ease: "easeOut",
+                }}
             >
 
-                <motion.div
+                <div
+                    className="home-hero-symbol"
+                >
 
-                    className="home-introduction"
+                    <Sparkles
+                        size={24}
+                    />
 
-                    initial={{
-                        opacity:
-                            0,
+                </div>
 
-                        y:
-                            25,
-                    }}
 
-                    animate={{
-                        opacity:
-                            1,
+                <span
+                    className="home-hero-eyebrow"
+                >
 
-                        y:
-                            0,
-                    }}
+                    {isDnd
+                        ? "UM MUNDO DE AVENTURAS"
+                        : "A REALIDADE NÃO É O QUE PARECE"}
 
-                    transition={{
-                        duration:
-                            0.7,
-                    }}
+                </span>
 
+
+                <h1>
+
+                    {isDnd
+                        ? "DUNGEONS & DRAGONS"
+                        : "ORDEM PARANORMAL"}
+
+                </h1>
+
+
+                <p
+                    className="home-hero-description"
+                >
+
+                    {isDnd
+                        ? "Reúna sua mesa e atravesse reinos onde aventuras e lendas aguardam."
+                        : "Entre em uma realidade onde o paranormal observa cada movimento."}
+
+                </p>
+
+
+                <div
+                    className="home-current-system"
                 >
 
                     <div
-                        className="home-symbol"
+                        className="home-current-icon"
                     >
 
-                        <Sparkles
-                            size={26}
+                        <SystemIcon
+                            size={22}
                         />
 
                     </div>
 
 
-                    <span
-                        className="home-eyebrow"
+                    <div
+                        className="home-current-info"
                     >
 
-                        SEU MUNDO ESTÁ PRONTO
+                        <small>
+
+                            SISTEMA ATIVO
+
+                        </small>
+
+
+                        <strong>
+
+                            {currentSystem.name}
+
+                        </strong>
+
+
+                        <span>
+
+                            {currentSystem.description}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    className="home-enter-button"
+                >
+
+                    <span>
+
+                        Entrar na aventura
 
                     </span>
 
 
-                    <h1>
+                    <ArrowRight
+                        size={18}
+                    />
 
-                        Bem-vindo ao
+                </button>
 
-                        <strong>
+            </motion.section>
 
-                            ORDO
-                            RPGISTAS
 
-                        </strong>
-
-                    </h1>
-
-
-                    <p>
-
-                        Escolha seu sistema,
-                        reúna sua mesa e
-                        transforme imaginação
-                        em história.
-
-                    </p>
-
-
-                    <div
-                        className="home-current-system"
-                    >
-
-                        <div
-                            className="home-current-icon"
-                        >
-
-                            <SystemIcon
-                                size={24}
-                            />
-
-                        </div>
-
-
-                        <div>
-
-                            <small>
-
-                                SISTEMA ATUAL
-
-                            </small>
-
-
-                            <strong>
-
-                                {
-                                    currentSystem.name
-                                }
-
-                            </strong>
-
-
-                            <span>
-
-                                {
-                                    currentSystem.description
-                                }
-
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <button
-
-                        type="button"
-
-                        className="home-enter-button"
-
-                        onClick={() => {
-
-                            handleNavigation(
-                                "campaigns"
-                            );
-
-                        }}
-
-                    >
-
-                        <span>
-
-                            Entrar na aventura
-
-                        </span>
-
-
-                        <ArrowRight
-                            size={18}
-                        />
-
-                    </button>
-
-                </motion.div>
-
-
-                <div
-                    className="home-system-selector"
-                >
-
-                    <button
-
-                        type="button"
-
-                        onClick={() => {
-
-                            setTheme(
-                                "dnd"
-                            );
-
-                        }}
-
-                        className={`
-                            home-system-card
-                            home-system-dnd
-                            ${
-                                isDnd
-                                    ? "active"
-                                    : ""
-                            }
-                        `}
-
-                    >
-
-                        <Sword
-                            size={25}
-                        />
-
-                        <span>
-
-                            D&D
-
-                        </span>
-
-                        <small>
-
-                            Fantasia e aventura
-
-                        </small>
-
-                    </button>
-
-
-                    <button
-
-                        type="button"
-
-                        onClick={() => {
-
-                            setTheme(
-                                "ordem"
-                            );
-
-                        }}
-
-                        className={`
-                            home-system-card
-                            home-system-ordem
-                            ${
-                                !isDnd
-                                    ? "active"
-                                    : ""
-                            }
-                        `}
-
-                    >
-
-                        <Shield
-                            size={25}
-                        />
-
-                        <span>
-
-                            Ordem Paranormal
-
-                        </span>
-
-                        <small>
-
-                            O outro lado observa
-
-                        </small>
-
-                    </button>
-
-                </div>
-
-            </section>
-
+            {/* =====================================
+                SELETOR DE SISTEMA
+            ===================================== */}
 
             <section
-                className="home-features"
+                className="home-system-selector"
             >
 
-                {
+                <button
+                    type="button"
+                    className={
+                        `home-system-option ${
+                            isDnd
+                                ? "active"
+                                : ""
+                        }`
+                    }
+                    onClick={() => {
 
-                    features.map(
-                        feature => {
+                        setTheme(
+                            "dnd"
+                        );
 
-                            const Icon =
-                                feature.icon;
+                    }}
+                >
+
+                    <Sword
+                        size={18}
+                    />
+
+                    <span>
+
+                        D&D
+
+                    </span>
+
+                </button>
 
 
-                            return (
+                <button
+                    type="button"
+                    className={
+                        `home-system-option ${
+                            !isDnd
+                                ? "active"
+                                : ""
+                        }`
+                    }
+                    onClick={() => {
 
-                                <article
+                        setTheme(
+                            "ordem"
+                        );
 
-                                    key={
-                                        feature.title
-                                    }
+                    }}
+                >
 
-                                    className="home-feature-card"
+                    <Shield
+                        size={18}
+                    />
 
-                                >
+                    <span>
 
-                                    <Icon
-                                        size={22}
-                                    />
+                        ORDEM
 
-                                    <strong>
+                    </span>
 
-                                        {
-                                            feature.title
-                                        }
-
-                                    </strong>
-
-                                    <span>
-
-                                        {
-                                            feature.text
-                                        }
-
-                                    </span>
-
-                                </article>
-
-                            );
-
-                        }
-                    )
-
-                }
+                </button>
 
             </section>
 
+
+            {/* =====================================
+                INFORMAÇÃO INFERIOR
+            ===================================== */}
 
             <div
                 className="home-bottom-info"
             >
 
-                ORDO RPGISTAS
-
                 <span>
-                    •
+
+                    ORDO RPGISTAS
+
                 </span>
 
-                {
 
-                    isDnd
-                        ? "DUNGEONS & DRAGONS"
-                        : "ORDEM PARANORMAL"
+                <span>
 
-                }
+                    •
+
+                </span>
+
+
+                <span>
+
+                    {isDnd
+                        ? "D&D"
+                        : "ORDEM PARANORMAL"}
+
+                </span>
 
             </div>
 
