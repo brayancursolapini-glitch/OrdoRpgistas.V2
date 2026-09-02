@@ -4,9 +4,14 @@ import "./MagicalButton.css";
 export default function MagicalButton({
 
     children,
+
     onClick,
+
     type = "button",
+
     className = "",
+
+    disabled = false,
 
 }) {
 
@@ -14,9 +19,17 @@ export default function MagicalButton({
 
         <button
 
-            type={type}
+            type={
+                type
+            }
 
-            onClick={onClick}
+            disabled={
+                disabled
+            }
+
+            onClick={
+                onClick
+            }
 
             className={`
                 magical-button
@@ -24,6 +37,11 @@ export default function MagicalButton({
             `}
 
         >
+
+            <span
+                className="magical-button-glow"
+            />
+
 
             <span
                 className="magical-button-content"
