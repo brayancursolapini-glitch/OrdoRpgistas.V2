@@ -3,41 +3,68 @@
     position:
         relative;
 
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        46px;
+
+    padding:
+        0
+        22px;
+
     overflow:
         hidden;
 
-    padding:
-        14px 24px;
-
     border:
         1px solid
-        rgba(192, 132, 252, 0.45);
+        rgba(
+            192,
+            132,
+            252,
+            0.55
+        );
 
     border-radius:
         12px;
 
-    cursor:
-        pointer;
-
     color:
         #ffffff;
 
-    background:
+    cursor:
+        pointer;
 
+    background:
         linear-gradient(
             135deg,
-            rgba(124, 58, 237, 0.9),
-            rgba(168, 85, 247, 0.75)
+            rgba(
+                124,
+                58,
+                237,
+                0.85
+            ),
+            rgba(
+                190,
+                24,
+                93,
+                0.75
+            )
         );
 
     box-shadow:
-
-        0 10px 30px
-        rgba(124, 58, 237, 0.2),
-
-        inset
-        0 1px 0
-        rgba(255, 255, 255, 0.18);
+        0 12px 35px
+        rgba(
+            0,
+            0,
+            0,
+            0.35
+        );
 
     transition:
         transform 0.25s ease,
@@ -52,17 +79,65 @@
         translateY(-2px);
 
     box-shadow:
-
-        0 15px 40px
-        rgba(124, 58, 237, 0.4);
+        0 18px 45px
+        rgba(
+            124,
+            58,
+            237,
+            0.35
+        );
 
 }
 
 
-.magical-button:active {
+.magical-button:disabled {
+
+    opacity:
+        0.5;
+
+    cursor:
+        not-allowed;
+
+}
+
+
+.magical-button-glow {
+
+    position:
+        absolute;
+
+    inset:
+        -100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(
+                255,
+                255,
+                255,
+                0.35
+            ),
+            transparent
+        );
 
     transform:
-        translateY(0);
+        rotate(25deg)
+        translateX(-100%);
+
+    transition:
+        transform 0.8s ease;
+
+}
+
+
+.magical-button:hover
+.magical-button-glow {
+
+    transform:
+        rotate(25deg)
+        translateX(100%);
 
 }
 
@@ -74,5 +149,17 @@
 
     z-index:
         1;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    font-weight:
+        800;
 
 }
