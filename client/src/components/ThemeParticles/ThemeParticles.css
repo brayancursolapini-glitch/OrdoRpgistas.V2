@@ -1,145 +1,287 @@
 .theme-particles {
+    position: fixed;
 
-    position:
-        absolute;
+    inset: 0;
 
-    inset:
-        0;
+    z-index: 5;
 
-    z-index:
-        3;
+    overflow: hidden;
 
-    overflow:
-        hidden;
-
-    pointer-events:
-        none;
-
+    pointer-events: none;
 }
 
 
-.theme-particles span {
+/* =========================================
+   D&D
+========================================= */
 
-    position:
-        absolute;
+.theme-particles-dnd {
+    perspective: 1000px;
+}
 
-    display:
-        block;
 
-    border-radius:
-        999px;
+.leaf-particle-wrapper {
+    position: absolute;
 
     animation:
-        particleFloat
+        leafFall
         linear
         infinite;
 
-    opacity:
-        0.7;
-
+    will-change:
+        transform;
 }
 
 
-.theme-particles-dnd span {
-
-    background:
-        #facc15;
-
-    box-shadow:
-        0 0 14px
+.leaf-particle-wind {
+    color:
         rgba(
-            250,
-            204,
-            21,
-            0.8
-        );
-
-}
-
-
-.theme-particles-ordem span {
-
-    background:
-        #d946ef;
-
-    box-shadow:
-        0 0 16px
-        rgba(
-            217,
-            70,
-            239,
-            0.8
-        );
-
-}
-
-
-.theme-particles-magic span {
-
-    background:
-        linear-gradient(
-            135deg,
-            #facc15,
-            #a855f7,
-            #ef4444
-        );
-
-    box-shadow:
-        0 0 18px
-        rgba(
-            192,
-            132,
-            252,
+            215,
+            151,
+            57,
             0.9
         );
 
+    filter:
+        drop-shadow(
+            0 0 7px
+            rgba(
+                255,
+                177,
+                72,
+                0.25
+            )
+        );
+
+    transform:
+        translate(
+            var(--wind-x),
+            var(--wind-y)
+        )
+        rotate(
+            var(--rotation)
+        );
+
+    transition:
+        transform
+        0.35s
+        ease-out;
+
+    will-change:
+        transform;
 }
 
 
-@keyframes particleFloat {
+@keyframes leafFall {
 
     0% {
+
+        opacity: 0;
 
         transform:
             translate3d(
                 0,
-                0,
+                -120px,
                 0
+            )
+            rotate(
+                0deg
             );
 
-        opacity:
-            0;
+    }
+
+
+    8% {
+
+        opacity: 0.9;
 
     }
 
 
-    15% {
+    50% {
 
-        opacity:
-            0.8;
-
-    }
-
-
-    85% {
-
-        opacity:
-            0.8;
+        transform:
+            translate3d(
+                var(--drift),
+                55vh,
+                0
+            )
+            rotate(
+                180deg
+            );
 
     }
 
 
     100% {
 
+        opacity: 0;
+
         transform:
             translate3d(
-                70px,
-                -180px,
+                calc(
+                    var(--drift) *
+                    1.6
+                ),
+                115vh,
                 0
+            )
+            rotate(
+                420deg
             );
 
-        opacity:
-            0;
+    }
+
+}
+
+
+/* =========================================
+   ORDEM PARANORMAL
+========================================= */
+
+.theme-particles-ordem {
+
+    background:
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(
+                120,
+                0,
+                20,
+                0.1
+            ),
+            transparent
+            45%
+        );
+
+}
+
+
+.ordem-particle {
+
+    position: absolute;
+
+    bottom: -20px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(
+            255,
+            30,
+            55,
+            0.85
+        );
+
+    box-shadow:
+        0 0 8px
+        rgba(
+            255,
+            0,
+            35,
+            0.8
+        ),
+        0 0 18px
+        rgba(
+            160,
+            0,
+            30,
+            0.5
+        );
+
+    animation:
+        ordemParticleRise
+        linear
+        infinite;
+
+    will-change:
+        transform,
+        opacity;
+
+}
+
+
+@keyframes ordemParticleRise {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            )
+            scale(
+                0.5
+            );
+
+    }
+
+
+    12% {
+
+        opacity: 0.9;
+
+    }
+
+
+    50% {
+
+        transform:
+            translate3d(
+                var(--drift),
+                -55vh,
+                0
+            )
+            scale(
+                1
+            );
+
+    }
+
+
+    100% {
+
+        opacity: 0;
+
+        transform:
+            translate3d(
+                calc(
+                    var(--drift) *
+                    1.4
+                ),
+                -115vh,
+                0
+            )
+            scale(
+                0.4
+            );
+
+    }
+
+}
+
+
+@media (
+    max-width: 768px
+) {
+
+    .leaf-particle-wrapper:nth-child(
+        n + 17
+    ) {
+
+        display: none;
+
+    }
+
+
+    .ordem-particle:nth-child(
+        n + 23
+    ) {
+
+        display: none;
 
     }
 
