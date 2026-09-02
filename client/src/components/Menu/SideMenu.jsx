@@ -5,15 +5,24 @@ import {
 import {
 
     BookOpen,
-    ChevronLeft,
+
     Crown,
+
     DoorOpen,
-    Map,
+
     Menu,
+
     Search,
+
     Shield,
+
+    Map,
+
     UserRound,
+
     Users,
+
+    X,
 
 } from "lucide-react";
 
@@ -26,24 +35,46 @@ import "./SideMenu.css";
 
 export default function SideMenu({
 
+    onNavigate,
+
     onLogout,
 
 }) {
 
     const [
-
         open,
         setOpen,
-
-    ] = useState(false);
+    ] = useState(
+        false
+    );
 
 
     const {
-
         user,
         logout,
-
     } = useUser();
+
+
+    function handleNavigation(
+        destination
+    ) {
+
+        if (
+            onNavigate
+        ) {
+
+            onNavigate(
+                destination
+            );
+
+        }
+
+
+        setOpen(
+            false
+        );
+
+    }
 
 
     function handleLogout() {
@@ -51,13 +82,86 @@ export default function SideMenu({
         logout();
 
 
-        if (onLogout) {
+        if (
+            onLogout
+        ) {
 
             onLogout();
 
         }
 
     }
+
+
+    const navigation = [
+
+        {
+            id:
+                "characters",
+
+            label:
+                "Personagens",
+
+            icon:
+                UserRound,
+        },
+
+        {
+            id:
+                "campaigns",
+
+            label:
+                "Campanhas",
+
+            icon:
+                Crown,
+        },
+
+        {
+            id:
+                "maps",
+
+            label:
+                "Mapas",
+
+            icon:
+                Map,
+        },
+
+        {
+            id:
+                "books",
+
+            label:
+                "Livros",
+
+            icon:
+                BookOpen,
+        },
+
+        {
+            id:
+                "master",
+
+            label:
+                "Escudo do Mestre",
+
+            icon:
+                Shield,
+        },
+
+        {
+            id:
+                "players",
+
+            label:
+                "Procurar jogadores",
+
+            icon:
+                Search,
+        },
+
+    ];
 
 
     return (
@@ -90,13 +194,20 @@ export default function SideMenu({
 
                 }}
 
-                aria-label="Abrir menu"
+                aria-label={
+                    open
+                        ? "Fechar menu"
+                        : "Abrir menu"
+                }
 
             >
 
-                {open
-                    ? <ChevronLeft size={20} />
-                    : <Menu size={20} />
+                {
+
+                    open
+                        ? <X size={20} />
+                        : <Menu size={20} />
+
                 }
 
             </button>
@@ -137,7 +248,9 @@ export default function SideMenu({
 
 
                         <span>
+
                             Aventureiro
+
                         </span>
 
                     </div>
@@ -149,70 +262,55 @@ export default function SideMenu({
                     className="side-menu-navigation"
                 >
 
-                    <button type="button">
+                    {
 
-                        <Users size={19} />
+                        navigation.map(
+                            item => {
 
-                        <span>
-                            Personagens
-                        </span>
-
-                    </button>
+                                const Icon =
+                                    item.icon;
 
 
-                    <button type="button">
+                                return (
 
-                        <Crown size={19} />
+                                    <button
 
-                        <span>
-                            Campanhas
-                        </span>
+                                        key={
+                                            item.id
+                                        }
 
-                    </button>
+                                        type="button"
 
+                                        onClick={() => {
 
-                    <button type="button">
+                                            handleNavigation(
+                                                item.id
+                                            );
 
-                        <Map size={19} />
+                                        }}
 
-                        <span>
-                            Mapas
-                        </span>
+                                    >
 
-                    </button>
+                                        <Icon
+                                            size={19}
+                                        />
 
+                                        <span>
 
-                    <button type="button">
+                                            {
+                                                item.label
+                                            }
 
-                        <BookOpen size={19} />
+                                        </span>
 
-                        <span>
-                            Livros
-                        </span>
+                                    </button>
 
-                    </button>
+                                );
 
+                            }
+                        )
 
-                    <button type="button">
-
-                        <Shield size={19} />
-
-                        <span>
-                            Escudo do Mestre
-                        </span>
-
-                    </button>
-
-
-                    <button type="button">
-
-                        <Search size={19} />
-
-                        <span>
-                            Procurar jogadores
-                        </span>
-
-                    </button>
+                    }
 
                 </nav>
 
@@ -238,7 +336,9 @@ export default function SideMenu({
                         />
 
                         <span>
+
                             Sair
+
                         </span>
 
                     </button>
