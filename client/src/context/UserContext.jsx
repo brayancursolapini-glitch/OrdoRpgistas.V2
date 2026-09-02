@@ -1,15 +1,14 @@
 import {
-
     createContext,
     useContext,
-    useEffect,
     useState,
-
 } from "react";
 
 
 const UserContext =
-    createContext(null);
+    createContext(
+        null
+    );
 
 
 export function UserProvider({
@@ -29,62 +28,113 @@ export function UserProvider({
                 );
 
 
-            return savedUser
-                ? JSON.parse(savedUser)
-                : null;
+            if (
+                savedUser
+            ) {
 
-        }
+                return JSON.parse(
+                    savedUser
+                );
 
-        catch {
+            }
+
+        } catch {
 
             return null;
 
         }
 
+
+        return null;
+
     });
 
 
-    useEffect(() => {
+    function login({
+        email,
+        username,
+    }) {
 
-        if (user) {
+        const newUser = {
 
-            localStorage.setItem(
-                "ordo-rpgistas-user",
-                JSON.stringify(user)
-            );
+            email:
+                email ||
+                "",
 
-        }
+            username:
+                username ||
+                email
+                    ?.split("@")[0]
+                    ||
+                "RPGista",
 
-        else {
+            name:
+                username ||
+                email
+                    ?.split("@")[0]
+                    ||
+                "RPGista",
 
-            localStorage.removeItem(
-                "ordo-rpgistas-user"
-            );
-
-        }
-
-    }, [
-        user,
-    ]);
+        };
 
 
-    function login(userData) {
+        localStorage.setItem(
+            "ordo-rpgistas-user",
+            JSON.stringify(
+                newUser
+            )
+        );
 
-        setUser(userData);
+
+        setUser(
+            newUser
+        );
 
     }
 
 
-    function register(userData) {
+    function register({
+        name,
+        username,
+        email,
+    }) {
 
-        setUser(userData);
+        const newUser = {
+
+            name,
+
+            username,
+
+            email,
+
+        };
+
+
+        localStorage.setItem(
+            "ordo-rpgistas-user",
+            JSON.stringify(
+                newUser
+            )
+        );
+
+
+        setUser(
+            newUser
+        );
 
     }
 
 
     function logout() {
 
-        setUser(null);
+        localStorage.removeItem(
+            "ordo-rpgistas-user"
+        );
+
+
+        setUser(
+            null
+        );
 
     }
 
@@ -94,12 +144,10 @@ export function UserProvider({
         <UserContext.Provider
 
             value={{
-
                 user,
                 login,
                 register,
                 logout,
-
             }}
 
         >
