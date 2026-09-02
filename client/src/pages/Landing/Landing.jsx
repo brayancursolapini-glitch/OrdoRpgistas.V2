@@ -8,21 +8,12 @@ import {
     Shield,
 } from "lucide-react";
 
-import ThemeParticles
-    from "../../components/ThemeParticles/ThemeParticles";
-
-import MagicalButton
-    from "../../components/Buttons/MagicalButton";
-
 import "./Landing.css";
 
 
 export default function Landing({
-
     onLogin,
-
     onRegister,
-
 }) {
 
     const dndBackground =
@@ -39,26 +30,20 @@ export default function Landing({
             className="landing"
         >
 
+            {/* =====================================
+                FUNDOS
+            ===================================== */}
+
             <section
-
-                className="landing-world
-                landing-world-dnd"
-
+                className="landing-world landing-world-dnd"
                 style={{
                     backgroundImage:
                         `url(${dndBackground})`,
                 }}
-
             >
 
                 <div
                     className="landing-world-overlay"
-                />
-
-
-                <ThemeParticles
-                    variant="dnd"
-                    amount={24}
                 />
 
 
@@ -67,29 +52,29 @@ export default function Landing({
                 >
 
                     <span>
-
-                        <Sword
-                            size={15}
-                        />
 
                         UM MUNDO DE AVENTURAS
 
                     </span>
 
 
-                    <h2>
+                    <h1>
 
                         DUNGEONS
+
                         <br />
+
                         & DRAGONS
 
-                    </h2>
+                    </h1>
 
 
                     <p>
 
-                        Reinos, aventuras e
-                        lendas aguardam.
+                        Reinos,
+                        aventuras
+                        e lendas
+                        aguardam.
 
                     </p>
 
@@ -99,25 +84,15 @@ export default function Landing({
 
 
             <section
-
-                className="landing-world
-                landing-world-ordem"
-
+                className="landing-world landing-world-ordem"
                 style={{
                     backgroundImage:
                         `url(${ordemBackground})`,
                 }}
-
             >
 
                 <div
                     className="landing-world-overlay"
-                />
-
-
-                <ThemeParticles
-                    variant="ordem"
-                    amount={24}
                 />
 
 
@@ -127,28 +102,27 @@ export default function Landing({
 
                     <span>
 
-                        <Shield
-                            size={15}
-                        />
-
                         A REALIDADE NÃO É O QUE PARECE
 
                     </span>
 
 
-                    <h2>
+                    <h1>
 
                         ORDEM
+
                         <br />
+
                         PARANORMAL
 
-                    </h2>
+                    </h1>
 
 
                     <p>
 
-                        O paranormal observa
-                        cada movimento.
+                        O paranormal
+                        observa cada
+                        movimento.
 
                     </p>
 
@@ -157,63 +131,133 @@ export default function Landing({
             </section>
 
 
+            {/* =====================================
+                DIVISÃO MÁGICA
+            ===================================== */}
+
             <div
                 className="landing-magic-divider"
             >
 
                 <div
-                    className="landing-magic-core"
+                    className="landing-magic-line"
+                />
+
+
+                <div
+                    className="landing-magic-glow"
+                />
+
+
+                <div
+                    className="landing-magic-dust"
+                >
+
+                    {Array
+                        .from({
+                            length: 36,
+                        })
+                        .map(
+                            (
+                                _,
+                                index
+                            ) => (
+
+                                <span
+                                    key={index}
+                                    style={{
+                                        "--delay":
+                                            `${(
+                                                index *
+                                                0.23
+                                            ) % 4}s`,
+
+                                        "--offset":
+                                            `${(
+                                                (
+                                                    index *
+                                                    37
+                                                ) %
+                                                80
+                                            ) -
+                                            40}px`,
+                                    }}
+                                />
+
+                            )
+                        )}
+
+                </div>
+
+            </div>
+
+
+            {/* =====================================
+                CONTORNO MÁGICO
+            ===================================== */}
+
+            <div
+                className="landing-magic-frame"
+                aria-hidden="true"
+            >
+
+                <span
+                    className="landing-frame-particle p1"
+                />
+
+                <span
+                    className="landing-frame-particle p2"
+                />
+
+                <span
+                    className="landing-frame-particle p3"
+                />
+
+                <span
+                    className="landing-frame-particle p4"
+                />
+
+                <span
+                    className="landing-frame-particle p5"
+                />
+
+                <span
+                    className="landing-frame-particle p6"
                 />
 
             </div>
 
 
-            <ThemeParticles
-                variant="magic"
-                amount={50}
-            />
-
+            {/* =====================================
+                PAINEL CENTRAL
+            ===================================== */}
 
             <motion.section
-
                 className="landing-panel"
-
                 initial={{
-                    opacity:
-                        0,
-
-                    y:
-                        30,
-
-                    scale:
-                        0.96,
+                    opacity: 0,
+                    scale: 0.92,
+                    y: 20,
                 }}
-
                 animate={{
-                    opacity:
-                        1,
-
-                    y:
-                        0,
-
-                    scale:
-                        1,
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
                 }}
-
                 transition={{
-                    duration:
-                        0.7,
+                    duration: 0.7,
+                    ease: "easeOut",
                 }}
-
             >
 
                 <Sparkles
-                    size={28}
+                    className="landing-panel-icon"
+                    size={25}
                 />
 
 
                 <span
-                    className="landing-eyebrow"
+                    className="landing-panel-eyebrow"
                 >
 
                     SEU MUNDO ESTÁ PRONTO
@@ -221,81 +265,101 @@ export default function Landing({
                 </span>
 
 
-                <h1>
+                <h2>
 
                     ORDO
 
                     <strong>
+
                         RPGISTAS
+
                     </strong>
 
-                </h1>
+                </h2>
 
 
                 <p>
 
-                    Escolha seu mundo,
-                    reúna sua mesa e
-                    comece uma nova história.
+                    Escolha um sistema,
+                    reúna sua mesa
+                    e comece uma
+                    nova história.
 
                 </p>
 
 
                 <div
-                    className="landing-actions"
+                    className="landing-system-preview"
                 >
 
-                    <MagicalButton
-                        onClick={
-                            onLogin
-                        }
+                    <div
+                        className="landing-system-icon"
                     >
 
-                        Entrar
+                        <Sword
+                            size={18}
+                        />
 
-                    </MagicalButton>
+                    </div>
 
 
-                    <button
+                    <div>
 
-                        type="button"
+                        <small>
 
-                        className="landing-register"
+                            DOIS MUNDOS.
+                            UM LUGAR.
 
-                        onClick={
-                            onRegister
-                        }
+                        </small>
 
-                    >
 
-                        Criar conta
+                        <strong>
 
-                    </button>
+                            SUA AVENTURA
+                            COMEÇA AQUI
+
+                        </strong>
+
+                    </div>
 
                 </div>
 
 
-                <span
+                <button
+                    type="button"
+                    className="landing-enter-button"
+                    onClick={onLogin}
+                >
+
+                    <Shield
+                        size={17}
+                    />
+
+                    Entrar
+
+                </button>
+
+
+                <button
+                    type="button"
+                    className="landing-register-button"
+                    onClick={onRegister}
+                >
+
+                    Criar conta
+
+                </button>
+
+
+                <small
                     className="landing-footer-text"
                 >
 
                     Onde histórias ganham vida.
 
-                </span>
+                </small>
 
             </motion.section>
-
-
-            <div
-                className="landing-corner
-                landing-corner-top"
-            />
-
-
-            <div
-                className="landing-corner
-                landing-corner-bottom"
-            />
 
         </main>
 
