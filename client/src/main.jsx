@@ -25,15 +25,15 @@ ReactDOM
 
         <React.StrictMode>
 
-            <ThemeProvider>
+            <UserProvider>
 
-                <UserProvider>
+                <ThemeProvider>
 
                     <App />
 
-                </UserProvider>
+                </ThemeProvider>
 
-            </ThemeProvider>
+            </UserProvider>
 
         </React.StrictMode>
 
