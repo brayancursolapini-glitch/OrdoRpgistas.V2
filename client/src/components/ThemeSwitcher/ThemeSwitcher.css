@@ -1,114 +1,116 @@
 .theme-switcher {
 
     display:
-        flex;
+        inline-flex;
 
     align-items:
         center;
 
     gap:
-        10px;
+        8px;
 
     padding:
-        8px 12px;
+        10px
+        14px;
 
     border:
         1px solid
-        rgba(255, 255, 255, 0.15);
+        rgba(
+            255,
+            255,
+            255,
+            0.16
+        );
 
     border-radius:
-        12px;
-
-    cursor:
-        pointer;
+        999px;
 
     color:
         #ffffff;
 
+    cursor:
+        pointer;
+
     background:
-        rgba(5, 5, 10, 0.6);
+        rgba(
+            5,
+            5,
+            10,
+            0.65
+        );
 
     backdrop-filter:
-        blur(12px);
+        blur(14px);
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
 
 }
 
 
-.theme-switcher-icon {
+.theme-switcher:hover {
 
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    width:
-        30px;
-
-    height:
-        30px;
-
-    border-radius:
-        8px;
-
-    background:
-        rgba(255, 255, 255, 0.08);
+    transform:
+        translateY(-2px);
 
 }
 
 
-.theme-switcher.dnd
-.theme-switcher-icon {
+.theme-switcher-dnd:hover {
 
-    color:
-        #f6c85f;
+    border-color:
+        rgba(
+            250,
+            204,
+            21,
+            0.7
+        );
 
-}
-
-
-.theme-switcher.ordem
-.theme-switcher-icon {
-
-    color:
-        #c084fc;
-
-}
-
-
-.theme-switcher-text {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        flex-start;
+    box-shadow:
+        0 0 20px
+        rgba(
+            250,
+            204,
+            21,
+            0.18
+        );
 
 }
 
 
-.theme-switcher-text small {
+.theme-switcher-ordem:hover {
 
-    font-size:
-        0.5rem;
+    border-color:
+        rgba(
+            217,
+            70,
+            239,
+            0.7
+        );
 
-    letter-spacing:
-        0.15em;
-
-    opacity:
-        0.6;
+    box-shadow:
+        0 0 20px
+        rgba(
+            217,
+            70,
+            239,
+            0.18
+        );
 
 }
 
 
-.theme-switcher-text strong {
+.theme-switcher span {
 
     font-size:
         0.72rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.08em;
 
 }
