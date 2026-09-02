@@ -7,9 +7,7 @@ import {
 
 
 const ThemeContext =
-    createContext(
-        null
-    );
+    createContext(null);
 
 
 export function ThemeProvider({
@@ -50,12 +48,10 @@ export function ThemeProvider({
         );
 
 
-        document
-            .documentElement
-            .setAttribute(
-                "data-theme",
-                theme
-            );
+        document.documentElement.setAttribute(
+            "data-theme",
+            theme
+        );
 
     }, [
         theme,
@@ -65,15 +61,10 @@ export function ThemeProvider({
     function toggleTheme() {
 
         setTheme(
-            currentTheme => {
-
-                return (
-                    currentTheme === "dnd"
-                        ? "ordem"
-                        : "dnd"
-                );
-
-            }
+            currentTheme =>
+                currentTheme === "dnd"
+                    ? "ordem"
+                    : "dnd"
         );
 
     }
@@ -82,13 +73,11 @@ export function ThemeProvider({
     return (
 
         <ThemeContext.Provider
-
             value={{
                 theme,
                 setTheme,
                 toggleTheme,
             }}
-
         >
 
             {children}
