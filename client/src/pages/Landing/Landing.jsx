@@ -1,8 +1,15 @@
 import {
+    motion,
+} from "framer-motion";
 
+import {
     Sparkles,
-
+    Sword,
+    Shield,
 } from "lucide-react";
+
+import ThemeParticles
+    from "../../components/ThemeParticles/ThemeParticles";
 
 import MagicalButton
     from "../../components/Buttons/MagicalButton";
@@ -13,6 +20,7 @@ import "./Landing.css";
 export default function Landing({
 
     onLogin,
+
     onRegister,
 
 }) {
@@ -32,27 +40,42 @@ export default function Landing({
         >
 
             <section
-                className="landing-world landing-dnd"
-                style={{
 
+                className="landing-world
+                landing-world-dnd"
+
+                style={{
                     backgroundImage:
                         `url(${dndBackground})`,
-
                 }}
+
             >
 
                 <div
-                    className="landing-world-dark"
+                    className="landing-world-overlay"
+                />
+
+
+                <ThemeParticles
+                    variant="dnd"
+                    amount={24}
                 />
 
 
                 <div
-                    className="landing-world-content landing-dnd-content"
+                    className="landing-world-content"
                 >
 
                     <span>
+
+                        <Sword
+                            size={15}
+                        />
+
                         UM MUNDO DE AVENTURAS
+
                     </span>
+
 
                     <h2>
 
@@ -61,6 +84,7 @@ export default function Landing({
                         & DRAGONS
 
                     </h2>
+
 
                     <p>
 
@@ -75,27 +99,42 @@ export default function Landing({
 
 
             <section
-                className="landing-world landing-ordem"
-                style={{
 
+                className="landing-world
+                landing-world-ordem"
+
+                style={{
                     backgroundImage:
                         `url(${ordemBackground})`,
-
                 }}
+
             >
 
                 <div
-                    className="landing-world-dark"
+                    className="landing-world-overlay"
+                />
+
+
+                <ThemeParticles
+                    variant="ordem"
+                    amount={24}
                 />
 
 
                 <div
-                    className="landing-world-content landing-ordem-content"
+                    className="landing-world-content"
                 >
 
                     <span>
+
+                        <Shield
+                            size={15}
+                        />
+
                         A REALIDADE NÃO É O QUE PARECE
+
                     </span>
+
 
                     <h2>
 
@@ -104,6 +143,7 @@ export default function Landing({
                         PARANORMAL
 
                     </h2>
+
 
                     <p>
 
@@ -121,29 +161,53 @@ export default function Landing({
                 className="landing-magic-divider"
             >
 
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
+                <div
+                    className="landing-magic-core"
+                />
 
             </div>
 
 
-            <div
-                className="landing-frame"
+            <ThemeParticles
+                variant="magic"
+                amount={50}
             />
 
 
-            <section
+            <motion.section
+
                 className="landing-panel"
+
+                initial={{
+                    opacity:
+                        0,
+
+                    y:
+                        30,
+
+                    scale:
+                        0.96,
+                }}
+
+                animate={{
+                    opacity:
+                        1,
+
+                    y:
+                        0,
+
+                    scale:
+                        1,
+                }}
+
+                transition={{
+                    duration:
+                        0.7,
+                }}
+
             >
 
                 <Sparkles
-                    className="landing-symbol"
                     size={28}
                 />
 
@@ -170,7 +234,7 @@ export default function Landing({
 
                 <p>
 
-                    Escolha seu sistema,
+                    Escolha seu mundo,
                     reúna sua mesa e
                     comece uma nova história.
 
@@ -182,7 +246,9 @@ export default function Landing({
                 >
 
                     <MagicalButton
-                        onClick={onLogin}
+                        onClick={
+                            onLogin
+                        }
                     >
 
                         Entrar
@@ -196,7 +262,9 @@ export default function Landing({
 
                         className="landing-register"
 
-                        onClick={onRegister}
+                        onClick={
+                            onRegister
+                        }
 
                     >
 
@@ -206,18 +274,28 @@ export default function Landing({
 
                 </div>
 
-            </section>
+
+                <span
+                    className="landing-footer-text"
+                >
+
+                    Onde histórias ganham vida.
+
+                </span>
+
+            </motion.section>
 
 
             <div
-                className="landing-footer"
-            >
+                className="landing-corner
+                landing-corner-top"
+            />
 
-                ORDO RPGISTAS
-                <span>•</span>
-                ONDE HISTÓRIAS GANHAM VIDA
 
-            </div>
+            <div
+                className="landing-corner
+                landing-corner-bottom"
+            />
 
         </main>
 
