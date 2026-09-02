@@ -3,10 +3,8 @@ import {
 } from "react";
 
 import {
-
     ArrowLeft,
     LogIn,
-
 } from "lucide-react";
 
 import {
@@ -22,7 +20,9 @@ import "./Login.css";
 export default function Login({
 
     onBack,
+
     onRegister,
+
     onLoginSuccess,
 
 }) {
@@ -33,51 +33,59 @@ export default function Login({
 
 
     const [
-        username,
-        setUsername,
-    ] = useState("");
-
-
-    const [
         email,
         setEmail,
-    ] = useState("");
+    ] = useState(
+        ""
+    );
 
 
     const [
         password,
         setPassword,
-    ] = useState("");
+    ] = useState(
+        ""
+    );
 
 
-    function handleSubmit(event) {
+    const [
+        error,
+        setError,
+    ] = useState(
+        ""
+    );
+
+
+    function handleSubmit(
+        event
+    ) {
 
         event.preventDefault();
 
 
-        const userData = {
+        if (
+            !email.trim() ||
+            !password.trim()
+        ) {
 
-            name:
-                username.trim() ||
-                email.split("@")[0],
+            setError(
+                "Preencha seu email e senha."
+            );
 
-            username:
-                username.trim() ||
-                email.split("@")[0],
-
-            email,
-
-        };
-
-
-        login(userData);
-
-
-        if (onLoginSuccess) {
-
-            onLoginSuccess();
+            return;
 
         }
+
+
+        login({
+
+            email:
+                email.trim(),
+
+        });
+
+
+        onLoginSuccess();
 
     }
 
@@ -87,11 +95,6 @@ export default function Login({
         <main
             className="auth-page"
         >
-
-            <div
-                className="auth-background"
-            />
-
 
             <section
                 className="auth-card"
@@ -103,7 +106,9 @@ export default function Login({
 
                     className="auth-back"
 
-                    onClick={onBack}
+                    onClick={
+                        onBack
+                    }
 
                 >
 
@@ -116,15 +121,10 @@ export default function Login({
                 </button>
 
 
-                <div
+                <LogIn
                     className="auth-icon"
-                >
-
-                    <LogIn
-                        size={26}
-                    />
-
-                </div>
+                    size={32}
+                />
 
 
                 <span
@@ -147,53 +147,34 @@ export default function Login({
 
 
                 <form
-                    onSubmit={handleSubmit}
+                    onSubmit={
+                        handleSubmit
+                    }
                 >
 
                     <label>
 
-                        Nome de usuário
-
-                        <input
-
-                            type="text"
-
-                            value={username}
-
-                            onChange={event => {
-
-                                setUsername(
-                                    event.target.value
-                                );
-
-                            }}
-
-                            required
-
-                        />
-
-                    </label>
-
-
-                    <label>
-
-                        E-mail
+                        Email
 
                         <input
 
                             type="email"
 
-                            value={email}
+                            value={
+                                email
+                            }
 
-                            onChange={event => {
+                            onChange={
+                                event => {
 
-                                setEmail(
-                                    event.target.value
-                                );
+                                    setEmail(
+                                        event.target.value
+                                    );
 
-                            }}
+                                }
+                            }
 
-                            required
+                            placeholder="seu@email.com"
 
                         />
 
@@ -208,21 +189,42 @@ export default function Login({
 
                             type="password"
 
-                            value={password}
+                            value={
+                                password
+                            }
 
-                            onChange={event => {
+                            onChange={
+                                event => {
 
-                                setPassword(
-                                    event.target.value
-                                );
+                                    setPassword(
+                                        event.target.value
+                                    );
 
-                            }}
+                                }
+                            }
 
-                            required
+                            placeholder="Sua senha"
 
                         />
 
                     </label>
+
+
+                    {
+
+                        error && (
+
+                            <p
+                                className="auth-error"
+                            >
+
+                                {error}
+
+                            </p>
+
+                        )
+
+                    }
 
 
                     <MagicalButton
@@ -246,7 +248,9 @@ export default function Login({
 
                         type="button"
 
-                        onClick={onRegister}
+                        onClick={
+                            onRegister
+                        }
 
                     >
 
