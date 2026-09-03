@@ -1,12 +1,13 @@
-import {
-    motion,
-} from "framer-motion";
+import { motion } from "framer-motion";
 
 import {
     Sparkles,
-    Sword,
     Shield,
+    Sword,
 } from "lucide-react";
+
+import MagicalButton
+    from "../../components/Buttons/MagicalButton";
 
 import "./Landing.css";
 
@@ -18,7 +19,6 @@ export default function Landing({
 
     const dndBackground =
         `${import.meta.env.BASE_URL}images/dnd-background.jpg`;
-
 
     const ordemBackground =
         `${import.meta.env.BASE_URL}images/ordem-background.jpg`;
@@ -34,196 +34,268 @@ export default function Landing({
                 FUNDOS
             ===================================== */}
 
-            <section
-                className="landing-world landing-world-dnd"
-                style={{
-                    backgroundImage:
-                        `url(${dndBackground})`,
-                }}
-            >
-
-                <div
-                    className="landing-world-overlay"
-                />
-
-
-                <div
-                    className="landing-world-content"
-                >
-
-                    <span>
-
-                        UM MUNDO DE AVENTURAS
-
-                    </span>
-
-
-                    <h1>
-
-                        DUNGEONS
-
-                        <br />
-
-                        & DRAGONS
-
-                    </h1>
-
-
-                    <p>
-
-                        Reinos,
-                        aventuras
-                        e lendas
-                        aguardam.
-
-                    </p>
-
-                </div>
-
-            </section>
-
-
-            <section
-                className="landing-world landing-world-ordem"
-                style={{
-                    backgroundImage:
-                        `url(${ordemBackground})`,
-                }}
-            >
-
-                <div
-                    className="landing-world-overlay"
-                />
-
-
-                <div
-                    className="landing-world-content"
-                >
-
-                    <span>
-
-                        A REALIDADE NÃO É O QUE PARECE
-
-                    </span>
-
-
-                    <h1>
-
-                        ORDEM
-
-                        <br />
-
-                        PARANORMAL
-
-                    </h1>
-
-
-                    <p>
-
-                        O paranormal
-                        observa cada
-                        movimento.
-
-                    </p>
-
-                </div>
-
-            </section>
-
-
-            {/* =====================================
-                DIVISÃO MÁGICA
-            ===================================== */}
-
             <div
-                className="landing-magic-divider"
+                className="landing-backgrounds"
             >
 
-                <div
-                    className="landing-magic-line"
-                />
+                {/* D&D */}
 
-
-                <div
-                    className="landing-magic-glow"
-                />
-
-
-                <div
-                    className="landing-magic-dust"
+                <section
+                    className="landing-world
+                    landing-world-dnd"
+                    style={{
+                        backgroundImage:
+                            `url("${dndBackground}")`,
+                    }}
                 >
 
-                    {Array
-                        .from({
-                            length: 36,
-                        })
-                        .map(
-                            (
-                                _,
-                                index
-                            ) => (
+                    <div
+                        className="landing-world-darkness"
+                    />
 
-                                <span
-                                    key={index}
-                                    style={{
-                                        "--delay":
-                                            `${(
-                                                index *
-                                                0.23
-                                            ) % 4}s`,
+                    <div
+                        className="landing-world-vignette"
+                    />
 
-                                        "--offset":
-                                            `${(
-                                                (
-                                                    index *
-                                                    37
-                                                ) %
-                                                80
-                                            ) -
-                                            40}px`,
-                                    }}
-                                />
 
-                            )
-                        )}
+                    <motion.div
+                        className="landing-world-text
+                        landing-world-text-dnd"
 
-                </div>
+                        initial={{
+                            opacity: 0,
+                            x: -40,
+                        }}
+
+                        animate={{
+                            opacity: 1,
+                            x: 0,
+                        }}
+
+                        transition={{
+                            duration: 0.9,
+                            delay: 0.2,
+                        }}
+                    >
+
+                        <span
+                            className="landing-world-eyebrow"
+                        >
+
+                            UM MUNDO DE AVENTURAS
+
+                        </span>
+
+
+                        <h1>
+
+                            DUNGEONS
+
+                            <br />
+
+                            & DRAGONS
+
+                        </h1>
+
+
+                        <p>
+
+                            Reinos, aventuras e
+                            lendas aguardam.
+
+                        </p>
+
+
+                        <div
+                            className="landing-world-system"
+                        >
+
+                            <Sword
+                                size={15}
+                            />
+
+                            <span>
+
+                                SISTEMA D&D
+
+                            </span>
+
+                        </div>
+
+                    </motion.div>
+
+                </section>
+
+
+                {/* ORDEM */}
+
+                <section
+                    className="landing-world
+                    landing-world-ordem"
+                    style={{
+                        backgroundImage:
+                            `url("${ordemBackground}")`,
+                    }}
+                >
+
+                    <div
+                        className="landing-world-darkness"
+                    />
+
+                    <div
+                        className="landing-world-vignette"
+                    />
+
+
+                    <motion.div
+                        className="landing-world-text
+                        landing-world-text-ordem"
+
+                        initial={{
+                            opacity: 0,
+                            x: 40,
+                        }}
+
+                        animate={{
+                            opacity: 1,
+                            x: 0,
+                        }}
+
+                        transition={{
+                            duration: 0.9,
+                            delay: 0.35,
+                        }}
+                    >
+
+                        <span
+                            className="landing-world-eyebrow"
+                        >
+
+                            A REALIDADE NÃO É O QUE PARECE
+
+                        </span>
+
+
+                        <h1>
+
+                            ORDEM
+
+                            <br />
+
+                            PARANORMAL
+
+                        </h1>
+
+
+                        <p>
+
+                            O paranormal observa
+                            cada movimento.
+
+                        </p>
+
+
+                        <div
+                            className="landing-world-system"
+                        >
+
+                            <Shield
+                                size={15}
+                            />
+
+                            <span>
+
+                                SISTEMA ORDEM
+
+                            </span>
+
+                        </div>
+
+                    </motion.div>
+
+                </section>
 
             </div>
 
 
             {/* =====================================
-                CONTORNO MÁGICO
+                ESCURECIMENTO GERAL
             ===================================== */}
 
             <div
-                className="landing-magic-frame"
-                aria-hidden="true"
+                className="landing-global-overlay"
+            />
+
+
+            {/* =====================================
+                BORDA MÁGICA
+            ===================================== */}
+
+            <div
+                className="landing-magic-border"
             >
 
-                <span
-                    className="landing-frame-particle p1"
+                <div
+                    className="landing-magic-border-glow"
                 />
 
-                <span
-                    className="landing-frame-particle p2"
+            </div>
+
+
+            {/* =====================================
+                DIVISÃO CENTRAL
+            ===================================== */}
+
+            <div
+                className="landing-magical-divider"
+            >
+
+                <div
+                    className="landing-divider-glow"
                 />
 
-                <span
-                    className="landing-frame-particle p3"
+                <div
+                    className="landing-divider-core"
                 />
 
-                <span
-                    className="landing-frame-particle p4"
+                <div
+                    className="landing-divider-energy
+                    landing-divider-energy-one"
                 />
 
-                <span
-                    className="landing-frame-particle p5"
+                <div
+                    className="landing-divider-energy
+                    landing-divider-energy-two"
                 />
 
-                <span
-                    className="landing-frame-particle p6"
+                <div
+                    className="landing-divider-energy
+                    landing-divider-energy-three"
                 />
+
+            </div>
+
+
+            {/* =====================================
+                PARTÍCULAS MÁGICAS
+            ===================================== */}
+
+            <div
+                className="landing-particles"
+            >
+
+                <span className="landing-particle particle-1" />
+                <span className="landing-particle particle-2" />
+                <span className="landing-particle particle-3" />
+                <span className="landing-particle particle-4" />
+                <span className="landing-particle particle-5" />
+                <span className="landing-particle particle-6" />
+                <span className="landing-particle particle-7" />
+                <span className="landing-particle particle-8" />
+                <span className="landing-particle particle-9" />
+                <span className="landing-particle particle-10" />
+                <span className="landing-particle particle-11" />
+                <span className="landing-particle particle-12" />
 
             </div>
 
@@ -234,132 +306,197 @@ export default function Landing({
 
             <motion.section
                 className="landing-panel"
+
                 initial={{
                     opacity: 0,
                     scale: 0.92,
                     y: 20,
                 }}
+
                 animate={{
                     opacity: 1,
                     scale: 1,
                     y: 0,
                 }}
+
                 transition={{
                     duration: 0.7,
+                    delay: 0.15,
                     ease: "easeOut",
                 }}
             >
 
-                <Sparkles
-                    className="landing-panel-icon"
-                    size={25}
+                <div
+                    className="landing-panel-top-glow"
                 />
 
 
-                <span
-                    className="landing-panel-eyebrow"
-                >
-
-                    SEU MUNDO ESTÁ PRONTO
-
-                </span>
-
-
-                <h2>
-
-                    ORDO
-
-                    <strong>
-
-                        RPGISTAS
-
-                    </strong>
-
-                </h2>
-
-
-                <p>
-
-                    Escolha um sistema,
-                    reúna sua mesa
-                    e comece uma
-                    nova história.
-
-                </p>
-
-
                 <div
-                    className="landing-system-preview"
+                    className="landing-panel-content"
                 >
+
+                    {/* ÍCONE */}
 
                     <div
-                        className="landing-system-icon"
+                        className="landing-panel-icon"
                     >
 
-                        <Sword
-                            size={18}
+                        <Sparkles
+                            size={22}
                         />
 
                     </div>
 
 
-                    <div>
+                    {/* EYEBROW */}
 
-                        <small>
+                    <span
+                        className="landing-panel-eyebrow"
+                    >
 
-                            DOIS MUNDOS.
-                            UM LUGAR.
+                        SEU MUNDO ESTÁ PRONTO
 
-                        </small>
+                    </span>
 
+
+                    {/* LOGO */}
+
+                    <h2>
+
+                        ORDO
 
                         <strong>
 
-                            SUA AVENTURA
-                            COMEÇA AQUI
+                            RPGISTAS
 
                         </strong>
 
+                    </h2>
+
+
+                    {/* DESCRIÇÃO */}
+
+                    <p
+                        className="landing-panel-description"
+                    >
+
+                        Escolha um sistema,
+                        reúna sua mesa e comece
+                        uma nova história.
+
+                    </p>
+
+
+                    {/* SISTEMA */}
+
+                    <div
+                        className="landing-current-system"
+                    >
+
+                        <div
+                            className="landing-current-system-icon"
+                        >
+
+                            <Sword
+                                size={18}
+                            />
+
+                        </div>
+
+
+                        <div
+                            className="landing-current-system-info"
+                        >
+
+                            <small>
+
+                                SEU MUNDO INICIAL
+
+                            </small>
+
+
+                            <strong>
+
+                                SUA AVENTURA COMEÇA AQUI
+
+                            </strong>
+
+                        </div>
+
                     </div>
+
+
+                    {/* BOTÕES */}
+
+                    <div
+                        className="landing-panel-actions"
+                    >
+
+                        <MagicalButton
+                            type="button"
+                            onClick={onLogin}
+                        >
+
+                            Entrar
+
+                        </MagicalButton>
+
+
+                        <button
+                            type="button"
+                            className="landing-register-button"
+                            onClick={onRegister}
+                        >
+
+                            Criar conta
+
+                        </button>
+
+                    </div>
+
+
+                    {/* FRASE */}
+
+                    <span
+                        className="landing-panel-footer"
+                    >
+
+                        Onde histórias ganham vida.
+
+                    </span>
 
                 </div>
 
-
-                <button
-                    type="button"
-                    className="landing-enter-button"
-                    onClick={onLogin}
-                >
-
-                    <Shield
-                        size={17}
-                    />
-
-                    Entrar
-
-                </button>
-
-
-                <button
-                    type="button"
-                    className="landing-register-button"
-                    onClick={onRegister}
-                >
-
-                    Criar conta
-
-                </button>
-
-
-                <small
-                    className="landing-footer-text"
-                >
-
-                    Onde histórias ganham vida.
-
-                </small>
-
             </motion.section>
+
+
+            {/* =====================================
+                RODAPÉ
+            ===================================== */}
+
+            <div
+                className="landing-bottom-brand"
+            >
+
+                <span>
+
+                    ORDO RPGISTAS
+
+                </span>
+
+                <span>
+
+                    •
+
+                </span>
+
+                <span>
+
+                    DOIS MUNDOS. INFINITAS HISTÓRIAS.
+
+                </span>
+
+            </div>
 
         </main>
 
