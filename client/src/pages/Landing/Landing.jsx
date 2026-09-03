@@ -1,20 +1,13 @@
-import { motion } from "framer-motion";
+import { Sparkles, Sword, Shield } from "lucide-react";
 
-import {
-    Sparkles,
-    Shield,
-    Sword,
-} from "lucide-react";
-
-import MagicalButton
-    from "../../components/Buttons/MagicalButton";
+import MagicalButton from "../../components/Buttons/MagicalButton/MagicalButton";
 
 import "./Landing.css";
 
 
 export default function Landing({
     onLogin,
-    onRegister,
+    onCadastro,
 }) {
 
     const dndBackground =
@@ -31,470 +24,350 @@ export default function Landing({
         >
 
             {/* =====================================
-                FUNDOS
-            ===================================== */}
-
-            <div
-                className="landing-backgrounds"
-            >
-
-                {/* D&D */}
-
-                <section
-                    className="landing-world
-                    landing-world-dnd"
-                    style={{
-                        backgroundImage:
-                            `url("${dndBackground}")`,
-                    }}
-                >
-
-                    <div
-                        className="landing-world-darkness"
-                    />
-
-                    <div
-                        className="landing-world-vignette"
-                    />
-
-
-                    <motion.div
-                        className="landing-world-text
-                        landing-world-text-dnd"
-
-                        initial={{
-                            opacity: 0,
-                            x: -40,
-                        }}
-
-                        animate={{
-                            opacity: 1,
-                            x: 0,
-                        }}
-
-                        transition={{
-                            duration: 0.9,
-                            delay: 0.2,
-                        }}
-                    >
-
-                        <span
-                            className="landing-world-eyebrow"
-                        >
-
-                            UM MUNDO DE AVENTURAS
-
-                        </span>
-
-
-                        <h1>
-
-                            DUNGEONS
-
-                            <br />
-
-                            & DRAGONS
-
-                        </h1>
-
-
-                        <p>
-
-                            Reinos, aventuras e
-                            lendas aguardam.
-
-                        </p>
-
-
-                        <div
-                            className="landing-world-system"
-                        >
-
-                            <Sword
-                                size={15}
-                            />
-
-                            <span>
-
-                                SISTEMA D&D
-
-                            </span>
-
-                        </div>
-
-                    </motion.div>
-
-                </section>
-
-
-                {/* ORDEM */}
-
-                <section
-                    className="landing-world
-                    landing-world-ordem"
-                    style={{
-                        backgroundImage:
-                            `url("${ordemBackground}")`,
-                    }}
-                >
-
-                    <div
-                        className="landing-world-darkness"
-                    />
-
-                    <div
-                        className="landing-world-vignette"
-                    />
-
-
-                    <motion.div
-                        className="landing-world-text
-                        landing-world-text-ordem"
-
-                        initial={{
-                            opacity: 0,
-                            x: 40,
-                        }}
-
-                        animate={{
-                            opacity: 1,
-                            x: 0,
-                        }}
-
-                        transition={{
-                            duration: 0.9,
-                            delay: 0.35,
-                        }}
-                    >
-
-                        <span
-                            className="landing-world-eyebrow"
-                        >
-
-                            A REALIDADE NÃO É O QUE PARECE
-
-                        </span>
-
-
-                        <h1>
-
-                            ORDEM
-
-                            <br />
-
-                            PARANORMAL
-
-                        </h1>
-
-
-                        <p>
-
-                            O paranormal observa
-                            cada movimento.
-
-                        </p>
-
-
-                        <div
-                            className="landing-world-system"
-                        >
-
-                            <Shield
-                                size={15}
-                            />
-
-                            <span>
-
-                                SISTEMA ORDEM
-
-                            </span>
-
-                        </div>
-
-                    </motion.div>
-
-                </section>
-
-            </div>
-
-
-            {/* =====================================
-                ESCURECIMENTO GERAL
-            ===================================== */}
-
-            <div
-                className="landing-global-overlay"
-            />
-
-
-            {/* =====================================
-                BORDA MÁGICA
-            ===================================== */}
-
-            <div
-                className="landing-magic-border"
+                CENÁRIO D&D
+            ====================================== */}
+
+            <section
+                className="landing-world landing-world-dnd"
+                style={{
+                    backgroundImage:
+                        `url("${dndBackground}")`,
+                }}
             >
 
                 <div
-                    className="landing-magic-border-glow"
+                    className="landing-world-dark"
                 />
 
-            </div>
+
+                <div
+                    className="landing-world-content landing-dnd-content"
+                >
+
+                    <span
+                        className="landing-world-eyebrow"
+                    >
+
+                        UM MUNDO DE AVENTURAS
+
+                    </span>
+
+
+                    <h1>
+
+                        DUNGEONS
+
+                        <br />
+
+                        <span>
+                            & DRAGONS
+                        </span>
+
+                    </h1>
+
+
+                    <p>
+
+                        Reinos, aventuras e lendas aguardam.
+
+                    </p>
+
+
+                    <div
+                        className="landing-system-tag"
+                    >
+
+                        <Sword
+                            size={14}
+                        />
+
+                        <span>
+
+                            SISTEMA D&D
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
 
 
             {/* =====================================
-                DIVISÃO CENTRAL
-            ===================================== */}
+                CENÁRIO ORDEM
+            ====================================== */}
+
+            <section
+                className="landing-world landing-world-ordem"
+                style={{
+                    backgroundImage:
+                        `url("${ordemBackground}")`,
+                }}
+            >
+
+                <div
+                    className="landing-world-dark"
+                />
+
+
+                <div
+                    className="landing-world-content landing-ordem-content"
+                >
+
+                    <span
+                        className="landing-world-eyebrow"
+                    >
+
+                        A REALIDADE NÃO É O QUE PARECE
+
+                    </span>
+
+
+                    <h1>
+
+                        ORDEM
+
+                        <br />
+
+                        <span>
+                            PARANORMAL
+                        </span>
+
+                    </h1>
+
+
+                    <p>
+
+                        O paranormal observa cada movimento.
+
+                    </p>
+
+
+                    <div
+                        className="landing-system-tag"
+                    >
+
+                        <Shield
+                            size={14}
+                        />
+
+                        <span>
+
+                            SISTEMA ORDEM
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            {/* =====================================
+                DIVISÓRIA MÁGICA CENTRAL
+            ====================================== */}
 
             <div
-                className="landing-magical-divider"
+                className="landing-magic-divider"
+                aria-hidden="true"
             >
 
                 <div
                     className="landing-divider-glow"
                 />
 
-                <div
-                    className="landing-divider-core"
-                />
 
                 <div
-                    className="landing-divider-energy
-                    landing-divider-energy-one"
+                    className="landing-divider-line"
                 />
+
 
                 <div
-                    className="landing-divider-energy
-                    landing-divider-energy-two"
-                />
+                    className="landing-divider-particles"
+                >
 
-                <div
-                    className="landing-divider-energy
-                    landing-divider-energy-three"
-                />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
 
-            </div>
-
-
-            {/* =====================================
-                PARTÍCULAS MÁGICAS
-            ===================================== */}
-
-            <div
-                className="landing-particles"
-            >
-
-                <span className="landing-particle particle-1" />
-                <span className="landing-particle particle-2" />
-                <span className="landing-particle particle-3" />
-                <span className="landing-particle particle-4" />
-                <span className="landing-particle particle-5" />
-                <span className="landing-particle particle-6" />
-                <span className="landing-particle particle-7" />
-                <span className="landing-particle particle-8" />
-                <span className="landing-particle particle-9" />
-                <span className="landing-particle particle-10" />
-                <span className="landing-particle particle-11" />
-                <span className="landing-particle particle-12" />
+                </div>
 
             </div>
 
 
             {/* =====================================
                 PAINEL CENTRAL
-            ===================================== */}
+            ====================================== */}
 
-            <motion.section
+            <section
                 className="landing-panel"
-
-                initial={{
-                    opacity: 0,
-                    scale: 0.92,
-                    y: 20,
-                }}
-
-                animate={{
-                    opacity: 1,
-                    scale: 1,
-                    y: 0,
-                }}
-
-                transition={{
-                    duration: 0.7,
-                    delay: 0.15,
-                    ease: "easeOut",
-                }}
             >
 
                 <div
-                    className="landing-panel-top-glow"
-                />
-
-
-                <div
-                    className="landing-panel-content"
+                    className="landing-panel-icon"
                 >
 
-                    {/* ÍCONE */}
-
-                    <div
-                        className="landing-panel-icon"
-                    >
-
-                        <Sparkles
-                            size={22}
-                        />
-
-                    </div>
-
-
-                    {/* EYEBROW */}
-
-                    <span
-                        className="landing-panel-eyebrow"
-                    >
-
-                        SEU MUNDO ESTÁ PRONTO
-
-                    </span>
-
-
-                    {/* LOGO */}
-
-                    <h2>
-
-                        ORDO
-
-                        <strong>
-
-                            RPGISTAS
-
-                        </strong>
-
-                    </h2>
-
-
-                    {/* DESCRIÇÃO */}
-
-                    <p
-                        className="landing-panel-description"
-                    >
-
-                        Escolha um sistema,
-                        reúna sua mesa e comece
-                        uma nova história.
-
-                    </p>
-
-
-                    {/* SISTEMA */}
-
-                    <div
-                        className="landing-current-system"
-                    >
-
-                        <div
-                            className="landing-current-system-icon"
-                        >
-
-                            <Sword
-                                size={18}
-                            />
-
-                        </div>
-
-
-                        <div
-                            className="landing-current-system-info"
-                        >
-
-                            <small>
-
-                                SEU MUNDO INICIAL
-
-                            </small>
-
-
-                            <strong>
-
-                                SUA AVENTURA COMEÇA AQUI
-
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    {/* BOTÕES */}
-
-                    <div
-                        className="landing-panel-actions"
-                    >
-
-                        <MagicalButton
-                            type="button"
-                            onClick={onLogin}
-                        >
-
-                            Entrar
-
-                        </MagicalButton>
-
-
-                        <button
-                            type="button"
-                            className="landing-register-button"
-                            onClick={onRegister}
-                        >
-
-                            Criar conta
-
-                        </button>
-
-                    </div>
-
-
-                    {/* FRASE */}
-
-                    <span
-                        className="landing-panel-footer"
-                    >
-
-                        Onde histórias ganham vida.
-
-                    </span>
+                    <Sparkles
+                        size={22}
+                    />
 
                 </div>
 
-            </motion.section>
+
+                <span
+                    className="landing-panel-eyebrow"
+                >
+
+                    SEU MUNDO ESTÁ PRONTO
+
+                </span>
+
+
+                <h2>
+
+                    ORDO
+
+                    <strong>
+
+                        RPGISTAS
+
+                    </strong>
+
+                </h2>
+
+
+                <p
+                    className="landing-panel-description"
+                >
+
+                    Escolha um sistema,
+                    reúna sua mesa e comece
+                    uma nova história.
+
+                </p>
+
+
+                <div
+                    className="landing-panel-system"
+                >
+
+                    <Sparkles
+                        size={16}
+                    />
+
+
+                    <div>
+
+                        <small>
+
+                            SEU MUNDO INICIA
+
+                        </small>
+
+
+                        <strong>
+
+                            SUA AVENTURA COMEÇA AQUI
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    className="landing-panel-actions"
+                >
+
+                    <MagicalButton
+                        onClick={onLogin}
+                    >
+
+                        Entrar
+
+                    </MagicalButton>
+
+
+                    <button
+                        type="button"
+                        className="landing-create-button"
+                        onClick={onCadastro}
+                    >
+
+                        Criar conta
+
+                    </button>
+
+                </div>
+
+
+                <span
+                    className="landing-panel-footer"
+                >
+
+                    Onde histórias ganham vida.
+
+                </span>
+
+            </section>
+
+
+            {/* =====================================
+                PARTÍCULAS GERAIS
+            ====================================== */}
+
+            <div
+                className="landing-ambient-particles"
+                aria-hidden="true"
+            >
+
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+
+            </div>
+
+
+            {/* =====================================
+                CONTORNO MÁGICO
+            ====================================== */}
+
+            <div
+                className="landing-magic-border"
+                aria-hidden="true"
+            />
 
 
             {/* =====================================
                 RODAPÉ
-            ===================================== */}
+            ====================================== */}
 
             <div
-                className="landing-bottom-brand"
+                className="landing-footer"
             >
 
-                <span>
-
-                    ORDO RPGISTAS
-
-                </span>
-
-                <span>
-
-                    •
-
-                </span>
-
-                <span>
-
-                    DOIS MUNDOS. INFINITAS HISTÓRIAS.
-
-                </span>
+                ORDO RPGISTAS
+                <span>•</span>
+                DOIS MUNDOS. INFINITAS HISTÓRIAS.
 
             </div>
 
