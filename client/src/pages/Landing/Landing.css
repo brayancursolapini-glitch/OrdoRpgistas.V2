@@ -1,8 +1,11 @@
+/* =========================================
+   LANDING
+========================================= */
+
 .landing {
     position: relative;
 
     width: 100%;
-
     min-height: 100vh;
 
     overflow: hidden;
@@ -10,21 +13,36 @@
     background:
         #050509;
 
-    isolation: isolate;
+    color:
+        #ffffff;
+
+    isolation:
+        isolate;
 }
 
 
 /* =========================================
-   MUNDOS
+   FUNDOS
 ========================================= */
 
-.landing-world {
+.landing-backgrounds {
     position: absolute;
 
-    top: 0;
-    bottom: 0;
+    inset: 0;
 
-    width: 55%;
+    display: flex;
+
+    z-index: 0;
+}
+
+
+.landing-world {
+    position: relative;
+
+    width: 50%;
+    min-height: 100vh;
+
+    overflow: hidden;
 
     background-size:
         cover;
@@ -32,130 +50,101 @@
     background-position:
         center;
 
-    overflow: hidden;
+    background-repeat:
+        no-repeat;
+
+    transition:
+        filter 0.5s ease;
 }
 
 
-.landing-world-dnd {
+.landing-world::before {
+    content: "";
 
-    left: 0;
-
-    clip-path:
-        polygon(
-            0 0,
-            96% 0,
-            100% 7%,
-            97% 16%,
-            100% 25%,
-            96% 34%,
-            99% 44%,
-            96% 55%,
-            100% 66%,
-            97% 77%,
-            100% 88%,
-            96% 100%,
-            0 100%
-        );
-
-}
-
-
-.landing-world-ordem {
-
-    right: 0;
-
-    clip-path:
-        polygon(
-            4% 0,
-            0 7%,
-            3% 16%,
-            0 25%,
-            4% 34%,
-            1% 44%,
-            4% 55%,
-            0 66%,
-            3% 77%,
-            0 88%,
-            4% 100%,
-            100% 100%,
-            100% 0
-        );
-
-}
-
-
-.landing-world-overlay {
     position: absolute;
 
     inset: 0;
-}
-
-
-.landing-world-dnd
-.landing-world-overlay {
 
     background:
         linear-gradient(
             90deg,
-            rgba(
-                4,
-                8,
-                10,
-                0.15
-            ),
-            rgba(
-                3,
-                8,
-                10,
-                0.25
-            )
-        ),
-        linear-gradient(
-            0deg,
-            rgba(
-                0,
-                0,
-                0,
-                0.68
-            ),
-            transparent
-            65%
+            rgba(0, 0, 0, 0.05),
+            rgba(0, 0, 0, 0.2)
         );
-
 }
 
 
-.landing-world-ordem
-.landing-world-overlay {
+.landing-world-dnd {
+    background-position:
+        center;
+}
+
+
+.landing-world-ordem {
+    background-position:
+        center;
+}
+
+
+/* =========================================
+   ESCURECIMENTO DAS IMAGENS
+========================================= */
+
+.landing-world-darkness {
+    position: absolute;
+
+    inset: 0;
 
     background:
         linear-gradient(
-            270deg,
-            rgba(
-                0,
-                0,
-                0,
-                0.1
-            ),
-            rgba(
-                5,
-                0,
-                8,
-                0.35
-            )
-        ),
-        linear-gradient(
-            0deg,
-            rgba(
-                0,
-                0,
-                0,
-                0.72
-            ),
-            transparent
-            65%
+            to bottom,
+            rgba(0, 0, 0, 0.12),
+            rgba(0, 0, 0, 0.32)
         );
 
+    z-index: 1;
+}
+
+
+.landing-world-vignette {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 2;
+
+    background:
+        radial-gradient(
+            circle at center,
+            transparent 35%,
+            rgba(0, 0, 0, 0.3) 100%
+        );
+}
+
+
+/* =========================================
+   ESCURECIMENTO CENTRAL
+========================================= */
+
+.landing-global-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 3;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(3, 5, 10, 0.08) 0%,
+            rgba(3, 5, 10, 0.02) 25%,
+            rgba(3, 5, 10, 0.35) 45%,
+            rgba(3, 5, 10, 0.35) 55%,
+            rgba(3, 5, 10, 0.02) 75%,
+            rgba(3, 5, 10, 0.08) 100%
+        );
 }
 
 
@@ -163,671 +152,642 @@
    TEXTOS DOS MUNDOS
 ========================================= */
 
-.landing-world-content {
+.landing-world-text {
     position: absolute;
 
-    z-index: 3;
+    z-index: 5;
 
-    bottom: 10%;
+    bottom: 10vh;
 
-    width: 55%;
+    width:
+        min(430px, 80%);
 
-    color:
-        #ffffff;
+    display: flex;
+
+    flex-direction:
+        column;
+
+    gap: 14px;
 }
 
 
-.landing-world-dnd
-.landing-world-content {
+.landing-world-text-dnd {
+    left: 12%;
+}
 
-    left: 22%;
+
+.landing-world-text-ordem {
+    right: 12%;
+
+    align-items:
+        flex-end;
 
     text-align:
-        center;
-
+        right;
 }
 
 
-.landing-world-ordem
-.landing-world-content {
-
-    right: 20%;
-
-    text-align:
-        center;
-
-}
-
-
-.landing-world-content span {
-
+.landing-world-eyebrow {
     font-size:
         0.56rem;
-
-    letter-spacing:
-        0.3em;
 
     font-weight:
         700;
 
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.75
-        );
+    letter-spacing:
+        0.22em;
 
+    color:
+        rgba(255, 255, 255, 0.75);
 }
 
 
-.landing-world-content h1 {
-
-    margin:
-        14px 0;
+.landing-world-text h1 {
+    margin: 0;
 
     font-family:
         Georgia,
+        "Times New Roman",
         serif;
 
     font-size:
         clamp(
-            2.4rem,
-            4.6vw,
-            5rem
+            2.6rem,
+            4vw,
+            5.2rem
         );
 
     line-height:
-        0.92;
+        0.9;
 
     letter-spacing:
-        0.02em;
+        0.015em;
 
     text-shadow:
-        0 5px 25px
-        rgba(
-            0,
-            0,
-            0,
-            0.75
-        );
-
+        0 8px 25px
+        rgba(0, 0, 0, 0.8);
 }
 
 
-.landing-world-content p {
+.landing-world-text p {
+    margin: 0;
 
     font-size:
-        0.75rem;
+        0.78rem;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.8
-        );
+        rgba(255, 255, 255, 0.72);
 
+    text-shadow:
+        0 4px 15px
+        rgba(0, 0, 0, 0.9);
+}
+
+
+.landing-world-system {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 4px;
+
+    font-size:
+        0.58rem;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.12em;
+
+    color:
+        rgba(255, 255, 255, 0.72);
 }
 
 
 /* =========================================
-   DIVISÃO MÁGICA
+   DIVISÃO MÁGICA CENTRAL
 ========================================= */
 
-.landing-magic-divider {
-
-    position: absolute;
-
-    z-index: 10;
-
-    top: 0;
-    bottom: 0;
-
-    left: 50%;
-
-    width: 150px;
-
-    transform:
-        translateX(
-            -50%
-        );
-
-    pointer-events:
-        none;
-
-}
-
-
-.landing-magic-line {
-
+.landing-magical-divider {
     position: absolute;
 
     top: -5%;
-    bottom: -5%;
 
     left: 50%;
 
-    width: 5px;
+    width: 90px;
+
+    height: 110%;
 
     transform:
-        translateX(
-            -50%
-        );
+        translateX(-50%);
+
+    z-index: 10;
+
+    pointer-events: none;
+}
+
+
+.landing-divider-core {
+    position: absolute;
+
+    top: 0;
+
+    left: 50%;
+
+    width: 2px;
+
+    height: 100%;
+
+    transform:
+        translateX(-50%);
 
     background:
         linear-gradient(
-            180deg,
+            to bottom,
             transparent,
-            rgba(
-                255,
-                255,
-                255,
-                0.95
-            )
-            10%,
-            rgba(
-                174,
-                95,
-                255,
-                0.9
-            )
-            30%,
-            rgba(
-                255,
-                255,
-                255,
-                0.95
-            )
-            50%,
-            rgba(
-                255,
-                65,
-                165,
-                0.9
-            )
-            70%,
-            rgba(
-                255,
-                255,
-                255,
-                0.9
-            )
-            90%,
+            rgba(255, 255, 255, 0.75) 12%,
+            rgba(192, 132, 252, 0.95) 30%,
+            rgba(255, 255, 255, 0.9) 50%,
+            rgba(168, 85, 247, 0.9) 70%,
+            rgba(255, 255, 255, 0.7) 88%,
             transparent
         );
 
     clip-path:
         polygon(
-            45% 0,
-            100% 7%,
-            35% 15%,
-            90% 24%,
-            20% 33%,
-            95% 43%,
-            30% 53%,
-            100% 62%,
-            20% 72%,
-            85% 82%,
-            30% 92%,
-            65% 100%,
-            45% 100%,
-            0 92%,
-            60% 82%,
-            0 72%,
-            65% 62%,
-            0 53%,
-            70% 43%,
-            5% 33%,
-            80% 24%,
-            10% 15%,
-            55% 7%
+            48% 0%,
+            60% 5%,
+            40% 12%,
+            58% 20%,
+            43% 28%,
+            62% 35%,
+            39% 44%,
+            58% 52%,
+            42% 61%,
+            60% 70%,
+            38% 78%,
+            58% 87%,
+            45% 94%,
+            52% 100%,
+            48% 100%
         );
 
     box-shadow:
         0 0 10px
-        rgba(
-            255,
-            255,
-            255,
-            0.8
-        ),
-        0 0 28px
-        rgba(
-            160,
-            80,
-            255,
-            0.8
-        );
-
+        rgba(192, 132, 252, 0.9),
+        0 0 25px
+        rgba(168, 85, 247, 0.7),
+        0 0 50px
+        rgba(236, 72, 153, 0.35);
 }
 
 
-.landing-magic-glow {
-
+.landing-divider-glow {
     position: absolute;
 
-    inset: 0;
+    top: 0;
 
-    background:
-        radial-gradient(
-            ellipse at center,
-            rgba(
-                179,
-                80,
-                255,
-                0.28
-            ),
-            transparent
-            55%
-        );
+    left: 50%;
+
+    width: 35px;
+
+    height: 100%;
+
+    transform:
+        translateX(-50%);
 
     filter:
-        blur(
-            20px
+        blur(16px);
+
+    opacity:
+        0.8;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent,
+            rgba(139, 92, 246, 0.8),
+            rgba(236, 72, 153, 0.55),
+            rgba(139, 92, 246, 0.8),
+            transparent
         );
 
+    animation:
+        dividerGlow
+        3s
+        ease-in-out
+        infinite;
 }
 
 
-/* =========================================
-   POEIRA MÁGICA
-========================================= */
-
-.landing-magic-dust {
-
-    position: absolute;
-
-    inset: 0;
-
-}
-
-
-.landing-magic-dust span {
-
+.landing-divider-energy {
     position: absolute;
 
     left: 50%;
 
-    top:
-        calc(
-            (var(--i, 1)) *
-            10%
-        );
+    width: 4px;
 
-    width: 3px;
-    height: 3px;
+    height: 90px;
 
     border-radius:
         50%;
 
+    transform:
+        translateX(-50%);
+
     background:
-        #ffffff;
+        linear-gradient(
+            to bottom,
+            transparent,
+            #ffffff,
+            #c084fc,
+            #ec4899,
+            transparent
+        );
+
+    filter:
+        blur(1px);
 
     box-shadow:
-        0 0 10px
-        rgba(
-            197,
-            110,
-            255,
-            1
-        ),
-        0 0 20px
-        rgba(
-            255,
-            80,
-            185,
-            0.8
-        );
+        0 0 18px
+        rgba(192, 132, 252, 0.9);
 
     animation:
-        magicDust
-        4s
-        ease-in-out
+        dividerEnergy
+        linear
         infinite;
+}
+
+
+.landing-divider-energy-one {
+    animation-duration:
+        4s;
+}
+
+
+.landing-divider-energy-two {
+    animation-duration:
+        5.8s;
 
     animation-delay:
-        var(--delay);
-
+        -2.2s;
 }
 
 
-/* Distribui verticalmente */
+.landing-divider-energy-three {
+    animation-duration:
+        7s;
 
-.landing-magic-dust span:nth-child(
-    1n
-) {
-
-    top:
-        calc(
-            (
-                var(--delay) *
-                100
-            )
-        );
-
-}
-
-
-@keyframes magicDust {
-
-    0% {
-
-        opacity: 0;
-
-        transform:
-            translate(
-                var(--offset),
-                -30px
-            )
-            scale(
-                0.3
-            );
-
-    }
-
-
-    50% {
-
-        opacity: 1;
-
-        transform:
-            translate(
-                calc(
-                    var(--offset) *
-                    -1
-                ),
-                50vh
-            )
-            scale(
-                1
-            );
-
-    }
-
-
-    100% {
-
-        opacity: 0;
-
-        transform:
-            translate(
-                var(--offset),
-                110vh
-            )
-            scale(
-                0.2
-            );
-
-    }
-
+    animation-delay:
+        -4.8s;
 }
 
 
 /* =========================================
-   CONTORNO MÁGICO
+   BORDA MÁGICA
 ========================================= */
 
-.landing-magic-frame {
-
+.landing-magic-border {
     position: absolute;
 
-    inset: 12px;
+    inset: 7px;
 
-    z-index: 12;
+    z-index: 20;
+
+    pointer-events: none;
 
     border:
         1px solid
-        rgba(
-            202,
-            129,
-            255,
-            0.18
-        );
+        rgba(192, 132, 252, 0.22);
 
     box-shadow:
-        inset
-        0 0 30px
-        rgba(
-            150,
-            60,
-            255,
-            0.08
-        );
-
-    pointer-events:
-        none;
-
+        inset 0 0 20px
+        rgba(139, 92, 246, 0.08);
 }
 
 
-.landing-frame-particle {
+.landing-magic-border::before {
+    content: "";
 
     position: absolute;
 
+    inset: -1px;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius:
+        2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(192, 132, 252, 0.8),
+            transparent,
+            rgba(236, 72, 153, 0.7),
+            transparent
+        );
+
+    mask:
+        linear-gradient(#fff 0 0)
+        padding-box,
+        linear-gradient(#fff 0 0);
+
+    mask-composite:
+        exclude;
+
+    opacity:
+        0.65;
+
+    animation:
+        borderPulse
+        4s
+        ease-in-out
+        infinite;
+}
+
+
+/* =========================================
+   PARTÍCULAS
+========================================= */
+
+.landing-particles {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 12;
+
+    pointer-events: none;
+
+    overflow: hidden;
+}
+
+
+.landing-particle {
+    position: absolute;
+
     width: 4px;
+
     height: 4px;
 
     border-radius:
         50%;
 
     background:
-        #d580ff;
+        #c084fc;
 
     box-shadow:
         0 0 10px
-        #b341ff,
-        0 0 22px
-        rgba(
-            255,
-            60,
-            180,
-            0.8
-        );
+        #c084fc;
 
     animation:
-        frameMagic
-        6s
+        particleFloat
         linear
         infinite;
-
 }
 
 
-.p1 {
-    top: 0;
-    left: 8%;
+.particle-1 {
+    left: 5%;
+    top: 70%;
+    animation-duration: 8s;
 }
 
-.p2 {
-    top: 0;
-    left: 65%;
-    animation-delay: -2s;
-}
-
-.p3 {
-    right: 0;
+.particle-2 {
+    left: 16%;
     top: 28%;
-    animation-delay: -1s;
-}
-
-.p4 {
-    right: 0;
-    bottom: 18%;
-    animation-delay: -4s;
-}
-
-.p5 {
-    bottom: 0;
-    left: 55%;
+    animation-duration: 10s;
     animation-delay: -3s;
 }
 
-.p6 {
-    left: 0;
-    bottom: 22%;
-    animation-delay: -5s;
+.particle-3 {
+    left: 27%;
+    top: 50%;
+    animation-duration: 7s;
+    animation-delay: -4s;
 }
 
+.particle-4 {
+    left: 42%;
+    top: 20%;
+    animation-duration: 9s;
+}
 
-@keyframes frameMagic {
+.particle-5 {
+    left: 49%;
+    top: 75%;
+    animation-duration: 6s;
+}
 
-    0%,
-    100% {
+.particle-6 {
+    left: 54%;
+    top: 30%;
+    animation-duration: 11s;
+}
 
-        opacity: 0.3;
+.particle-7 {
+    left: 63%;
+    top: 70%;
+    animation-duration: 8s;
+    animation-delay: -2s;
+}
 
-        transform:
-            scale(
-                0.6
-            );
+.particle-8 {
+    left: 73%;
+    top: 38%;
+    animation-duration: 10s;
+}
 
-    }
+.particle-9 {
+    left: 84%;
+    top: 76%;
+    animation-duration: 7s;
+}
 
+.particle-10 {
+    left: 94%;
+    top: 25%;
+    animation-duration: 9s;
+}
 
-    50% {
+.particle-11 {
+    left: 36%;
+    top: 85%;
+    animation-duration: 12s;
+}
 
-        opacity: 1;
-
-        transform:
-            scale(
-                1.8
-            );
-
-    }
-
+.particle-12 {
+    left: 58%;
+    top: 12%;
+    animation-duration: 8s;
 }
 
 
 /* =========================================
-   PAINEL
+   PAINEL CENTRAL
 ========================================= */
 
 .landing-panel {
-
     position: absolute;
 
-    z-index: 20;
+    /*
+    CENTRALIZAÇÃO REAL
+    */
 
     top: 50%;
+
     left: 50%;
 
     transform:
-        translate(
-            -50%,
-            -50%
-        );
+        translate(-50%, -50%);
+
+    z-index: 30;
 
     width:
         min(
-            390px,
-            calc(
-                100% - 40px
-            )
-        );
-
-    padding:
-        34px;
-
-    border-radius:
-        20px;
-
-    text-align:
-        center;
-
-    color:
-        #ffffff;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(
-                16,
-                20,
-                28,
-                0.95
-            ),
-            rgba(
-                8,
-                9,
-                14,
-                0.96
-            )
+            92vw,
+            390px
         );
 
     border:
         1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.14
-        );
+        rgba(192, 132, 252, 0.25);
 
-    box-shadow:
-        0 30px 80px
-        rgba(
-            0,
-            0,
-            0,
-            0.65
-        ),
-        0 0 40px
-        rgba(
-            160,
-            80,
-            255,
-            0.12
+    border-radius:
+        18px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15, 18, 27, 0.94),
+            rgba(8, 10, 17, 0.96)
         );
 
     backdrop-filter:
-        blur(
-            16px
-        );
+        blur(18px);
 
+    box-shadow:
+        0 25px 80px
+        rgba(0, 0, 0, 0.65),
+        0 0 35px
+        rgba(139, 92, 246, 0.12);
 }
 
 
+.landing-panel-top-glow {
+    position: absolute;
+
+    top: -80px;
+
+    left: 50%;
+
+    width: 240px;
+
+    height: 150px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(168, 85, 247, 0.22),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+
+.landing-panel-content {
+    position: relative;
+
+    z-index: 2;
+
+    padding:
+        32px
+        30px
+        25px;
+
+    display: flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    text-align:
+        center;
+}
+
+
+/* =========================================
+   ÍCONE
+========================================= */
+
 .landing-panel-icon {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 12px;
 
     color:
         #c084fc;
 
-    margin-bottom:
-        14px;
-
+    filter:
+        drop-shadow(
+            0 0 12px
+            rgba(192, 132, 252, 0.7)
+        );
 }
 
 
-.landing-panel-eyebrow {
+/* =========================================
+   TEXTOS DO PAINEL
+========================================= */
 
+.landing-panel-eyebrow {
     font-size:
-        0.55rem;
+        0.52rem;
+
+    font-weight:
+        700;
 
     letter-spacing:
-        0.28em;
+        0.2em;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.55
-        );
-
+        rgba(255, 255, 255, 0.48);
 }
 
 
 .landing-panel h2 {
-
     margin:
-        12px 0;
+        10px 0 8px;
+
+    display: flex;
+
+    flex-direction:
+        column;
 
     font-size:
         clamp(
             2.3rem,
-            4vw,
-            3.2rem
+            5vw,
+            3.4rem
         );
 
     line-height:
@@ -836,46 +796,43 @@
     font-weight:
         300;
 
+    letter-spacing:
+        0.05em;
 }
 
 
 .landing-panel h2 strong {
-
-    display:
-        block;
-
     font-weight:
         900;
 
     color:
-        #b985ff;
+        #c084fc;
 
+    letter-spacing:
+        0.08em;
+
+    text-shadow:
+        0 0 22px
+        rgba(192, 132, 252, 0.22);
 }
 
 
-.landing-panel p {
-
+.landing-panel-description {
     max-width:
         270px;
 
     margin:
-        0 auto
-        22px;
+        8px 0
+        20px;
 
     font-size:
-        0.75rem;
+        0.68rem;
 
     line-height:
-        1.7;
+        1.6;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.65
-        );
-
+        rgba(255, 255, 255, 0.62);
 }
 
 
@@ -883,87 +840,189 @@
    SISTEMA
 ========================================= */
 
-.landing-system-preview {
+.landing-current-system {
+    width: 100%;
 
-    display:
-        flex;
+    display: flex;
 
-    align-items:
-        center;
+    align-items: center;
 
-    gap:
-        12px;
+    gap: 12px;
 
     padding:
-        13px;
-
-    margin-bottom:
-        14px;
-
-    text-align:
-        left;
-
-    border-radius:
         12px;
 
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.05
-        );
+    margin-bottom:
+        10px;
 
     border:
         1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.09
-        );
-
-}
-
-
-.landing-system-icon {
-
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    width:
-        40px;
-
-    height:
-        40px;
+        rgba(255, 255, 255, 0.1);
 
     border-radius:
         10px;
 
-    color:
-        #d6b4ff;
-
     background:
-        rgba(
-            170,
-            90,
-            255,
-            0.13
-        );
-
+        rgba(255, 255, 255, 0.035);
 }
 
 
-.landing-system-preview small {
+.landing-current-system-icon {
+    display: flex;
 
-    display:
-        block;
+    align-items: center;
 
-    margin-bottom:
-        4px;
+    justify-content: center;
+
+    width: 36px;
+
+    height: 36px;
+
+    border-radius:
+        9px;
+
+    color:
+        #c084fc;
+
+    background:
+        rgba(139, 92, 246, 0.13);
+}
+
+
+.landing-current-system-info {
+    display: flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        flex-start;
+
+    gap: 3px;
+
+    text-align:
+        left;
+}
+
+
+.landing-current-system-info small {
+    font-size:
+        0.45rem;
+
+    letter-spacing:
+        0.14em;
+
+    color:
+        rgba(255, 255, 255, 0.42);
+}
+
+
+.landing-current-system-info strong {
+    font-size:
+        0.58rem;
+
+    letter-spacing:
+        0.04em;
+
+    color:
+        rgba(255, 255, 255, 0.85);
+}
+
+
+/* =========================================
+   BOTÕES
+========================================= */
+
+.landing-panel-actions {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction:
+        column;
+
+    gap: 10px;
+}
+
+
+.landing-register-button {
+    width: 100%;
+
+    min-height: 42px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.13);
+
+    border-radius:
+        9px;
+
+    color:
+        rgba(255, 255, 255, 0.85);
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    cursor:
+        pointer;
+
+    transition:
+        0.25s ease;
+}
+
+
+.landing-register-button:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(192, 132, 252, 0.45);
+
+    background:
+        rgba(139, 92, 246, 0.12);
+}
+
+
+/* =========================================
+   FOOTER DO PAINEL
+========================================= */
+
+.landing-panel-footer {
+    margin-top:
+        15px;
+
+    font-size:
+        0.48rem;
+
+    color:
+        rgba(255, 255, 255, 0.35);
+}
+
+
+/* =========================================
+   RODAPÉ
+========================================= */
+
+.landing-bottom-brand {
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 18px;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 25;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    white-space:
+        nowrap;
 
     font-size:
         0.48rem;
@@ -972,321 +1031,237 @@
         0.12em;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.45
-        );
+        rgba(255, 255, 255, 0.38);
+}
+
+
+/* =========================================
+   ANIMAÇÕES
+========================================= */
+
+@keyframes dividerGlow {
+
+    0%,
+    100% {
+
+        opacity:
+            0.4;
+
+    }
+
+    50% {
+
+        opacity:
+            1;
+
+    }
 
 }
 
 
-.landing-system-preview strong {
+@keyframes dividerEnergy {
 
-    display:
-        block;
+    from {
 
-    font-size:
-        0.62rem;
+        top:
+            -15%;
 
-    letter-spacing:
-        0.05em;
+        opacity:
+            0;
+
+    }
+
+    15% {
+
+        opacity:
+            1;
+
+    }
+
+    85% {
+
+        opacity:
+            1;
+
+    }
+
+    to {
+
+        top:
+            105%;
+
+        opacity:
+            0;
+
+    }
+
+}
+
+
+@keyframes particleFloat {
+
+    0% {
+
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            );
+
+        opacity:
+            0;
+
+    }
+
+    20% {
+
+        opacity:
+            1;
+
+    }
+
+    50% {
+
+        transform:
+            translate3d(
+                20px,
+                -35px,
+                0
+            );
+
+    }
+
+    100% {
+
+        transform:
+            translate3d(
+                -15px,
+                -80px,
+                0
+            );
+
+        opacity:
+            0;
+
+    }
+
+}
+
+
+@keyframes borderPulse {
+
+    0%,
+    100% {
+
+        opacity:
+            0.3;
+
+    }
+
+    50% {
+
+        opacity:
+            0.9;
+
+    }
 
 }
 
 
 /* =========================================
-   BOTÕES
+   RESPONSIVO
 ========================================= */
 
-.landing-enter-button,
-.landing-register-button {
-
-    width:
-        100%;
-
-    height:
-        45px;
-
-    border-radius:
-        10px;
-
-    cursor:
-        pointer;
-
-    transition:
-        0.25s
-        ease;
-
-}
-
-
-.landing-enter-button {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        8px;
-
-    margin-bottom:
-        9px;
-
-    border:
-        1px solid
-        rgba(
-            213,
-            145,
-            255,
-            0.55
-        );
-
-    color:
-        #ffffff;
-
-    font-weight:
-        700;
-
-    background:
-        linear-gradient(
-            90deg,
-            #7035c5,
-            #b12d74
-        );
-
-    box-shadow:
-        0 8px 25px
-        rgba(
-            120,
-            45,
-            190,
-            0.25
-        );
-
-}
-
-
-.landing-enter-button:hover {
-
-    transform:
-        translateY(
-            -2px
-        );
-
-    filter:
-        brightness(
-            1.12
-        );
-
-}
-
-
-.landing-register-button {
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.14
-        );
-
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.85
-        );
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.04
-        );
-
-}
-
-
-.landing-register-button:hover {
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.08
-        );
-
-}
-
-
-.landing-footer-text {
-
-    display:
-        block;
-
-    margin-top:
-        18px;
-
-    font-size:
-        0.55rem;
-
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.38
-        );
-
-}
-
-
 @media (
-    max-width: 850px
+    max-width: 900px
 ) {
 
-    .landing-world {
-
-        width:
-            58%;
-
+    .landing-world-text {
+        bottom:
+            8vh;
     }
 
 
-    .landing-world-content {
-
-        width:
-            80%;
-
-    }
-
-
-    .landing-world-dnd
-    .landing-world-content {
-
+    .landing-world-text-dnd {
         left:
-            8%;
-
+            7%;
     }
 
 
-    .landing-world-ordem
-    .landing-world-content {
-
+    .landing-world-text-ordem {
         right:
-            8%;
+            7%;
+    }
 
+
+    .landing-world-text h1 {
+        font-size:
+            clamp(
+                2rem,
+                6vw,
+                3.5rem
+            );
     }
 
 }
 
 
 @media (
-    max-width: 650px
+    max-width: 700px
 ) {
 
-    .landing-world {
-
+    .landing-world-text {
         width:
-            100%;
-
-        height:
-            50%;
-
+            90%;
     }
 
 
-    .landing-world-dnd {
-
-        top: 0;
-        bottom: auto;
-
-        clip-path:
-            none;
-
+    .landing-world-text-dnd {
+        left:
+            5%;
     }
 
 
-    .landing-world-ordem {
-
-        bottom: 0;
-        top: auto;
-
-        clip-path:
-            none;
-
+    .landing-world-text-ordem {
+        right:
+            5%;
     }
 
 
-    .landing-world-content {
+    .landing-world-text h1 {
+        font-size:
+            2rem;
+    }
 
+
+    .landing-world-text p,
+    .landing-world-system {
         display:
             none;
-
-    }
-
-
-    .landing-magic-divider {
-
-        top:
-            calc(
-                50% -
-                70px
-            );
-
-        bottom:
-            auto;
-
-        left: 0;
-
-        width:
-            100%;
-
-        height:
-            140px;
-
-        transform:
-            none;
-
-    }
-
-
-    .landing-magic-line {
-
-        top: 50%;
-        bottom: auto;
-
-        left: 0;
-
-        width:
-            100%;
-
-        height:
-            4px;
-
-        transform:
-            none;
-
     }
 
 
     .landing-panel {
+        width:
+            min(
+                90vw,
+                360px
+            );
+    }
 
+
+    .landing-panel-content {
         padding:
-            28px 22px;
+            28px
+            22px
+            22px;
+    }
 
+
+    .landing-bottom-brand {
+        font-size:
+            0.4rem;
     }
 
 }
