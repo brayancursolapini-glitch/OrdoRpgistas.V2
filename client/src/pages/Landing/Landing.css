@@ -1,9 +1,8 @@
-/* =========================================
-   LANDING
-========================================= */
+/* =========================================================
+   LANDING PAGE
+========================================================= */
 
 .landing {
-
     position: relative;
 
     width: 100%;
@@ -13,60 +12,117 @@
 
     display: flex;
 
-    background:
-        #05060d;
+    align-items: center;
+    justify-content: center;
+
+    background: #050509;
 
     isolation: isolate;
-
 }
 
 
-/* =========================================
-   MUNDOS
-========================================= */
+/* =========================================================
+   MUNDOS DE FUNDO
+========================================================= */
 
 .landing-world {
-
     position: absolute;
 
     top: 0;
     bottom: 0;
 
-    width: 50%;
+    width: 56%;
 
-    background-position:
-        center;
+    background-size: cover;
+    background-position: center;
 
-    background-size:
-        cover;
+    background-repeat: no-repeat;
 
-    background-repeat:
-        no-repeat;
+    z-index: -3;
 
-    overflow: hidden;
-
+    transition:
+        transform 0.8s ease,
+        filter 0.8s ease;
 }
 
 
-.landing-world-dnd {
-
+.landing-dnd {
     left: 0;
 
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            91% 18%,
+            100% 36%,
+            92% 52%,
+            100% 68%,
+            90% 84%,
+            100% 100%,
+            0 100%
+        );
 }
 
 
-.landing-world-ordem {
-
+.landing-ordem {
     right: 0;
 
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            100% 100%,
+            0 100%,
+            9% 84%,
+            0 68%,
+            8% 52%,
+            0 36%,
+            9% 18%
+        );
 }
 
 
-/* =========================================
-   ESCURECIMENTO
-========================================= */
+/* =========================================================
+   OVERLAY DOS MUNDOS
+========================================================= */
 
-.landing-world-dark {
+.landing-world-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+}
+
+
+.landing-dnd .landing-world-overlay {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(8, 13, 10, 0.18),
+            rgba(8, 13, 10, 0.35),
+            rgba(5, 5, 9, 0.72)
+        );
+}
+
+
+.landing-ordem .landing-world-overlay {
+    background:
+        linear-gradient(
+            270deg,
+            rgba(9, 4, 12, 0.18),
+            rgba(18, 3, 8, 0.4),
+            rgba(5, 5, 9, 0.78)
+        );
+}
+
+
+/* =========================================================
+   ESCURECIMENTO CENTRAL
+========================================================= */
+
+.landing::after {
+    content: "";
 
     position: absolute;
 
@@ -74,1407 +130,874 @@
 
     pointer-events: none;
 
-}
-
-
-.landing-world-dnd
-.landing-world-dark {
+    z-index: -1;
 
     background:
-
-        linear-gradient(
-            90deg,
-            rgba(2, 7, 8, 0.32),
-            rgba(2, 7, 8, 0.10) 55%,
-            rgba(5, 4, 12, 0.68)
-        ),
-
-        linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.72),
-            transparent 55%
+        radial-gradient(
+            ellipse at center,
+            rgba(5, 5, 9, 0.05) 0%,
+            rgba(5, 5, 9, 0.35) 34%,
+            rgba(5, 5, 9, 0.7) 72%,
+            rgba(5, 5, 9, 0.88) 100%
         );
-
 }
 
 
-.landing-world-ordem
-.landing-world-dark {
+/* =========================================================
+   TEXTOS DOS MUNDOS
+========================================================= */
 
-    background:
-
-        linear-gradient(
-            270deg,
-            rgba(0, 0, 0, 0.40),
-            rgba(4, 2, 10, 0.15) 50%,
-            rgba(8, 2, 18, 0.72)
-        ),
-
-        linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.74),
-            transparent 55%
-        );
-
-}
-
-
-/* =========================================
-   TÍTULOS DOS MUNDOS
-========================================= */
-
-.landing-world-content {
-
+.landing-world-text {
     position: absolute;
 
-    z-index: 5;
+    top: 50%;
 
-    bottom: 9%;
+    transform:
+        translateY(-50%);
 
-    color:
-        #ffffff;
+    display: flex;
+    flex-direction: column;
 
-    max-width:
-        500px;
+    max-width: 420px;
 
-}
-
-
-.landing-dnd-content {
-
-    left: 12%;
-
-}
-
-
-.landing-ordem-content {
-
-    right: 12%;
-
-    text-align:
-        right;
-
-}
-
-
-.landing-world-eyebrow {
-
-    display: block;
-
-    margin-bottom:
-        12px;
-
-    font-size:
-        0.58rem;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.28em;
-
-    color:
-        rgba(255, 255, 255, 0.78);
-
-}
-
-
-.landing-world-content h1 {
-
-    margin: 0;
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-size:
-        clamp(2.8rem, 4vw, 5.6rem);
-
-    line-height:
-        0.84;
-
-    letter-spacing:
-        0.02em;
+    color: #ffffff;
 
     text-shadow:
+        0 3px 18px rgba(0, 0, 0, 0.85);
 
-        0 4px 18px
-        rgba(0, 0, 0, 0.9);
-
+    z-index: 2;
 }
 
 
-.landing-world-content h1 span {
-
-    display:
-        inline-block;
-
+.landing-dnd .landing-world-text {
+    left: 7%;
+    text-align: left;
 }
 
 
-.landing-world-content p {
+.landing-ordem .landing-world-text {
+    right: 7%;
+    text-align: right;
+    align-items: flex-end;
+}
 
-    margin-top:
-        20px;
 
-    font-size:
-        0.78rem;
+.landing-world-text span {
+    display: block;
+
+    margin-bottom: 14px;
+
+    font-size: 0.68rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.28em;
 
     color:
-        rgba(255, 255, 255, 0.76);
-
+        rgba(255, 255, 255, 0.72);
 }
 
 
-.landing-system-tag {
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-    margin-top:
-        16px;
+.landing-world-text h2 {
+    margin: 0;
 
     font-size:
-        0.56rem;
+        clamp(
+            2.1rem,
+            4vw,
+            5rem
+        );
 
-    font-weight:
-        800;
+    line-height: 0.92;
 
-    letter-spacing:
-        0.15em;
+    letter-spacing: 0.03em;
 
+    font-weight: 900;
+}
+
+
+.landing-dnd .landing-world-text h2 {
     color:
-        rgba(255, 255, 255, 0.78);
+        #f4df9a;
 
+    text-shadow:
+        0 0 30px
+        rgba(255, 195, 90, 0.28);
 }
 
 
-.landing-system-tag svg {
+.landing-ordem .landing-world-text h2 {
+    color:
+        #eab1c7;
 
-    opacity:
-        0.9;
-
+    text-shadow:
+        0 0 30px
+        rgba(220, 35, 95, 0.32);
 }
 
 
-/* =========================================
-   DIVISÓRIA MÁGICA
-========================================= */
+/* =========================================================
+   DIVISÓRIA MÁGICA CENTRAL
+========================================================= */
 
-.landing-magic-divider {
+.landing::before {
+    content: "";
 
     position: absolute;
+
+    top: -10%;
+
+    left: 50%;
+
+    width: 7px;
+
+    height: 120%;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 3;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent 0%,
+            rgba(255, 226, 154, 0.2) 5%,
+            rgba(192, 132, 252, 0.95) 18%,
+            rgba(255, 255, 255, 0.95) 30%,
+            rgba(236, 72, 153, 0.95) 48%,
+            rgba(192, 132, 252, 0.95) 68%,
+            rgba(255, 226, 154, 0.4) 88%,
+            transparent 100%
+        );
+
+    box-shadow:
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 28px rgba(192, 132, 252, 0.9),
+        0 0 55px rgba(236, 72, 153, 0.65);
+
+    filter:
+        blur(0.2px);
+
+    animation:
+        magicalDivider 3.2s ease-in-out infinite;
+}
+
+
+@keyframes magicalDivider {
+
+    0%,
+    100% {
+        opacity: 0.65;
+
+        transform:
+            translateX(-50%)
+            scaleY(0.98);
+    }
+
+    50% {
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            scaleY(1.03);
+    }
+
+}
+
+
+/* =========================================================
+   PARTÍCULAS DA DIVISÓRIA
+========================================================= */
+
+.landing-divider {
+    position: absolute;
+
+    left: 50%;
+    top: 0;
+
+    width: 180px;
+    height: 100%;
+
+    transform:
+        translateX(-50%);
+
+    pointer-events: none;
+
+    z-index: 4;
+
+    overflow: hidden;
+}
+
+
+.landing-divider span {
+    position: absolute;
+
+    left: 50%;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 0 10px #ffffff,
+        0 0 22px #c084fc,
+        0 0 38px #ec4899;
+
+    animation:
+        magicalDust 5s linear infinite;
+}
+
+
+.landing-divider span:nth-child(1) {
+    left: 22%;
+
+    animation-delay: 0s;
+}
+
+
+.landing-divider span:nth-child(2) {
+    left: 42%;
+
+    animation-delay: -1.2s;
+}
+
+
+.landing-divider span:nth-child(3) {
+    left: 62%;
+
+    animation-delay: -2.4s;
+}
+
+
+.landing-divider span:nth-child(4) {
+    left: 78%;
+
+    animation-delay: -3.5s;
+}
+
+
+@keyframes magicalDust {
+
+    from {
+        top: 105%;
+
+        opacity: 0;
+
+        transform:
+            translateX(0)
+            scale(0.4);
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    50% {
+        transform:
+            translateX(35px)
+            scale(1);
+    }
+
+    85% {
+        opacity: 1;
+    }
+
+    to {
+        top: -10%;
+
+        opacity: 0;
+
+        transform:
+            translateX(-25px)
+            scale(0.3);
+    }
+
+}
+
+
+/* =========================================================
+   PAINEL CENTRAL
+========================================================= */
+
+.landing-panel {
+    position: relative;
 
     z-index: 10;
 
-    top: 0;
-    bottom: 0;
-
-    left: 50%;
-
     width:
-        170px;
-
-    transform:
-        translateX(-50%);
-
-    pointer-events:
-        none;
-
-}
-
-
-/* Brilho amplo */
-
-.landing-divider-glow {
-
-    position: absolute;
-
-    inset:
-        0;
-
-    background:
-
-        linear-gradient(
-            90deg,
-
-            transparent,
-
-            rgba(109, 43, 255, 0.05) 20%,
-
-            rgba(172, 69, 255, 0.28) 47%,
-
-            rgba(235, 69, 255, 0.35) 50%,
-
-            rgba(111, 53, 255, 0.28) 53%,
-
-            rgba(58, 21, 134, 0.08) 78%,
-
-            transparent
+        min(
+            470px,
+            calc(100% - 40px)
         );
-
-    filter:
-        blur(14px);
-
-    animation:
-        dividerPulse
-        4s
-        ease-in-out
-        infinite;
-
-}
-
-
-/* Linha central */
-
-.landing-divider-line {
-
-    position: absolute;
-
-    top: 0;
-    bottom: 0;
-
-    left: 50%;
-
-    width:
-        3px;
-
-    transform:
-        translateX(-50%);
-
-    background:
-
-        linear-gradient(
-
-            to bottom,
-
-            transparent,
-
-            rgba(219, 129, 255, 0.95) 10%,
-
-            rgba(255, 88, 231, 0.9) 35%,
-
-            rgba(176, 103, 255, 1) 55%,
-
-            rgba(255, 89, 211, 0.85) 80%,
-
-            transparent
-
-        );
-
-    box-shadow:
-
-        0 0 6px
-        rgba(203, 90, 255, 1),
-
-        0 0 18px
-        rgba(178, 65, 255, 0.9),
-
-        0 0 40px
-        rgba(121, 38, 255, 0.65);
-
-}
-
-
-/* =========================================
-   PARTÍCULAS DA DIVISÃO
-========================================= */
-
-.landing-divider-particles {
-
-    position: absolute;
-
-    inset: 0;
-
-}
-
-
-.landing-divider-particles span {
-
-    position: absolute;
-
-    width:
-        4px;
-
-    height:
-        4px;
-
-    border-radius:
-        50%;
-
-    background:
-        #d76cff;
-
-    box-shadow:
-
-        0 0 8px
-        #cc55ff,
-
-        0 0 18px
-        #8b35ff;
-
-    animation:
-        dividerParticle
-        5s
-        linear
-        infinite;
-
-}
-
-
-.landing-divider-particles span:nth-child(1) {
-
-    left:
-        48%;
-
-    top:
-        5%;
-
-    animation-delay:
-        -1s;
-
-}
-
-
-.landing-divider-particles span:nth-child(2) {
-
-    left:
-        30%;
-
-    top:
-        20%;
-
-    animation-delay:
-        -3s;
-
-}
-
-
-.landing-divider-particles span:nth-child(3) {
-
-    left:
-        65%;
-
-    top:
-        34%;
-
-    animation-delay:
-        -2s;
-
-}
-
-
-.landing-divider-particles span:nth-child(4) {
-
-    left:
-        38%;
-
-    top:
-        46%;
-
-    animation-delay:
-        -4s;
-
-}
-
-
-.landing-divider-particles span:nth-child(5) {
-
-    left:
-        75%;
-
-    top:
-        57%;
-
-    animation-delay:
-        -1.5s;
-
-}
-
-
-.landing-divider-particles span:nth-child(6) {
-
-    left:
-        22%;
-
-    top:
-        66%;
-
-    animation-delay:
-        -2.7s;
-
-}
-
-
-.landing-divider-particles span:nth-child(7) {
-
-    left:
-        54%;
-
-    top:
-        78%;
-
-    animation-delay:
-        -0.8s;
-
-}
-
-
-.landing-divider-particles span:nth-child(8) {
-
-    left:
-        42%;
-
-    top:
-        90%;
-
-    animation-delay:
-        -3.4s;
-
-}
-
-
-.landing-divider-particles span:nth-child(9) {
-
-    left:
-        68%;
-
-    top:
-        12%;
-
-    animation-delay:
-        -2.1s;
-
-}
-
-
-.landing-divider-particles span:nth-child(10) {
-
-    left:
-        18%;
-
-    top:
-        39%;
-
-    animation-delay:
-        -4.4s;
-
-}
-
-
-.landing-divider-particles span:nth-child(11) {
-
-    left:
-        80%;
-
-    top:
-        72%;
-
-    animation-delay:
-        -1.8s;
-
-}
-
-
-.landing-divider-particles span:nth-child(12) {
-
-    left:
-        35%;
-
-    top:
-        85%;
-
-    animation-delay:
-        -3.8s;
-
-}
-
-
-/* =========================================
-   PAINEL CENTRAL
-========================================= */
-
-.landing-panel {
-
-    /*
-        O painel é centralizado em relação
-        À TELA INTEIRA.
-    */
-
-    position: absolute;
-
-    z-index: 100;
-
-    top: 50%;
-    left: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-    width:
-        min(390px, calc(100vw - 40px));
 
     padding:
-        34px 32px 28px;
+        42px
+        42px
+        34px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+
+    color: #ffffff;
 
     border:
         1px solid
-        rgba(180, 108, 255, 0.42);
+        rgba(255, 255, 255, 0.18);
 
     border-radius:
-        18px;
+        24px;
 
     background:
-
         linear-gradient(
             145deg,
+            rgba(13, 10, 22, 0.88),
+            rgba(7, 7, 13, 0.94)
+        );
 
-            rgba(20, 22, 33, 0.96),
+    backdrop-filter:
+        blur(18px);
 
-            rgba(9, 10, 17, 0.98)
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0, 0, 0, 0.65),
+        0 0 45px
+        rgba(192, 132, 252, 0.16);
+}
+
+
+/* BORDA MÁGICA DO PAINEL */
+
+.landing-panel::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -1px;
+
+    z-index: -1;
+
+    border-radius:
+        24px;
+
+    padding: 1px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 225, 150, 0.7),
+            rgba(192, 132, 252, 0.5),
+            rgba(236, 72, 153, 0.55),
+            rgba(255, 225, 150, 0.45)
+        );
+
+    mask:
+        linear-gradient(#000 0 0)
+        content-box,
+        linear-gradient(#000 0 0);
+
+    mask-composite:
+        exclude;
+
+    -webkit-mask:
+        linear-gradient(#000 0 0)
+        content-box,
+        linear-gradient(#000 0 0);
+
+    -webkit-mask-composite:
+        xor;
+}
+
+
+/* =========================================================
+   SÍMBOLO
+========================================================= */
+
+.landing-symbol {
+    margin-bottom: 18px;
+
+    color:
+        #d8b4fe;
+
+    filter:
+        drop-shadow(
+            0 0 14px
+            rgba(192, 132, 252, 0.8)
+        );
+
+    animation:
+        landingSymbol 3s ease-in-out infinite;
+}
+
+
+@keyframes landingSymbol {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+    }
+
+    50% {
+        transform:
+            translateY(-6px)
+            rotate(8deg);
+    }
+
+}
+
+
+/* =========================================================
+   TEXTO DO PAINEL
+========================================================= */
+
+.landing-welcome {
+    font-size: 0.68rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.3em;
+
+    color:
+        rgba(255, 255, 255, 0.58);
+}
+
+
+.landing-panel h1 {
+    margin:
+        12px
+        0
+        8px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    font-size:
+        clamp(
+            2.5rem,
+            6vw,
+            4rem
+        );
+
+    line-height: 0.9;
+
+    letter-spacing: 0.08em;
+
+    font-weight: 300;
+}
+
+
+.landing-panel h1 strong {
+    margin-top: 6px;
+
+    font-weight: 900;
+
+    color:
+        #d8b4fe;
+
+    text-shadow:
+        0 0 25px
+        rgba(192, 132, 252, 0.4);
+}
+
+
+.landing-panel p {
+    margin:
+        12px
+        0
+        0;
+
+    color:
+        rgba(255, 255, 255, 0.68);
+
+    font-size: 0.95rem;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   DIVISOR INTERNO
+========================================================= */
+
+.landing-panel .landing-divider {
+    position: relative;
+
+    top: auto;
+    left: auto;
+
+    transform: none;
+
+    width: 100%;
+
+    height: auto;
+
+    margin:
+        26px
+        0
+        24px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 14px;
+
+    color:
+        #d8b4fe;
+
+    font-size: 0.9rem;
+
+    overflow: visible;
+
+    pointer-events: none;
+}
+
+
+.landing-panel .landing-divider span {
+    position: relative;
+
+    top: auto;
+    left: auto;
+
+    display: block;
+
+    width: 70px;
+    height: 1px;
+
+    border-radius: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(192, 132, 252, 0.8)
         );
 
     box-shadow:
+        0 0 8px
+        rgba(192, 132, 252, 0.4);
 
-        0 20px 80px
-        rgba(0, 0, 0, 0.68),
-
-        0 0 40px
-        rgba(121, 55, 255, 0.15);
-
-    backdrop-filter:
-        blur(14px);
-
-    text-align:
-        center;
-
+    animation: none;
 }
 
 
-.landing-panel-icon {
+.landing-panel .landing-divider span:last-child {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(236, 72, 153, 0.8),
+            transparent
+        );
+}
 
-    display:
-        flex;
 
-    justify-content:
-        center;
+/* =========================================================
+   AÇÕES
+========================================================= */
 
-    margin-bottom:
-        14px;
+.landing-actions {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    align-items: stretch;
+}
+
+
+.landing-actions button {
+    width: 100%;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+.landing-login {
+    margin-top: 20px;
+
+    padding: 10px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    border: none;
+
+    background: transparent;
 
     color:
-        #c775ff;
+        rgba(255, 255, 255, 0.62);
 
+    font-size: 0.82rem;
+
+    cursor: pointer;
+
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
 }
 
 
-.landing-panel-eyebrow {
-
-    display:
-        block;
-
-    margin-bottom:
-        10px;
-
-    font-size:
-        0.54rem;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.22em;
-
-    color:
-        rgba(255, 255, 255, 0.55);
-
-}
-
-
-.landing-panel h2 {
-
-    margin: 0;
-
+.landing-login:hover {
     color:
         #ffffff;
 
-    font-size:
-        clamp(2rem, 3vw, 3rem);
-
-    font-weight:
-        300;
-
-    line-height:
-        0.9;
-
-    letter-spacing:
-        0.08em;
-
+    transform:
+        translateY(-2px);
 }
 
 
-.landing-panel h2 strong {
-
-    display:
-        block;
-
-    margin-top:
-        6px;
-
-    font-weight:
-        900;
-
-    color:
-        #c67cff;
-
-    text-shadow:
-
-        0 0 18px
-        rgba(185, 93, 255, 0.35);
-
-}
-
-
-.landing-panel-description {
-
-    margin:
-
-        20px
-        auto
-        24px;
-
-    max-width:
-        260px;
-
-    font-size:
-        0.72rem;
-
-    line-height:
-        1.7;
-
-    color:
-        rgba(255, 255, 255, 0.64);
-
-}
-
-
-/* =========================================
-   SISTEMA DO PAINEL
-========================================= */
-
-.landing-panel-system {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        12px;
-
-    padding:
-        14px;
-
-    margin-bottom:
-        14px;
-
-    border:
-
-        1px solid
-        rgba(255, 255, 255, 0.10);
-
-    border-radius:
-        10px;
-
-    background:
-
-        rgba(255, 255, 255, 0.035);
-
-    text-align:
-        left;
-
-}
-
-
-.landing-panel-system svg {
-
-    flex-shrink:
-        0;
-
-    color:
-        #bb73ff;
-
-}
-
-
-.landing-panel-system small {
-
-    display:
-        block;
-
-    margin-bottom:
-        4px;
-
-    font-size:
-        0.48rem;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.14em;
-
-    color:
-        rgba(255, 255, 255, 0.48);
-
-}
-
-
-.landing-panel-system strong {
-
-    display:
-        block;
-
-    font-size:
-        0.62rem;
-
-    letter-spacing:
-        0.04em;
-
-    color:
-        rgba(255, 255, 255, 0.88);
-
-}
-
-
-/* =========================================
-   BOTÕES
-========================================= */
-
-.landing-panel-actions {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    gap:
-        10px;
-
-}
-
-
-.landing-panel-actions button {
-
-    width:
-        100%;
-
-}
-
-
-.landing-create-button {
-
-    min-height:
-        46px;
-
-    border:
-
-        1px solid
-        rgba(255, 255, 255, 0.16);
-
-    border-radius:
-        9px;
-
-    background:
-
-        rgba(255, 255, 255, 0.025);
-
-    color:
-        rgba(255, 255, 255, 0.88);
-
-    font-size:
-        0.72rem;
-
-    cursor:
-        pointer;
-
-    transition:
-
-        0.25s
-        ease;
-
-}
-
-
-.landing-create-button:hover {
-
-    border-color:
-        rgba(194, 112, 255, 0.75);
-
-    background:
-        rgba(151, 60, 255, 0.12);
-
-}
-
-
-.landing-panel-footer {
-
-    display:
-        block;
-
-    margin-top:
-        14px;
-
-    font-size:
-        0.48rem;
-
-    color:
-        rgba(255, 255, 255, 0.34);
-
-}
-
-
-/* =========================================
-   PARTÍCULAS AMBIENTAIS
-========================================= */
-
-.landing-ambient-particles {
-
-    position: absolute;
-
-    z-index: 20;
+/* =========================================================
+   CONTORNO MÁGICO DA TELA
+========================================================= */
+
+.landing-border {
+    position: fixed;
 
     inset: 0;
 
-    pointer-events:
-        none;
+    z-index: 20;
 
-}
+    pointer-events: none;
 
-
-.landing-ambient-particles span {
-
-    position: absolute;
-
-    width:
-        3px;
-
-    height:
-        3px;
-
-    border-radius:
-        50%;
-
-    background:
-        #c767ff;
+    border:
+        2px solid
+        rgba(192, 132, 252, 0.45);
 
     box-shadow:
-
-        0 0 8px
-        #9f43ff;
+        inset 0 0 20px
+        rgba(192, 132, 252, 0.2),
+        inset 0 0 70px
+        rgba(236, 72, 153, 0.08);
 
     animation:
-        ambientFloat
-        7s
-        ease-in-out
-        infinite;
-
+        magicalBorder 4s ease-in-out infinite;
 }
 
 
-.landing-ambient-particles span:nth-child(1) {
-
-    left: 8%;
-    top: 18%;
-
-}
-
-.landing-ambient-particles span:nth-child(2) {
-
-    left: 17%;
-    top: 72%;
-
-    animation-delay: -3s;
-
-}
-
-.landing-ambient-particles span:nth-child(3) {
-
-    left: 28%;
-    top: 24%;
-
-    animation-delay: -5s;
-
-}
-
-.landing-ambient-particles span:nth-child(4) {
-
-    left: 41%;
-    top: 83%;
-
-    animation-delay: -2s;
-
-}
-
-.landing-ambient-particles span:nth-child(5) {
-
-    left: 57%;
-    top: 14%;
-
-    animation-delay: -4s;
-
-}
-
-.landing-ambient-particles span:nth-child(6) {
-
-    left: 66%;
-    top: 70%;
-
-    animation-delay: -1s;
-
-}
-
-.landing-ambient-particles span:nth-child(7) {
-
-    left: 77%;
-    top: 34%;
-
-    animation-delay: -6s;
-
-}
-
-.landing-ambient-particles span:nth-child(8) {
-
-    left: 88%;
-    top: 76%;
-
-    animation-delay: -2.5s;
-
-}
-
-.landing-ambient-particles span:nth-child(9) {
-
-    left: 94%;
-    top: 20%;
-
-    animation-delay: -5.5s;
-
-}
-
-.landing-ambient-particles span:nth-child(10) {
-
-    left: 48%;
-    top: 9%;
-
-    animation-delay: -1.5s;
-
-}
-
-
-/* =========================================
-   CONTORNO MÁGICO DO SITE
-========================================= */
-
-.landing-magic-border {
-
-    position: absolute;
-
-    z-index: 200;
-
-    inset:
-        6px;
-
-    border:
-        1px solid
-        rgba(172, 82, 255, 0.5);
-
-    box-shadow:
-
-        inset
-        0 0 25px
-        rgba(151, 60, 255, 0.10),
-
-        0 0 20px
-        rgba(151, 60, 255, 0.12);
-
-    pointer-events:
-        none;
-
-}
-
-
-.landing-magic-border::before {
-
-    content:
-        "";
-
-    position: absolute;
-
-    inset:
-        -2px;
-
-    border:
-
-        1px solid
-        rgba(255, 108, 225, 0.16);
-
-    filter:
-        blur(4px);
-
-}
-
-
-/* =========================================
-   RODAPÉ
-========================================= */
-
-.landing-footer {
-
-    position: absolute;
-
-    z-index: 30;
-
-    left: 50%;
-    bottom: 14px;
-
-    transform:
-        translateX(-50%);
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        10px;
-
-    white-space:
-        nowrap;
-
-    font-size:
-        0.48rem;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        0.12em;
-
-    color:
-        rgba(255, 255, 255, 0.35);
-
-}
-
-
-/* =========================================
-   ANIMAÇÕES
-========================================= */
-
-@keyframes dividerPulse {
+@keyframes magicalBorder {
 
     0%,
     100% {
+        opacity: 0.55;
 
-        opacity:
-            0.55;
-
+        box-shadow:
+            inset 0 0 20px
+            rgba(192, 132, 252, 0.2),
+            inset 0 0 70px
+            rgba(236, 72, 153, 0.08);
     }
 
     50% {
+        opacity: 1;
 
-        opacity:
-            1;
-
+        box-shadow:
+            inset 0 0 28px
+            rgba(255, 226, 154, 0.28),
+            inset 0 0 90px
+            rgba(192, 132, 252, 0.14);
     }
 
 }
 
 
-@keyframes dividerParticle {
-
-    0% {
-
-        transform:
-            translateY(0)
-            translateX(0)
-            scale(0.7);
-
-        opacity:
-            0;
-
-    }
-
-    20% {
-
-        opacity:
-            1;
-
-    }
-
-    50% {
-
-        transform:
-
-            translateY(-40px)
-            translateX(12px)
-            scale(1.4);
-
-    }
-
-    100% {
-
-        transform:
-
-            translateY(-90px)
-            translateX(-8px)
-            scale(0.6);
-
-        opacity:
-            0;
-
-    }
-
-}
-
-
-@keyframes ambientFloat {
-
-    0%,
-    100% {
-
-        transform:
-            translateY(0)
-            translateX(0);
-
-        opacity:
-            0.35;
-
-    }
-
-    50% {
-
-        transform:
-            translateY(-24px)
-            translateX(12px);
-
-        opacity:
-            1;
-
-    }
-
-}
-
-
-/* =========================================
+/* =========================================================
    RESPONSIVIDADE
-========================================= */
+========================================================= */
 
-@media (
-    max-width: 850px
-) {
+@media (max-width: 900px) {
 
-    .landing-world-content {
-
-        bottom:
-            7%;
-
+    .landing-world {
+        width: 62%;
     }
 
 
-    .landing-dnd-content {
-
-        left:
-            6%;
-
+    .landing-world-text {
+        max-width: 260px;
     }
 
 
-    .landing-ordem-content {
-
-        right:
-            6%;
-
+    .landing-dnd .landing-world-text {
+        left: 5%;
     }
 
 
-    .landing-world-content h1 {
+    .landing-ordem .landing-world-text {
+        right: 5%;
+    }
 
+
+    .landing-world-text h2 {
         font-size:
             clamp(
-                2rem,
-                6vw,
-                3.4rem
+                1.8rem,
+                5vw,
+                3.2rem
             );
-
-    }
-
-
-    .landing-panel {
-
-        width:
-            min(
-                360px,
-                calc(100vw - 32px)
-            );
-
-        padding:
-            28px
-            24px
-            24px;
-
     }
 
 }
 
 
-@media (
-    max-width: 600px
-) {
+@media (max-width: 700px) {
 
     .landing {
-
-        min-height:
-            100dvh;
-
+        min-height: 100svh;
     }
 
 
     .landing-world {
-
-        width:
-            100%;
-
-        height:
-            50%;
-
+        width: 100%;
+        height: 50%;
     }
 
 
-    .landing-world-dnd {
+    .landing-dnd {
+        top: 0;
+        left: 0;
+        bottom: auto;
 
-        top:
-            0;
-
-        left:
-            0;
-
+        clip-path: none;
     }
 
 
-    .landing-world-ordem {
+    .landing-ordem {
+        top: auto;
+        right: 0;
+        bottom: 0;
 
-        top:
-            50%;
-
-        right:
-            0;
-
+        clip-path: none;
     }
 
 
-    .landing-magic-divider {
+    .landing::before {
+        top: 50%;
+        left: -10%;
 
-        top:
-            50%;
-
-        bottom:
-            auto;
-
-        left:
-            0;
-
-        width:
-            100%;
-
-        height:
-            80px;
-
-        transform:
-            translateY(-50%);
-
-    }
-
-
-    .landing-divider-line {
-
-        top:
-            50%;
-
-        bottom:
-            auto;
-
-        left:
-            0;
-
-        width:
-            100%;
-
-        height:
-            3px;
+        width: 120%;
+        height: 6px;
 
         transform:
             translateY(-50%);
 
         background:
-
             linear-gradient(
                 90deg,
-
                 transparent,
-
-                #b764ff,
-
-                #ff66e8,
-
-                #8d4fff,
-
+                rgba(192, 132, 252, 0.95),
+                rgba(255, 255, 255, 0.95),
+                rgba(236, 72, 153, 0.95),
                 transparent
             );
+    }
 
+
+    .landing-world-text {
+        top: 24%;
+
+        transform:
+            translateY(-50%);
+    }
+
+
+    .landing-ordem .landing-world-text {
+        top: 72%;
+    }
+
+
+    .landing-world-text span {
+        font-size: 0.52rem;
+
+        letter-spacing: 0.16em;
+    }
+
+
+    .landing-world-text h2 {
+        font-size: 1.55rem;
     }
 
 
     .landing-panel {
-
         width:
-            min(
-                340px,
-                calc(100vw - 30px)
-            );
+            calc(100% - 30px);
+
+        max-width:
+            440px;
 
         padding:
+            32px
             24px
-            20px;
-
+            28px;
     }
 
 
-    .landing-world-content {
-
-        display:
-            none;
-
+    .landing-panel h1 {
+        font-size: 2.4rem;
     }
 
 
-    .landing-footer {
+    .landing-border {
+        border-width: 1px;
+    }
 
-        font-size:
-            0.38rem;
+}
 
-        bottom:
-            8px;
 
+@media (max-width: 420px) {
+
+    .landing-panel {
+        padding:
+            28px
+            18px
+            24px;
+    }
+
+
+    .landing-symbol {
+        margin-bottom: 12px;
+    }
+
+
+    .landing-panel h1 {
+        font-size: 2.05rem;
+    }
+
+
+    .landing-panel p {
+        font-size: 0.84rem;
+    }
+
+
+    .landing-panel .landing-divider span {
+        width: 45px;
     }
 
 }
