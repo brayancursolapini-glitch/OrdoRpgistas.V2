@@ -1,6 +1,6 @@
 import { Sparkles, Sword, Shield } from "lucide-react";
 
-import MagicalButton from "../../components/Buttons/MagicalButton/MagicalButton";
+import MagicalButton from "../../components/Buttons/MagicalButton";
 
 import "./Landing.css";
 
