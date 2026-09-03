@@ -10,53 +10,68 @@
 
     overflow: hidden;
 
-    background:
-        #050509;
-
-    color:
-        #ffffff;
-
-    isolation:
-        isolate;
+    background: #050509;
 }
 
 
 /* =========================================
-   FUNDOS
+   MUNDOS
 ========================================= */
 
-.landing-backgrounds {
+.landing-worlds {
     position: absolute;
 
     inset: 0;
 
     display: flex;
 
-    z-index: 0;
+    width: 100%;
+    height: 100%;
 }
 
+
+/* =========================================
+   CADA MUNDO
+========================================= */
 
 .landing-world {
     position: relative;
 
     width: 50%;
-    min-height: 100vh;
+    height: 100%;
 
     overflow: hidden;
 
-    background-size:
-        cover;
-
-    background-position:
-        center;
-
-    background-repeat:
-        no-repeat;
+    background-size: cover;
+    background-position: center;
 
     transition:
-        filter 0.5s ease;
+        filter 0.6s ease,
+        transform 0.6s ease;
 }
 
+
+/* =========================================
+   IMAGEM D&D
+========================================= */
+
+.landing-world-dnd {
+    background-position: center;
+}
+
+
+/* =========================================
+   IMAGEM ORDEM
+========================================= */
+
+.landing-world-ordem {
+    background-position: center;
+}
+
+
+/* =========================================
+   ESCURECIMENTO DAS IMAGENS
+========================================= */
 
 .landing-world::before {
     content: "";
@@ -65,144 +80,79 @@
 
     inset: 0;
 
-    background:
-        linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.05),
-            rgba(0, 0, 0, 0.2)
-        );
-}
-
-
-.landing-world-dnd {
-    background-position:
-        center;
-}
-
-
-.landing-world-ordem {
-    background-position:
-        center;
-}
-
-
-/* =========================================
-   ESCURECIMENTO DAS IMAGENS
-========================================= */
-
-.landing-world-darkness {
-    position: absolute;
-
-    inset: 0;
+    z-index: 1;
 
     background:
         linear-gradient(
             to bottom,
-            rgba(0, 0, 0, 0.12),
-            rgba(0, 0, 0, 0.32)
-        );
-
-    z-index: 1;
-}
-
-
-.landing-world-vignette {
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 2;
-
-    background:
-        radial-gradient(
-            circle at center,
-            transparent 35%,
-            rgba(0, 0, 0, 0.3) 100%
+            rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.35) 55%,
+            rgba(0, 0, 0, 0.75)
         );
 }
 
 
 /* =========================================
-   ESCURECIMENTO CENTRAL
+   CONTEÚDO DOS MUNDOS
 ========================================= */
 
-.landing-global-overlay {
+.landing-world-content {
     position: absolute;
 
     inset: 0;
 
     z-index: 3;
 
-    pointer-events: none;
+    display: flex;
+    flex-direction: column;
 
-    background:
-        linear-gradient(
-            90deg,
-            rgba(3, 5, 10, 0.08) 0%,
-            rgba(3, 5, 10, 0.02) 25%,
-            rgba(3, 5, 10, 0.35) 45%,
-            rgba(3, 5, 10, 0.35) 55%,
-            rgba(3, 5, 10, 0.02) 75%,
-            rgba(3, 5, 10, 0.08) 100%
+    justify-content: flex-end;
+
+    padding:
+        clamp(40px, 7vw, 110px);
+
+    padding-bottom:
+        clamp(70px, 10vh, 130px);
+
+    color: #ffffff;
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   TEXTO PEQUENO
+========================================= */
+
+.landing-world-eyebrow {
+    margin-bottom: 12px;
+
+    font-size:
+        clamp(
+            0.55rem,
+            0.7vw,
+            0.75rem
+        );
+
+    font-weight: 700;
+
+    letter-spacing: 0.25em;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.7
         );
 }
 
 
 /* =========================================
-   TEXTOS DOS MUNDOS
+   TÍTULOS DOS MUNDOS
 ========================================= */
 
-.landing-world-text {
-    position: absolute;
-
-    z-index: 5;
-
-    bottom: 10vh;
-
-    width:
-        min(430px, 80%);
-
-    display: flex;
-
-    flex-direction:
-        column;
-
-    gap: 14px;
-}
-
-
-.landing-world-text-dnd {
-    left: 12%;
-}
-
-
-.landing-world-text-ordem {
-    right: 12%;
-
-    align-items:
-        flex-end;
-
-    text-align:
-        right;
-}
-
-
-.landing-world-eyebrow {
-    font-size:
-        0.56rem;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        0.22em;
-
-    color:
-        rgba(255, 255, 255, 0.75);
-}
-
-
-.landing-world-text h1 {
+.landing-world h1 {
     margin: 0;
 
     font-family:
@@ -212,75 +162,93 @@
 
     font-size:
         clamp(
-            2.6rem,
-            4vw,
-            5.2rem
+            2.4rem,
+            5vw,
+            5.5rem
         );
 
-    line-height:
-        0.9;
+    line-height: 0.9;
 
-    letter-spacing:
-        0.015em;
+    letter-spacing: 0.02em;
+
+    color: #ffffff;
 
     text-shadow:
-        0 8px 25px
-        rgba(0, 0, 0, 0.8);
+        0 10px 35px
+        rgba(
+            0,
+            0,
+            0,
+            0.65
+        );
 }
 
 
-.landing-world-text p {
-    margin: 0;
+.landing-world-description {
+    margin-top: 22px;
+
+    max-width: 300px;
 
     font-size:
-        0.78rem;
+        clamp(
+            0.75rem,
+            1vw,
+            1rem
+        );
+
+    line-height: 1.6;
 
     color:
-        rgba(255, 255, 255, 0.72);
-
-    text-shadow:
-        0 4px 15px
-        rgba(0, 0, 0, 0.9);
-}
-
-
-.landing-world-system {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    margin-top: 4px;
-
-    font-size:
-        0.58rem;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        0.12em;
-
-    color:
-        rgba(255, 255, 255, 0.72);
+        rgba(
+            255,
+            255,
+            255,
+            0.72
+        );
 }
 
 
 /* =========================================
-   DIVISÃO MÁGICA CENTRAL
+   SISTEMA
 ========================================= */
 
-.landing-magical-divider {
+.landing-world-system {
+    margin-top: 22px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 0.62rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.18em;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.8
+        );
+}
+
+
+/* =========================================
+   DIVISÓRIA CENTRAL
+========================================= */
+
+.landing-divider {
     position: absolute;
 
-    top: -5%;
+    top: 0;
+    bottom: 0;
 
     left: 50%;
 
-    width: 90px;
-
-    height: 110%;
+    width: 8px;
 
     transform:
         translateX(-50%);
@@ -288,20 +256,45 @@
     z-index: 10;
 
     pointer-events: none;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent 0%,
+            rgba(192, 132, 252, 0.25) 8%,
+            rgba(168, 85, 247, 0.95) 50%,
+            rgba(236, 72, 153, 0.4) 92%,
+            transparent 100%
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(168, 85, 247, 0.8),
+
+        0 0 35px
+        rgba(168, 85, 247, 0.55),
+
+        0 0 70px
+        rgba(236, 72, 153, 0.35);
 }
 
 
-.landing-divider-core {
+/* =========================================
+   BRILHO DA DIVISÓRIA
+========================================= */
+
+.landing-divider::before {
+    content: "";
+
     position: absolute;
 
     top: 0;
+    bottom: 0;
 
     left: 50%;
 
     width: 2px;
 
-    height: 100%;
-
     transform:
         translateX(-50%);
 
@@ -309,324 +302,80 @@
         linear-gradient(
             to bottom,
             transparent,
-            rgba(255, 255, 255, 0.75) 12%,
-            rgba(192, 132, 252, 0.95) 30%,
-            rgba(255, 255, 255, 0.9) 50%,
-            rgba(168, 85, 247, 0.9) 70%,
-            rgba(255, 255, 255, 0.7) 88%,
+            #d8b4fe,
+            #ffffff,
+            #d8b4fe,
             transparent
-        );
-
-    clip-path:
-        polygon(
-            48% 0%,
-            60% 5%,
-            40% 12%,
-            58% 20%,
-            43% 28%,
-            62% 35%,
-            39% 44%,
-            58% 52%,
-            42% 61%,
-            60% 70%,
-            38% 78%,
-            58% 87%,
-            45% 94%,
-            52% 100%,
-            48% 100%
         );
 
     box-shadow:
-        0 0 10px
-        rgba(192, 132, 252, 0.9),
-        0 0 25px
-        rgba(168, 85, 247, 0.7),
-        0 0 50px
-        rgba(236, 72, 153, 0.35);
+        0 0 18px
+        rgba(
+            255,
+            255,
+            255,
+            0.8
+        );
 }
 
 
-.landing-divider-glow {
+/* =========================================
+   ENERGIA MÁGICA
+========================================= */
+
+.landing-divider::after {
+    content: "";
+
     position: absolute;
 
-    top: 0;
+    inset: 0;
 
-    left: 50%;
-
-    width: 35px;
-
-    height: 100%;
+    width: 45px;
 
     transform:
         translateX(-50%);
 
-    filter:
-        blur(16px);
-
-    opacity:
-        0.8;
-
     background:
-        linear-gradient(
-            to bottom,
-            transparent,
-            rgba(139, 92, 246, 0.8),
-            rgba(236, 72, 153, 0.55),
-            rgba(139, 92, 246, 0.8),
-            transparent
+        radial-gradient(
+            circle,
+            rgba(192, 132, 252, 0.9) 0%,
+            rgba(192, 132, 252, 0.25) 18%,
+            transparent 65%
         );
 
+    opacity: 0.8;
+
     animation:
-        dividerGlow
+        dividerEnergy
         3s
         ease-in-out
         infinite;
 }
 
 
-.landing-divider-energy {
-    position: absolute;
+@keyframes dividerEnergy {
 
-    left: 50%;
+    0% {
+        opacity: 0.4;
 
-    width: 4px;
+        filter:
+            blur(0px);
+    }
 
-    height: 90px;
+    50% {
+        opacity: 1;
 
-    border-radius:
-        50%;
+        filter:
+            blur(2px);
+    }
 
-    transform:
-        translateX(-50%);
+    100% {
+        opacity: 0.4;
 
-    background:
-        linear-gradient(
-            to bottom,
-            transparent,
-            #ffffff,
-            #c084fc,
-            #ec4899,
-            transparent
-        );
+        filter:
+            blur(0px);
+    }
 
-    filter:
-        blur(1px);
-
-    box-shadow:
-        0 0 18px
-        rgba(192, 132, 252, 0.9);
-
-    animation:
-        dividerEnergy
-        linear
-        infinite;
-}
-
-
-.landing-divider-energy-one {
-    animation-duration:
-        4s;
-}
-
-
-.landing-divider-energy-two {
-    animation-duration:
-        5.8s;
-
-    animation-delay:
-        -2.2s;
-}
-
-
-.landing-divider-energy-three {
-    animation-duration:
-        7s;
-
-    animation-delay:
-        -4.8s;
-}
-
-
-/* =========================================
-   BORDA MÁGICA
-========================================= */
-
-.landing-magic-border {
-    position: absolute;
-
-    inset: 7px;
-
-    z-index: 20;
-
-    pointer-events: none;
-
-    border:
-        1px solid
-        rgba(192, 132, 252, 0.22);
-
-    box-shadow:
-        inset 0 0 20px
-        rgba(139, 92, 246, 0.08);
-}
-
-
-.landing-magic-border::before {
-    content: "";
-
-    position: absolute;
-
-    inset: -1px;
-
-    border:
-        1px solid
-        transparent;
-
-    border-radius:
-        2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(192, 132, 252, 0.8),
-            transparent,
-            rgba(236, 72, 153, 0.7),
-            transparent
-        );
-
-    mask:
-        linear-gradient(#fff 0 0)
-        padding-box,
-        linear-gradient(#fff 0 0);
-
-    mask-composite:
-        exclude;
-
-    opacity:
-        0.65;
-
-    animation:
-        borderPulse
-        4s
-        ease-in-out
-        infinite;
-}
-
-
-/* =========================================
-   PARTÍCULAS
-========================================= */
-
-.landing-particles {
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 12;
-
-    pointer-events: none;
-
-    overflow: hidden;
-}
-
-
-.landing-particle {
-    position: absolute;
-
-    width: 4px;
-
-    height: 4px;
-
-    border-radius:
-        50%;
-
-    background:
-        #c084fc;
-
-    box-shadow:
-        0 0 10px
-        #c084fc;
-
-    animation:
-        particleFloat
-        linear
-        infinite;
-}
-
-
-.particle-1 {
-    left: 5%;
-    top: 70%;
-    animation-duration: 8s;
-}
-
-.particle-2 {
-    left: 16%;
-    top: 28%;
-    animation-duration: 10s;
-    animation-delay: -3s;
-}
-
-.particle-3 {
-    left: 27%;
-    top: 50%;
-    animation-duration: 7s;
-    animation-delay: -4s;
-}
-
-.particle-4 {
-    left: 42%;
-    top: 20%;
-    animation-duration: 9s;
-}
-
-.particle-5 {
-    left: 49%;
-    top: 75%;
-    animation-duration: 6s;
-}
-
-.particle-6 {
-    left: 54%;
-    top: 30%;
-    animation-duration: 11s;
-}
-
-.particle-7 {
-    left: 63%;
-    top: 70%;
-    animation-duration: 8s;
-    animation-delay: -2s;
-}
-
-.particle-8 {
-    left: 73%;
-    top: 38%;
-    animation-duration: 10s;
-}
-
-.particle-9 {
-    left: 84%;
-    top: 76%;
-    animation-duration: 7s;
-}
-
-.particle-10 {
-    left: 94%;
-    top: 25%;
-    animation-duration: 9s;
-}
-
-.particle-11 {
-    left: 36%;
-    top: 85%;
-    animation-duration: 12s;
-}
-
-.particle-12 {
-    left: 58%;
-    top: 12%;
-    animation-duration: 8s;
 }
 
 
@@ -642,290 +391,299 @@
     */
 
     top: 50%;
-
     left: 50%;
 
     transform:
         translate(-50%, -50%);
 
-    z-index: 30;
+    /*
+    GARANTE QUE ELE FIQUE
+    ACIMA DA DIVISÓRIA
+    */
+
+    z-index: 50;
 
     width:
         min(
-            92vw,
-            390px
+            380px,
+            calc(100vw - 40px)
         );
 
-    border:
-        1px solid
-        rgba(192, 132, 252, 0.25);
+    margin: 0;
 
-    border-radius:
-        18px;
+    padding:
+        34px
+        28px;
 
-    overflow: hidden;
+    border-radius: 18px;
+
+    color: #ffffff;
 
     background:
         linear-gradient(
             145deg,
-            rgba(15, 18, 27, 0.94),
-            rgba(8, 10, 17, 0.96)
+            rgba(17, 20, 30, 0.96),
+            rgba(8, 10, 18, 0.98)
+        );
+
+    border:
+        1px solid
+        rgba(
+            192,
+            132,
+            252,
+            0.35
+        );
+
+    box-shadow:
+        0 25px 80px
+        rgba(
+            0,
+            0,
+            0,
+            0.65
+        ),
+
+        0 0 40px
+        rgba(
+            168,
+            85,
+            247,
+            0.12
         );
 
     backdrop-filter:
         blur(18px);
 
-    box-shadow:
-        0 25px 80px
-        rgba(0, 0, 0, 0.65),
-        0 0 35px
-        rgba(139, 92, 246, 0.12);
-}
-
-
-.landing-panel-top-glow {
-    position: absolute;
-
-    top: -80px;
-
-    left: 50%;
-
-    width: 240px;
-
-    height: 150px;
-
-    transform:
-        translateX(-50%);
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(168, 85, 247, 0.22),
-            transparent 70%
-        );
-
-    pointer-events: none;
-}
-
-
-.landing-panel-content {
-    position: relative;
-
-    z-index: 2;
-
-    padding:
-        32px
-        30px
-        25px;
-
-    display: flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        center;
-
-    text-align:
-        center;
+    -webkit-backdrop-filter:
+        blur(18px);
 }
 
 
 /* =========================================
-   ÍCONE
+   SÍMBOLO
 ========================================= */
 
 .landing-panel-icon {
     display: flex;
 
-    align-items: center;
-
     justify-content: center;
+    align-items: center;
 
     margin-bottom: 12px;
 
-    color:
-        #c084fc;
+    color: #c084fc;
 
     filter:
         drop-shadow(
             0 0 12px
-            rgba(192, 132, 252, 0.7)
+            rgba(
+                192,
+                132,
+                252,
+                0.6
+            )
         );
 }
 
 
 /* =========================================
-   TEXTOS DO PAINEL
+   TEXTO SUPERIOR
 ========================================= */
 
 .landing-panel-eyebrow {
-    font-size:
-        0.52rem;
+    display: block;
 
-    font-weight:
-        700;
+    margin-bottom: 12px;
 
-    letter-spacing:
-        0.2em;
+    text-align: center;
+
+    font-size: 0.58rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.22em;
 
     color:
-        rgba(255, 255, 255, 0.48);
-}
-
-
-.landing-panel h2 {
-    margin:
-        10px 0 8px;
-
-    display: flex;
-
-    flex-direction:
-        column;
-
-    font-size:
-        clamp(
-            2.3rem,
-            5vw,
-            3.4rem
+        rgba(
+            255,
+            255,
+            255,
+            0.55
         );
-
-    line-height:
-        0.9;
-
-    font-weight:
-        300;
-
-    letter-spacing:
-        0.05em;
-}
-
-
-.landing-panel h2 strong {
-    font-weight:
-        900;
-
-    color:
-        #c084fc;
-
-    letter-spacing:
-        0.08em;
-
-    text-shadow:
-        0 0 22px
-        rgba(192, 132, 252, 0.22);
-}
-
-
-.landing-panel-description {
-    max-width:
-        270px;
-
-    margin:
-        8px 0
-        20px;
-
-    font-size:
-        0.68rem;
-
-    line-height:
-        1.6;
-
-    color:
-        rgba(255, 255, 255, 0.62);
 }
 
 
 /* =========================================
-   SISTEMA
+   LOGO
 ========================================= */
 
-.landing-current-system {
-    width: 100%;
+.landing-panel-title {
+    margin: 0;
 
+    text-align: center;
+
+    font-size:
+        clamp(
+            2rem,
+            4vw,
+            3rem
+        );
+
+    font-weight: 300;
+
+    letter-spacing: 0.08em;
+
+    line-height: 0.9;
+}
+
+
+.landing-panel-title strong {
+    display: block;
+
+    margin-top: 4px;
+
+    font-weight: 800;
+
+    color: #c084fc;
+
+    text-shadow:
+        0 0 22px
+        rgba(
+            192,
+            132,
+            252,
+            0.35
+        );
+}
+
+
+/* =========================================
+   DESCRIÇÃO
+========================================= */
+
+.landing-panel-description {
+    margin:
+        18px
+        auto
+        26px;
+
+    max-width: 270px;
+
+    text-align: center;
+
+    font-size: 0.78rem;
+
+    line-height: 1.6;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.58
+        );
+}
+
+
+/* =========================================
+   SISTEMA SELECIONADO
+========================================= */
+
+.landing-panel-system {
     display: flex;
 
     align-items: center;
 
     gap: 12px;
 
-    padding:
-        12px;
+    margin-bottom: 14px;
 
-    margin-bottom:
-        10px;
+    padding:
+        12px
+        14px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.04
+        );
 
     border:
         1px solid
-        rgba(255, 255, 255, 0.1);
-
-    border-radius:
-        10px;
-
-    background:
-        rgba(255, 255, 255, 0.035);
+        rgba(
+            255,
+            255,
+            255,
+            0.1
+        );
 }
 
 
-.landing-current-system-icon {
+.landing-panel-system-icon {
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
-    width: 36px;
+    width: 34px;
+    height: 34px;
 
-    height: 36px;
+    flex-shrink: 0;
 
-    border-radius:
-        9px;
+    border-radius: 9px;
 
-    color:
-        #c084fc;
+    color: #c084fc;
 
     background:
-        rgba(139, 92, 246, 0.13);
+        rgba(
+            192,
+            132,
+            252,
+            0.12
+        );
 }
 
 
-.landing-current-system-info {
+.landing-panel-system-info {
     display: flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        flex-start;
+    flex-direction: column;
 
     gap: 3px;
-
-    text-align:
-        left;
 }
 
 
-.landing-current-system-info small {
-    font-size:
-        0.45rem;
+.landing-panel-system-info small {
+    font-size: 0.5rem;
 
-    letter-spacing:
-        0.14em;
+    letter-spacing: 0.12em;
 
     color:
-        rgba(255, 255, 255, 0.42);
+        rgba(
+            255,
+            255,
+            255,
+            0.4
+        );
 }
 
 
-.landing-current-system-info strong {
-    font-size:
-        0.58rem;
+.landing-panel-system-info strong {
+    font-size: 0.68rem;
 
-    letter-spacing:
-        0.04em;
+    letter-spacing: 0.06em;
 
     color:
-        rgba(255, 255, 255, 0.85);
+        rgba(
+            255,
+            255,
+            255,
+            0.85
+        );
 }
 
 
@@ -934,334 +692,307 @@
 ========================================= */
 
 .landing-panel-actions {
-    width: 100%;
-
     display: flex;
-
-    flex-direction:
-        column;
+    flex-direction: column;
 
     gap: 10px;
 }
 
 
-.landing-register-button {
+.landing-panel-enter,
+.landing-panel-register {
     width: 100%;
 
-    min-height: 42px;
+    min-height: 44px;
 
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.13);
+    border-radius: 9px;
 
-    border-radius:
-        9px;
+    cursor: pointer;
 
-    color:
-        rgba(255, 255, 255, 0.85);
+    font-family: inherit;
 
-    background:
-        rgba(255, 255, 255, 0.035);
+    font-size: 0.72rem;
 
-    cursor:
-        pointer;
+    font-weight: 700;
 
     transition:
-        0.25s ease;
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
 }
 
 
-.landing-register-button:hover {
+.landing-panel-enter {
+    border:
+        1px solid
+        rgba(
+            192,
+            132,
+            252,
+            0.8
+        );
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6d28d9,
+            #a21caf,
+            #be185d
+        );
+
+    box-shadow:
+        0 8px 25px
+        rgba(
+            109,
+            40,
+            217,
+            0.3
+        );
+}
+
+
+.landing-panel-enter:hover {
     transform:
         translateY(-2px);
 
-    border-color:
-        rgba(192, 132, 252, 0.45);
+    box-shadow:
+        0 12px 30px
+        rgba(
+            192,
+            132,
+            252,
+            0.45
+        );
+}
+
+
+.landing-panel-register {
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.12
+        );
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.8
+        );
 
     background:
-        rgba(139, 92, 246, 0.12);
+        rgba(
+            255,
+            255,
+            255,
+            0.03
+        );
+}
+
+
+.landing-panel-register:hover {
+    transform:
+        translateY(-2px);
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.07
+        );
 }
 
 
 /* =========================================
-   FOOTER DO PAINEL
+   FRASE INFERIOR
 ========================================= */
 
 .landing-panel-footer {
-    margin-top:
-        15px;
+    margin-top: 18px;
 
-    font-size:
-        0.48rem;
+    text-align: center;
+
+    font-size: 0.5rem;
 
     color:
-        rgba(255, 255, 255, 0.35);
+        rgba(
+            255,
+            255,
+            255,
+            0.3
+        );
 }
 
 
 /* =========================================
-   RODAPÉ
+   PARTÍCULAS DA LANDING
 ========================================= */
 
-.landing-bottom-brand {
+.landing-particles {
     position: absolute;
 
-    left: 50%;
+    inset: 0;
 
-    bottom: 18px;
+    z-index: 20;
 
-    transform:
-        translateX(-50%);
+    pointer-events: none;
 
-    z-index: 25;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    white-space:
-        nowrap;
-
-    font-size:
-        0.48rem;
-
-    letter-spacing:
-        0.12em;
-
-    color:
-        rgba(255, 255, 255, 0.38);
+    overflow: hidden;
 }
 
 
-/* =========================================
-   ANIMAÇÕES
-========================================= */
+.landing-particle {
+    position: absolute;
 
-@keyframes dividerGlow {
+    width: 3px;
+    height: 3px;
 
-    0%,
-    100% {
+    border-radius: 50%;
 
-        opacity:
-            0.4;
+    background: #c084fc;
 
-    }
+    box-shadow:
+        0 0 10px
+        rgba(
+            192,
+            132,
+            252,
+            0.9
+        );
 
-    50% {
-
-        opacity:
-            1;
-
-    }
-
+    animation:
+        landingParticle
+        linear
+        infinite;
 }
 
 
-@keyframes dividerEnergy {
-
-    from {
-
-        top:
-            -15%;
-
-        opacity:
-            0;
-
-    }
-
-    15% {
-
-        opacity:
-            1;
-
-    }
-
-    85% {
-
-        opacity:
-            1;
-
-    }
-
-    to {
-
-        top:
-            105%;
-
-        opacity:
-            0;
-
-    }
-
-}
-
-
-@keyframes particleFloat {
+@keyframes landingParticle {
 
     0% {
-
         transform:
-            translate3d(
-                0,
-                0,
-                0
-            );
+            translateY(20px);
 
-        opacity:
-            0;
-
+        opacity: 0;
     }
 
     20% {
-
-        opacity:
-            1;
-
+        opacity: 1;
     }
 
-    50% {
-
-        transform:
-            translate3d(
-                20px,
-                -35px,
-                0
-            );
-
+    80% {
+        opacity: 1;
     }
 
     100% {
-
         transform:
-            translate3d(
-                -15px,
-                -80px,
-                0
-            );
+            translateY(-100vh);
 
-        opacity:
-            0;
-
-    }
-
-}
-
-
-@keyframes borderPulse {
-
-    0%,
-    100% {
-
-        opacity:
-            0.3;
-
-    }
-
-    50% {
-
-        opacity:
-            0.9;
-
+        opacity: 0;
     }
 
 }
 
 
 /* =========================================
-   RESPONSIVO
+   MOBILE
 ========================================= */
 
-@media (
-    max-width: 900px
-) {
+@media (max-width: 900px) {
 
-    .landing-world-text {
-        bottom:
-            8vh;
+    .landing-world-content {
+        padding: 30px;
+        padding-bottom: 60px;
     }
 
 
-    .landing-world-text-dnd {
-        left:
-            7%;
-    }
-
-
-    .landing-world-text-ordem {
-        right:
-            7%;
-    }
-
-
-    .landing-world-text h1 {
+    .landing-world h1 {
         font-size:
             clamp(
                 2rem,
-                6vw,
-                3.5rem
+                7vw,
+                4rem
             );
-    }
-
-}
-
-
-@media (
-    max-width: 700px
-) {
-
-    .landing-world-text {
-        width:
-            90%;
-    }
-
-
-    .landing-world-text-dnd {
-        left:
-            5%;
-    }
-
-
-    .landing-world-text-ordem {
-        right:
-            5%;
-    }
-
-
-    .landing-world-text h1 {
-        font-size:
-            2rem;
-    }
-
-
-    .landing-world-text p,
-    .landing-world-system {
-        display:
-            none;
     }
 
 
     .landing-panel {
         width:
             min(
-                90vw,
-                360px
+                350px,
+                calc(100vw - 32px)
+            );
+
+        padding:
+            28px
+            22px;
+
+        top: 50%;
+        left: 50%;
+
+        transform:
+            translate(-50%, -50%);
+    }
+
+}
+
+
+/* =========================================
+   CELULAR
+========================================= */
+
+@media (max-width: 650px) {
+
+    .landing-world-content {
+        padding: 20px;
+        padding-bottom: 45px;
+    }
+
+
+    .landing-world-description {
+        display: none;
+    }
+
+
+    .landing-world h1 {
+        font-size:
+            clamp(
+                1.5rem,
+                7vw,
+                2.5rem
             );
     }
 
 
-    .landing-panel-content {
-        padding:
-            28px
-            22px
-            22px;
+    .landing-divider {
+        width: 4px;
     }
 
 
-    .landing-bottom-brand {
-        font-size:
-            0.4rem;
+    .landing-panel {
+        width:
+            calc(
+                100vw - 28px
+            );
+
+        max-width: 340px;
+
+        top: 50%;
+        left: 50%;
+
+        transform:
+            translate(-50%, -50%);
+
+        padding:
+            26px
+            20px;
     }
 
 }
