@@ -1,99 +1,122 @@
 /* =========================================
-   LANDING
+   LANDING - ESTRUTURA PRINCIPAL
 ========================================= */
 
 .landing {
     position: relative;
 
-    width: 100%;
+    width: 100vw;
     min-height: 100vh;
 
     overflow: hidden;
 
     background: #050509;
+
+    color: #ffffff;
+
+    isolation: isolate;
 }
 
 
 /* =========================================
-   MUNDOS
+   FUNDOS
 ========================================= */
 
-.landing-worlds {
+.landing-background {
     position: absolute;
 
     inset: 0;
 
-    display: flex;
-
     width: 100%;
     height: 100%;
+
+    z-index: -3;
+
+    display: flex;
 }
 
 
 /* =========================================
-   CADA MUNDO
+   MUNDO D&D
 ========================================= */
 
 .landing-world {
-    position: relative;
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
 
     width: 50%;
-    height: 100%;
 
     overflow: hidden;
 
     background-size: cover;
     background-position: center;
 
+    background-repeat: no-repeat;
+
     transition:
-        filter 0.6s ease,
-        transform 0.6s ease;
+        filter 0.4s ease,
+        transform 0.4s ease;
 }
 
-
-/* =========================================
-   IMAGEM D&D
-========================================= */
 
 .landing-world-dnd {
-    background-position: center;
+    left: 0;
+
+    background-image:
+        linear-gradient(
+            to right,
+            rgba(5, 8, 10, 0.10),
+            rgba(5, 8, 10, 0.35)
+        ),
+        url("/images/dnd-background.jpg");
 }
 
 
 /* =========================================
-   IMAGEM ORDEM
+   MUNDO ORDEM
 ========================================= */
 
 .landing-world-ordem {
-    background-position: center;
+    right: 0;
+
+    background-image:
+        linear-gradient(
+            to left,
+            rgba(3, 3, 8, 0.10),
+            rgba(3, 3, 8, 0.45)
+        ),
+        url("/images/ordem-background.jpg");
 }
 
 
 /* =========================================
-   ESCURECIMENTO DAS IMAGENS
+   ESCURECIMENTO PARA LEITURA
 ========================================= */
 
-.landing-world::before {
-    content: "";
-
+.landing-darkness {
     position: absolute;
 
     inset: 0;
 
-    z-index: 1;
+    z-index: -2;
+
+    pointer-events: none;
 
     background:
         linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.15),
-            rgba(0, 0, 0, 0.35) 55%,
-            rgba(0, 0, 0, 0.75)
+            90deg,
+            rgba(0, 0, 0, 0.20) 0%,
+            rgba(0, 0, 0, 0.08) 35%,
+            rgba(0, 0, 0, 0.08) 65%,
+            rgba(0, 0, 0, 0.25) 100%
         );
 }
 
 
 /* =========================================
-   CONTEÚDO DOS MUNDOS
+   CONTEÚDO DOS DOIS MUNDOS
 ========================================= */
 
 .landing-world-content {
@@ -101,50 +124,61 @@
 
     inset: 0;
 
-    z-index: 3;
-
-    display: flex;
-    flex-direction: column;
-
-    justify-content: flex-end;
-
-    padding:
-        clamp(40px, 7vw, 110px);
-
-    padding-bottom:
-        clamp(70px, 10vh, 130px);
-
-    color: #ffffff;
+    z-index: 2;
 
     pointer-events: none;
 }
 
 
 /* =========================================
-   TEXTO PEQUENO
+   TEXTO D&D
+========================================= */
+
+.landing-dnd-content {
+    position: absolute;
+
+    left: 7vw;
+    bottom: 12vh;
+
+    width: min(420px, 35vw);
+
+    text-align: left;
+}
+
+
+/* =========================================
+   TEXTO ORDEM
+========================================= */
+
+.landing-ordem-content {
+    position: absolute;
+
+    right: 7vw;
+    bottom: 12vh;
+
+    width: min(420px, 35vw);
+
+    text-align: right;
+}
+
+
+/* =========================================
+   LABELS
 ========================================= */
 
 .landing-world-eyebrow {
-    margin-bottom: 12px;
+    display: block;
 
-    font-size:
-        clamp(
-            0.55rem,
-            0.7vw,
-            0.75rem
-        );
+    margin-bottom: 14px;
 
-    font-weight: 700;
+    font-size: 0.58rem;
 
-    letter-spacing: 0.25em;
+    font-weight: 800;
+
+    letter-spacing: 0.28em;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.7
-        );
+        rgba(255, 255, 255, 0.72);
 }
 
 
@@ -152,7 +186,7 @@
    TÍTULOS DOS MUNDOS
 ========================================= */
 
-.landing-world h1 {
+.landing-world-title {
     margin: 0;
 
     font-family:
@@ -162,32 +196,25 @@
 
     font-size:
         clamp(
-            2.4rem,
-            5vw,
+            2.5rem,
+            4.4vw,
             5.5rem
         );
 
-    line-height: 0.9;
+    line-height: 0.92;
 
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
 
     color: #ffffff;
 
     text-shadow:
-        0 10px 35px
-        rgba(
-            0,
-            0,
-            0,
-            0.65
-        );
+        0 6px 30px
+        rgba(0, 0, 0, 0.7);
 }
 
 
 .landing-world-description {
-    margin-top: 22px;
-
-    max-width: 300px;
+    margin-top: 20px;
 
     font-size:
         clamp(
@@ -199,12 +226,7 @@
     line-height: 1.6;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.72
-        );
+        rgba(255, 255, 255, 0.72);
 }
 
 
@@ -212,35 +234,31 @@
    SISTEMA
 ========================================= */
 
-.landing-world-system {
-    margin-top: 22px;
+.landing-system {
+    display: inline-flex;
 
-    display: flex;
     align-items: center;
 
     gap: 8px;
 
-    font-size: 0.62rem;
+    margin-top: 20px;
+
+    font-size: 0.58rem;
 
     font-weight: 700;
 
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.8
-        );
+        rgba(255, 255, 255, 0.72);
 }
 
 
 /* =========================================
-   DIVISÓRIA CENTRAL
+   DIVISÓRIA MÁGICA
 ========================================= */
 
-.landing-divider {
+.landing-magic-divider {
     position: absolute;
 
     top: 0;
@@ -248,52 +266,28 @@
 
     left: 50%;
 
-    width: 8px;
+    width: 130px;
 
     transform:
         translateX(-50%);
 
-    z-index: 10;
+    z-index: 5;
 
     pointer-events: none;
-
-    background:
-        linear-gradient(
-            to bottom,
-            transparent 0%,
-            rgba(192, 132, 252, 0.25) 8%,
-            rgba(168, 85, 247, 0.95) 50%,
-            rgba(236, 72, 153, 0.4) 92%,
-            transparent 100%
-        );
-
-    box-shadow:
-        0 0 12px
-        rgba(168, 85, 247, 0.8),
-
-        0 0 35px
-        rgba(168, 85, 247, 0.55),
-
-        0 0 70px
-        rgba(236, 72, 153, 0.35);
 }
 
 
-/* =========================================
-   BRILHO DA DIVISÓRIA
-========================================= */
-
-.landing-divider::before {
+.landing-magic-divider::before {
     content: "";
 
     position: absolute;
 
-    top: 0;
-    bottom: 0;
+    top: -5%;
+    bottom: -5%;
 
     left: 50%;
 
-    width: 2px;
+    width: 3px;
 
     transform:
         translateX(-50%);
@@ -302,292 +296,328 @@
         linear-gradient(
             to bottom,
             transparent,
-            #d8b4fe,
-            #ffffff,
-            #d8b4fe,
+            rgba(192, 132, 252, 0.95),
+            rgba(236, 72, 153, 0.9),
+            rgba(192, 132, 252, 0.95),
             transparent
         );
 
     box-shadow:
-        0 0 18px
-        rgba(
-            255,
-            255,
-            255,
-            0.8
+        0 0 12px rgba(168, 85, 247, 0.8),
+        0 0 30px rgba(168, 85, 247, 0.6),
+        0 0 70px rgba(236, 72, 153, 0.35);
+
+    clip-path:
+        polygon(
+            48% 0%,
+            62% 8%,
+            42% 16%,
+            58% 25%,
+            40% 35%,
+            61% 45%,
+            43% 56%,
+            59% 67%,
+            41% 78%,
+            60% 88%,
+            48% 100%
         );
 }
 
 
-/* =========================================
-   ENERGIA MÁGICA
-========================================= */
-
-.landing-divider::after {
+.landing-magic-divider::after {
     content: "";
 
     position: absolute;
 
     inset: 0;
 
-    width: 45px;
-
-    transform:
-        translateX(-50%);
-
     background:
         radial-gradient(
             circle,
-            rgba(192, 132, 252, 0.9) 0%,
-            rgba(192, 132, 252, 0.25) 18%,
-            transparent 65%
+            rgba(192, 132, 252, 0.8) 1px,
+            transparent 2px
         );
 
-    opacity: 0.8;
+    background-size:
+        22px 55px;
+
+    opacity: 0.75;
+
+    filter:
+        drop-shadow(
+            0 0 8px
+            rgba(192, 132, 252, 0.9)
+        );
 
     animation:
-        dividerEnergy
+        dividerParticles
+        4s
+        linear
+        infinite;
+}
+
+
+@keyframes dividerParticles {
+
+    from {
+        background-position:
+            0 0;
+    }
+
+    to {
+        background-position:
+            0 -120px;
+    }
+
+}
+
+
+/* =========================================
+   CONTORNO MÁGICO DO SITE
+========================================= */
+
+.landing-magic-border {
+    position: absolute;
+
+    inset: 5px;
+
+    z-index: 20;
+
+    pointer-events: none;
+
+    border:
+        1px solid
+        rgba(192, 132, 252, 0.22);
+
+    box-shadow:
+        inset
+        0 0 30px
+        rgba(168, 85, 247, 0.08),
+        0 0 30px
+        rgba(168, 85, 247, 0.08);
+}
+
+
+.landing-magic-border::before,
+.landing-magic-border::after {
+    content: "";
+
+    position: absolute;
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background:
+        #c084fc;
+
+    box-shadow:
+        0 0 12px
+        #c084fc,
+        0 0 25px
+        #ec4899;
+
+    animation:
+        borderMagic
         3s
         ease-in-out
         infinite;
 }
 
 
-@keyframes dividerEnergy {
+.landing-magic-border::before {
+    top: 10%;
+    left: 0;
+}
 
-    0% {
-        opacity: 0.4;
 
-        filter:
-            blur(0px);
+.landing-magic-border::after {
+    right: 0;
+    bottom: 15%;
+
+    animation-delay:
+        1.5s;
+}
+
+
+@keyframes borderMagic {
+
+    0%,
+    100% {
+        opacity: 0.3;
+
+        transform:
+            scale(0.7);
     }
 
     50% {
         opacity: 1;
 
-        filter:
-            blur(2px);
-    }
-
-    100% {
-        opacity: 0.4;
-
-        filter:
-            blur(0px);
+        transform:
+            scale(1.3);
     }
 
 }
 
 
 /* =========================================
-   PAINEL CENTRAL
+   ÁREA CENTRAL
+   IMPORTANTE:
+   ESTA É A CORREÇÃO DO PAINEL
+========================================= */
+
+.landing-center {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 15;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   PAINEL
 ========================================= */
 
 .landing-panel {
-    position: absolute;
-
-    /*
-    CENTRALIZAÇÃO REAL
-    */
-
-    top: 50%;
-    left: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-    /*
-    GARANTE QUE ELE FIQUE
-    ACIMA DA DIVISÓRIA
-    */
-
-    z-index: 50;
+    position: relative;
 
     width:
         min(
-            380px,
+            340px,
             calc(100vw - 40px)
         );
 
-    margin: 0;
-
     padding:
-        34px
+        32px
+        28px
         28px;
 
-    border-radius: 18px;
+    border-radius:
+        16px;
 
-    color: #ffffff;
+    pointer-events: auto;
 
     background:
         linear-gradient(
             145deg,
-            rgba(17, 20, 30, 0.96),
-            rgba(8, 10, 18, 0.98)
+            rgba(20, 23, 33, 0.96),
+            rgba(10, 11, 18, 0.94)
         );
 
     border:
         1px solid
-        rgba(
-            192,
-            132,
-            252,
-            0.35
-        );
+        rgba(192, 132, 252, 0.38);
 
     box-shadow:
-        0 25px 80px
-        rgba(
-            0,
-            0,
-            0,
-            0.65
-        ),
-
-        0 0 40px
-        rgba(
-            168,
-            85,
-            247,
-            0.12
-        );
+        0 20px 70px
+        rgba(0, 0, 0, 0.65),
+        0 0 45px
+        rgba(168, 85, 247, 0.12);
 
     backdrop-filter:
-        blur(18px);
+        blur(16px);
 
-    -webkit-backdrop-filter:
-        blur(18px);
+    text-align:
+        center;
 }
 
 
 /* =========================================
-   SÍMBOLO
+   ÍCONE
 ========================================= */
 
 .landing-panel-icon {
     display: flex;
 
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 
-    color: #c084fc;
-
-    filter:
-        drop-shadow(
-            0 0 12px
-            rgba(
-                192,
-                132,
-                252,
-                0.6
-            )
-        );
+    color:
+        #c084fc;
 }
 
 
 /* =========================================
-   TEXTO SUPERIOR
+   TEXTO DO PAINEL
 ========================================= */
 
 .landing-panel-eyebrow {
     display: block;
 
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 
-    text-align: center;
+    font-size: 0.52rem;
 
-    font-size: 0.58rem;
+    font-weight: 800;
 
-    font-weight: 700;
-
-    letter-spacing: 0.22em;
+    letter-spacing: 0.2em;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.55
-        );
+        rgba(255, 255, 255, 0.5);
 }
 
 
-/* =========================================
-   LOGO
-========================================= */
-
-.landing-panel-title {
+.landing-panel h1 {
     margin: 0;
-
-    text-align: center;
 
     font-size:
         clamp(
             2rem,
-            4vw,
+            3vw,
             3rem
         );
 
     font-weight: 300;
 
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
 
-    line-height: 0.9;
+    line-height: 0.95;
 }
 
 
-.landing-panel-title strong {
+.landing-panel h1 strong {
     display: block;
 
-    margin-top: 4px;
+    margin-top: 3px;
+
+    color:
+        #c084fc;
 
     font-weight: 800;
-
-    color: #c084fc;
-
-    text-shadow:
-        0 0 22px
-        rgba(
-            192,
-            132,
-            252,
-            0.35
-        );
 }
 
-
-/* =========================================
-   DESCRIÇÃO
-========================================= */
 
 .landing-panel-description {
     margin:
         18px
         auto
-        26px;
+        22px;
 
-    max-width: 270px;
+    max-width:
+        250px;
 
-    text-align: center;
-
-    font-size: 0.78rem;
+    font-size: 0.7rem;
 
     line-height: 1.6;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.58
-        );
+        rgba(255, 255, 255, 0.6);
 }
 
 
 /* =========================================
-   SISTEMA SELECIONADO
+   SISTEMA ATUAL
 ========================================= */
 
 .landing-panel-system {
@@ -597,93 +627,53 @@
 
     gap: 12px;
 
-    margin-bottom: 14px;
+    margin-bottom: 10px;
 
     padding:
-        12px
-        14px;
+        12px;
 
-    border-radius: 10px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.04
-        );
+    border-radius:
+        10px;
 
     border:
         1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.1
-        );
+        rgba(255, 255, 255, 0.12);
+
+    background:
+        rgba(255, 255, 255, 0.04);
+
+    text-align:
+        left;
 }
 
 
 .landing-panel-system-icon {
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    width: 34px;
-    height: 34px;
-
-    flex-shrink: 0;
-
-    border-radius: 9px;
-
-    color: #c084fc;
-
-    background:
-        rgba(
-            192,
-            132,
-            252,
-            0.12
-        );
+    color:
+        #c084fc;
 }
 
 
-.landing-panel-system-info {
-    display: flex;
-    flex-direction: column;
+.landing-panel-system small {
+    display: block;
 
-    gap: 3px;
-}
+    margin-bottom: 3px;
 
-
-.landing-panel-system-info small {
-    font-size: 0.5rem;
+    font-size: 0.48rem;
 
     letter-spacing: 0.12em;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.4
-        );
+        rgba(255, 255, 255, 0.45);
 }
 
 
-.landing-panel-system-info strong {
-    font-size: 0.68rem;
+.landing-panel-system strong {
+    font-size: 0.62rem;
 
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.85
-        );
+        rgba(255, 255, 255, 0.82);
 }
 
 
@@ -693,305 +683,229 @@
 
 .landing-panel-actions {
     display: flex;
-    flex-direction: column;
 
-    gap: 10px;
+    flex-direction:
+        column;
+
+    gap: 9px;
+
+    margin-top:
+        12px;
 }
 
 
-.landing-panel-enter,
-.landing-panel-register {
+.landing-enter-button,
+.landing-register-button {
     width: 100%;
 
-    min-height: 44px;
+    min-height:
+        42px;
 
-    border-radius: 9px;
+    border-radius:
+        8px;
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
-    font-family: inherit;
-
-    font-size: 0.72rem;
-
-    font-weight: 700;
+    font-family:
+        inherit;
 
     transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        background 0.25s ease;
+        transform 0.2s ease,
+        filter 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 
-.landing-panel-enter {
+.landing-enter-button {
     border:
         1px solid
-        rgba(
-            192,
-            132,
-            252,
-            0.8
-        );
+        rgba(192, 132, 252, 0.75);
 
-    color: #ffffff;
+    color:
+        #ffffff;
+
+    font-weight:
+        700;
 
     background:
         linear-gradient(
             90deg,
             #6d28d9,
-            #a21caf,
             #be185d
         );
 
     box-shadow:
         0 8px 25px
-        rgba(
-            109,
-            40,
-            217,
-            0.3
-        );
+        rgba(168, 85, 247, 0.2);
 }
 
 
-.landing-panel-enter:hover {
-    transform:
-        translateY(-2px);
-
-    box-shadow:
-        0 12px 30px
-        rgba(
-            192,
-            132,
-            252,
-            0.45
-        );
-}
-
-
-.landing-panel-register {
+.landing-register-button {
     border:
         1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.12
-        );
+        rgba(255, 255, 255, 0.15);
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.8
-        );
+        rgba(255, 255, 255, 0.85);
 
     background:
-        rgba(
-            255,
-            255,
-            255,
-            0.03
-        );
+        rgba(255, 255, 255, 0.04);
 }
 
 
-.landing-panel-register:hover {
+.landing-enter-button:hover,
+.landing-register-button:hover {
     transform:
         translateY(-2px);
 
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.07
-        );
+    filter:
+        brightness(1.12);
 }
 
 
 /* =========================================
-   FRASE INFERIOR
+   TEXTO INFERIOR
 ========================================= */
 
 .landing-panel-footer {
-    margin-top: 18px;
+    display: block;
 
-    text-align: center;
+    margin-top:
+        14px;
 
-    font-size: 0.5rem;
+    font-size:
+        0.46rem;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.3
-        );
+        rgba(255, 255, 255, 0.38);
 }
 
 
 /* =========================================
-   PARTÍCULAS DA LANDING
+   RESPONSIVIDADE
 ========================================= */
 
-.landing-particles {
-    position: absolute;
+@media (
+    max-width: 900px
+) {
 
-    inset: 0;
+    .landing-dnd-content {
+        left:
+            5vw;
 
-    z-index: 20;
+        bottom:
+            10vh;
 
-    pointer-events: none;
-
-    overflow: hidden;
-}
-
-
-.landing-particle {
-    position: absolute;
-
-    width: 3px;
-    height: 3px;
-
-    border-radius: 50%;
-
-    background: #c084fc;
-
-    box-shadow:
-        0 0 10px
-        rgba(
-            192,
-            132,
-            252,
-            0.9
-        );
-
-    animation:
-        landingParticle
-        linear
-        infinite;
-}
-
-
-@keyframes landingParticle {
-
-    0% {
-        transform:
-            translateY(20px);
-
-        opacity: 0;
-    }
-
-    20% {
-        opacity: 1;
-    }
-
-    80% {
-        opacity: 1;
-    }
-
-    100% {
-        transform:
-            translateY(-100vh);
-
-        opacity: 0;
-    }
-
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 900px) {
-
-    .landing-world-content {
-        padding: 30px;
-        padding-bottom: 60px;
+        width:
+            40vw;
     }
 
 
-    .landing-world h1 {
+    .landing-ordem-content {
+        right:
+            5vw;
+
+        bottom:
+            10vh;
+
+        width:
+            40vw;
+    }
+
+
+    .landing-world-title {
         font-size:
             clamp(
                 2rem,
-                7vw,
+                5vw,
                 4rem
             );
+    }
+
+}
+
+
+@media (
+    max-width: 650px
+) {
+
+    .landing-world {
+        width:
+            100%;
+    }
+
+
+    .landing-world-dnd {
+        clip-path:
+            polygon(
+                0 0,
+                100% 0,
+                100% 50%,
+                0 60%
+            );
+    }
+
+
+    .landing-world-ordem {
+        clip-path:
+            polygon(
+                0 45%,
+                100% 35%,
+                100% 100%,
+                0 100%
+            );
+    }
+
+
+    .landing-magic-divider {
+        display:
+            none;
+    }
+
+
+    .landing-dnd-content {
+        top:
+            8vh;
+
+        bottom:
+            auto;
+
+        width:
+            80vw;
+    }
+
+
+    .landing-ordem-content {
+        top:
+            auto;
+
+        bottom:
+            8vh;
+
+        width:
+            80vw;
+    }
+
+
+    .landing-center {
+        align-items:
+            center;
+
+        justify-content:
+            center;
     }
 
 
     .landing-panel {
         width:
             min(
-                350px,
-                calc(100vw - 32px)
+                320px,
+                calc(100vw - 30px)
             );
 
         padding:
-            28px
-            22px;
-
-        top: 50%;
-        left: 50%;
-
-        transform:
-            translate(-50%, -50%);
-    }
-
-}
-
-
-/* =========================================
-   CELULAR
-========================================= */
-
-@media (max-width: 650px) {
-
-    .landing-world-content {
-        padding: 20px;
-        padding-bottom: 45px;
-    }
-
-
-    .landing-world-description {
-        display: none;
-    }
-
-
-    .landing-world h1 {
-        font-size:
-            clamp(
-                1.5rem,
-                7vw,
-                2.5rem
-            );
-    }
-
-
-    .landing-divider {
-        width: 4px;
-    }
-
-
-    .landing-panel {
-        width:
-            calc(
-                100vw - 28px
-            );
-
-        max-width: 340px;
-
-        top: 50%;
-        left: 50%;
-
-        transform:
-            translate(-50%, -50%);
-
-        padding:
-            26px
+            25px
             20px;
     }
 
