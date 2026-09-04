@@ -5,19 +5,8 @@ import Login from "./pages/Login/Login";
 import Cadastro from "./pages/Cadastro/Cadastro";
 import Home from "./pages/Home/Home";
 
-import IntroLoader from "./components/Loading/IntroLoader";
-
 function App() {
   const [currentPage, setCurrentPage] = useState("landing");
-  const [loading, setLoading] = useState(true);
-
-  if (loading) {
-    return (
-      <IntroLoader
-        onFinish={() => setLoading(false)}
-      />
-    );
-  }
 
   switch (currentPage) {
     case "login":
