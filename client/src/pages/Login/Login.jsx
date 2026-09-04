@@ -1,269 +1,103 @@
-import {
-    useState,
-} from "react";
-
-import {
-    ArrowLeft,
-    LogIn,
-} from "lucide-react";
-
-import {
-    useUser,
-} from "../../context/UserContext";
-
-import MagicalButton
-    from "../../components/Buttons/MagicalButton";
+import { useState } from "react";
+import { ArrowLeft, LogIn } from "lucide-react";
 
 import "./Login.css";
 
+export default function Login({ setCurrentPage }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-export default function Login({
+  const handleLogin = (event) => {
+    event.preventDefault();
 
-    onBack,
-
-    onRegister,
-
-    onLoginSuccess,
-
-}) {
-
-    const {
-        login,
-    } = useUser();
-
-
-    const [
-        email,
-        setEmail,
-    ] = useState(
-        ""
-    );
-
-
-    const [
-        password,
-        setPassword,
-    ] = useState(
-        ""
-    );
-
-
-    const [
-        error,
-        setError,
-    ] = useState(
-        ""
-    );
-
-
-    function handleSubmit(
-        event
-    ) {
-
-        event.preventDefault();
-
-
-        if (
-            !email.trim() ||
-            !password.trim()
-        ) {
-
-            setError(
-                "Preencha seu email e senha."
-            );
-
-            return;
-
-        }
-
-
-        login({
-
-            email:
-                email.trim(),
-
-        });
-
-
-        onLoginSuccess();
-
+    if (!username.trim() || !password.trim()) {
+      alert("Preencha todos os campos.");
+      return;
     }
 
+    setCurrentPage("home");
+  };
 
-    return (
+  return (
+    <main className="login-page">
+      <div className="login-background" />
 
-        <main
-            className="auth-page"
+      <section className="login-container">
+        <button
+          type="button"
+          className="login-back-button"
+          onClick={() => setCurrentPage("landing")}
         >
+          <ArrowLeft size={18} />
 
-            <section
-                className="auth-card"
+          Voltar
+        </button>
+
+        <div className="login-card">
+          <span className="login-eyebrow">
+            BEM-VINDO DE VOLTA
+          </span>
+
+          <h1>
+            Entrar no
+            <span> ORDO RPGISTAS</span>
+          </h1>
+
+          <p>
+            Continue sua jornada e retorne à sua mesa.
+          </p>
+
+          <form onSubmit={handleLogin}>
+            <label>
+              Usuário ou E-mail
+
+              <input
+                type="text"
+                placeholder="Digite seu usuário"
+                value={username}
+                onChange={(event) =>
+                  setUsername(event.target.value)
+                }
+              />
+            </label>
+
+            <label>
+              Senha
+
+              <input
+                type="password"
+                placeholder="Digite sua senha"
+                value={password}
+                onChange={(event) =>
+                  setPassword(event.target.value)
+                }
+              />
+            </label>
+
+            <button
+              type="submit"
+              className="login-submit-button"
             >
-
-                <button
-
-                    type="button"
-
-                    className="auth-back"
-
-                    onClick={
-                        onBack
-                    }
-
-                >
-
-                    <ArrowLeft
-                        size={18}
-                    />
-
-                    Voltar
-
-                </button>
-
-
-                <LogIn
-                    className="auth-icon"
-                    size={32}
-                />
-
-
-                <span
-                    className="auth-eyebrow"
-                >
-
-                    BEM-VINDO DE VOLTA
-
-                </span>
-
-
-                <h1>
-
-                    Entrar no
-                    <strong>
-                        Ordo RPGistas
-                    </strong>
-
-                </h1>
-
-
-                <form
-                    onSubmit={
-                        handleSubmit
-                    }
-                >
-
-                    <label>
-
-                        Email
-
-                        <input
-
-                            type="email"
-
-                            value={
-                                email
-                            }
-
-                            onChange={
-                                event => {
-
-                                    setEmail(
-                                        event.target.value
-                                    );
-
-                                }
-                            }
-
-                            placeholder="seu@email.com"
-
-                        />
-
-                    </label>
-
-
-                    <label>
-
-                        Senha
-
-                        <input
-
-                            type="password"
-
-                            value={
-                                password
-                            }
-
-                            onChange={
-                                event => {
-
-                                    setPassword(
-                                        event.target.value
-                                    );
-
-                                }
-                            }
-
-                            placeholder="Sua senha"
-
-                        />
-
-                    </label>
-
-
-                    {
-
-                        error && (
-
-                            <p
-                                className="auth-error"
-                            >
-
-                                {error}
-
-                            </p>
-
-                        )
-
-                    }
-
-
-                    <MagicalButton
-                        type="submit"
-                    >
-
-                        Entrar na aventura
-
-                    </MagicalButton>
-
-                </form>
-
-
-                <p
-                    className="auth-switch"
-                >
-
-                    Ainda não possui uma conta?
-
-                    <button
-
-                        type="button"
-
-                        onClick={
-                            onRegister
-                        }
-
-                    >
-
-                        Criar conta
-
-                    </button>
-
-                </p>
-
-            </section>
-
-        </main>
-
-    );
-
+              <LogIn size={18} />
+
+              Entrar
+            </button>
+          </form>
+
+          <div className="login-register">
+            <span>Ainda não possui uma conta?</span>
+
+            <button
+              type="button"
+              onClick={() =>
+                setCurrentPage("cadastro")
+              }
+            >
+              Criar conta
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }
