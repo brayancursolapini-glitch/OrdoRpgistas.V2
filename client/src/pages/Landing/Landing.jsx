@@ -1,103 +1,160 @@
-import { useState } from "react";
-import { ArrowLeft, LogIn } from "lucide-react";
+import { ArrowRight, UserPlus, Sparkles } from "lucide-react";
 
-import "./Login.css";
+import "./Landing.css";
 
-export default function Login({ setCurrentPage }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = (event) => {
-    event.preventDefault();
-
-    if (!username.trim() || !password.trim()) {
-      alert("Preencha todos os campos.");
-      return;
+export default function Landing({ setCurrentPage }) {
+  const goToPage = (page) => {
+    if (typeof setCurrentPage === "function") {
+      setCurrentPage(page);
     }
-
-    setCurrentPage("home");
   };
 
   return (
-    <main className="login-page">
-      <div className="login-background" />
+    <main className="landing-page">
+      {/* Fundo D&D */}
+      <section className="landing-side landing-dnd">
+        <div className="landing-overlay" />
 
-      <section className="login-container">
-        <button
-          type="button"
-          className="login-back-button"
-          onClick={() => setCurrentPage("landing")}
-        >
-          <ArrowLeft size={18} />
-
-          Voltar
-        </button>
-
-        <div className="login-card">
-          <span className="login-eyebrow">
-            BEM-VINDO DE VOLTA
+        <div className="landing-theme-content landing-theme-left">
+          <span className="landing-eyebrow">
+            UM MUNDO DE AVENTURAS
           </span>
 
           <h1>
-            Entrar no
-            <span> ORDO RPGISTAS</span>
+            DUNGEONS
+            <br />
+            <span>&amp;</span>
+            <br />
+            DRAGONS
           </h1>
 
           <p>
-            Continue sua jornada e retorne à sua mesa.
+            Reinos, aventuras e lendas aguardam.
           </p>
 
-          <form onSubmit={handleLogin}>
-            <label>
-              Usuário ou E-mail
-
-              <input
-                type="text"
-                placeholder="Digite seu usuário"
-                value={username}
-                onChange={(event) =>
-                  setUsername(event.target.value)
-                }
-              />
-            </label>
-
-            <label>
-              Senha
-
-              <input
-                type="password"
-                placeholder="Digite sua senha"
-                value={password}
-                onChange={(event) =>
-                  setPassword(event.target.value)
-                }
-              />
-            </label>
-
-            <button
-              type="submit"
-              className="login-submit-button"
-            >
-              <LogIn size={18} />
-
-              Entrar
-            </button>
-          </form>
-
-          <div className="login-register">
-            <span>Ainda não possui uma conta?</span>
-
-            <button
-              type="button"
-              onClick={() =>
-                setCurrentPage("cadastro")
-              }
-            >
-              Criar conta
-            </button>
-          </div>
+          <span className="landing-system">
+            ◈ SISTEMA D&amp;D
+          </span>
         </div>
       </section>
+
+      {/* Fundo Ordem */}
+      <section className="landing-side landing-ordem">
+        <div className="landing-overlay" />
+
+        <div className="landing-theme-content landing-theme-right">
+          <span className="landing-eyebrow">
+            A REALIDADE NÃO É O QUE PARECE
+          </span>
+
+          <h1>
+            ORDEM
+            <br />
+            PARANORMAL
+          </h1>
+
+          <p>
+            O paranormal observa cada movimento.
+          </p>
+
+          <span className="landing-system">
+            ◈ SISTEMA ORDEM
+          </span>
+        </div>
+      </section>
+
+      {/* Partículas mágicas */}
+      <div className="landing-magic-particles">
+        {Array.from({ length: 35 }).map((_, index) => (
+          <span
+            className="landing-particle"
+            key={index}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${4 + Math.random() * 6}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Divisória mágica */}
+      <div className="landing-magic-divider">
+        <div className="landing-divider-glow" />
+
+        {Array.from({ length: 20 }).map((_, index) => (
+          <span
+            className="landing-divider-particle"
+            key={index}
+            style={{
+              top: `${index * 5}%`,
+              animationDelay: `${index * 0.15}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Contorno mágico */}
+      <div className="landing-magic-border" />
+
+      {/* Painel */}
+      <section className="landing-panel-wrapper">
+        <div className="landing-panel">
+          <Sparkles
+            className="landing-panel-icon"
+            size={22}
+          />
+
+          <span className="landing-panel-small-title">
+            SEU MUNDO ESTÁ PRONTO
+          </span>
+
+          <h2>
+            ORDO<span>RPGISTAS</span>
+          </h2>
+
+          <p className="landing-panel-description">
+            Escolha um sistema, reúna sua mesa e comece uma nova história.
+          </p>
+
+          <div className="landing-panel-divider" />
+
+          <p className="landing-panel-highlight">
+            SEU MUNDO INICIA
+            <strong> SUA AVENTURA COMEÇA AQUI</strong>
+          </p>
+
+          <button
+            type="button"
+            className="landing-enter-button"
+            onClick={() => goToPage("login")}
+          >
+            <span>Entrar</span>
+
+            <ArrowRight size={17} />
+          </button>
+
+          <button
+            type="button"
+            className="landing-register-button"
+            onClick={() => goToPage("cadastro")}
+          >
+            <UserPlus size={16} />
+
+            <span>Criar conta</span>
+          </button>
+
+          <small>
+            Onde histórias ganham vida.
+          </small>
+        </div>
+      </section>
+
+      {/* Rodapé */}
+      <div className="landing-footer">
+        ORDO RPGISTAS · DOIS MUNDOS. INFINITAS HISTÓRIAS.
+      </div>
     </main>
   );
 }
