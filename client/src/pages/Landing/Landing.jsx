@@ -1,378 +1,169 @@
-import { Sparkles, Sword, Shield } from "lucide-react";
-
-import MagicalButton from "../../components/Buttons/MagicalButton";
-
 import "./Landing.css";
-
-
-export default function Landing({
-    onLogin,
-    onCadastro,
-}) {
-
-    const dndBackground =
-        `${import.meta.env.BASE_URL}images/dnd-background.jpg`;
-
-    const ordemBackground =
-        `${import.meta.env.BASE_URL}images/ordem-background.jpg`;
-
-
-    return (
-
-        <main
-            className="landing"
-        >
-
-            {/* =====================================
-                CENÁRIO D&D
-            ====================================== */}
-
-            <section
-                className="landing-world landing-world-dnd"
-                style={{
-                    backgroundImage:
-                        `url("${dndBackground}")`,
-                }}
-            >
-
-                <div
-                    className="landing-world-dark"
-                />
-
-
-                <div
-                    className="landing-world-content landing-dnd-content"
-                >
-
-                    <span
-                        className="landing-world-eyebrow"
-                    >
-
-                        UM MUNDO DE AVENTURAS
-
-                    </span>
-
-
-                    <h1>
-
-                        DUNGEONS
-
-                        <br />
-
-                        <span>
-                            & DRAGONS
-                        </span>
-
-                    </h1>
-
-
-                    <p>
-
-                        Reinos, aventuras e lendas aguardam.
-
-                    </p>
-
-
-                    <div
-                        className="landing-system-tag"
-                    >
-
-                        <Sword
-                            size={14}
-                        />
-
-                        <span>
-
-                            SISTEMA D&D
-
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            {/* =====================================
-                CENÁRIO ORDEM
-            ====================================== */}
-
-            <section
-                className="landing-world landing-world-ordem"
-                style={{
-                    backgroundImage:
-                        `url("${ordemBackground}")`,
-                }}
-            >
-
-                <div
-                    className="landing-world-dark"
-                />
-
-
-                <div
-                    className="landing-world-content landing-ordem-content"
-                >
-
-                    <span
-                        className="landing-world-eyebrow"
-                    >
-
-                        A REALIDADE NÃO É O QUE PARECE
-
-                    </span>
-
-
-                    <h1>
-
-                        ORDEM
-
-                        <br />
-
-                        <span>
-                            PARANORMAL
-                        </span>
-
-                    </h1>
-
-
-                    <p>
-
-                        O paranormal observa cada movimento.
-
-                    </p>
-
-
-                    <div
-                        className="landing-system-tag"
-                    >
-
-                        <Shield
-                            size={14}
-                        />
-
-                        <span>
-
-                            SISTEMA ORDEM
-
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            {/* =====================================
-                DIVISÓRIA MÁGICA CENTRAL
-            ====================================== */}
-
-            <div
-                className="landing-magic-divider"
-                aria-hidden="true"
-            >
-
-                <div
-                    className="landing-divider-glow"
-                />
-
-
-                <div
-                    className="landing-divider-line"
-                />
-
-
-                <div
-                    className="landing-divider-particles"
-                >
-
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-
-                </div>
-
-            </div>
-
-
-            {/* =====================================
-                PAINEL CENTRAL
-            ====================================== */}
-
-            <section
-                className="landing-panel"
-            >
-
-                <div
-                    className="landing-panel-icon"
-                >
-
-                    <Sparkles
-                        size={22}
-                    />
-
-                </div>
-
-
-                <span
-                    className="landing-panel-eyebrow"
-                >
-
-                    SEU MUNDO ESTÁ PRONTO
-
-                </span>
-
-
-                <h2>
-
-                    ORDO
-
-                    <strong>
-
-                        RPGISTAS
-
-                    </strong>
-
-                </h2>
-
-
-                <p
-                    className="landing-panel-description"
-                >
-
-                    Escolha um sistema,
-                    reúna sua mesa e comece
-                    uma nova história.
-
-                </p>
-
-
-                <div
-                    className="landing-panel-system"
-                >
-
-                    <Sparkles
-                        size={16}
-                    />
-
-
-                    <div>
-
-                        <small>
-
-                            SEU MUNDO INICIA
-
-                        </small>
-
-
-                        <strong>
-
-                            SUA AVENTURA COMEÇA AQUI
-
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    className="landing-panel-actions"
-                >
-
-                    <MagicalButton
-                        onClick={onLogin}
-                    >
-
-                        Entrar
-
-                    </MagicalButton>
-
-
-                    <button
-                        type="button"
-                        className="landing-create-button"
-                        onClick={onCadastro}
-                    >
-
-                        Criar conta
-
-                    </button>
-
-                </div>
-
-
-                <span
-                    className="landing-panel-footer"
-                >
-
-                    Onde histórias ganham vida.
-
-                </span>
-
-            </section>
-
-
-            {/* =====================================
-                PARTÍCULAS GERAIS
-            ====================================== */}
-
-            <div
-                className="landing-ambient-particles"
-                aria-hidden="true"
-            >
-
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-
-            </div>
-
-
-            {/* =====================================
-                CONTORNO MÁGICO
-            ====================================== */}
-
-            <div
-                className="landing-magic-border"
-                aria-hidden="true"
-            />
-
-
-            {/* =====================================
-                RODAPÉ
-            ====================================== */}
-
-            <div
-                className="landing-footer"
-            >
-
-                ORDO RPGISTAS
-                <span>•</span>
-                DOIS MUNDOS. INFINITAS HISTÓRIAS.
-
-            </div>
-
-        </main>
-
+import { Sparkles, Sword, Shield, ArrowRight, UserPlus } from "lucide-react";
+
+export default function Landing({ onNavigate, setPage }) {
+  const navigateTo = (page) => {
+    // Compatibilidade com diferentes versões do App.jsx
+    if (typeof onNavigate === "function") {
+      onNavigate(page);
+      return;
+    }
+
+    if (typeof setPage === "function") {
+      setPage(page);
+      return;
+    }
+
+    // Fallback caso o App utilize eventos personalizados
+    window.dispatchEvent(
+      new CustomEvent("ordo:navigate", {
+        detail: { page },
+      })
     );
+  };
 
+  return (
+    <main className="landing-page">
+      {/* =========================
+          FUNDOS
+      ========================== */}
+
+      <section className="landing-side landing-dnd">
+        <div className="landing-background-overlay" />
+
+        <div className="landing-system-content landing-system-left">
+          <span className="landing-eyebrow">
+            <Sword size={13} />
+            UM MUNDO DE AVENTURAS
+          </span>
+
+          <h1>
+            DUNGEONS
+            <br />
+            <span>&amp; DRAGONS</span>
+          </h1>
+
+          <p>Reinos, aventuras e lendas aguardam.</p>
+
+          <span className="landing-system-tag">
+            <span className="landing-tag-dot" />
+            SISTEMA D&amp;D
+          </span>
+        </div>
+      </section>
+
+      <section className="landing-side landing-ordem">
+        <div className="landing-background-overlay" />
+
+        <div className="landing-system-content landing-system-right">
+          <span className="landing-eyebrow">
+            <Shield size={13} />
+            A REALIDADE NÃO É O QUE PARECE
+          </span>
+
+          <h1>
+            ORDEM
+            <br />
+            <span>PARANORMAL</span>
+          </h1>
+
+          <p>O paranormal observa cada movimento.</p>
+
+          <span className="landing-system-tag">
+            <span className="landing-tag-dot" />
+            SISTEMA ORDEM
+          </span>
+        </div>
+      </section>
+
+      {/* =========================
+          CONTORNO MÁGICO
+      ========================== */}
+
+      <div className="landing-magic-border" />
+
+      {/* =========================
+          DIVISÓRIA MÁGICA
+      ========================== */}
+
+      <div className="landing-magic-divider">
+        <div className="magic-divider-core" />
+
+        <span className="magic-particle particle-1" />
+        <span className="magic-particle particle-2" />
+        <span className="magic-particle particle-3" />
+        <span className="magic-particle particle-4" />
+        <span className="magic-particle particle-5" />
+        <span className="magic-particle particle-6" />
+        <span className="magic-particle particle-7" />
+        <span className="magic-particle particle-8" />
+      </div>
+
+      {/* =========================
+          PAINEL CENTRAL
+      ========================== */}
+
+      <section className="landing-panel">
+        <div className="landing-panel-glow" />
+
+        <div className="landing-panel-content">
+          <Sparkles className="landing-panel-icon" size={22} />
+
+          <span className="landing-panel-kicker">
+            SEU MUNDO ESTÁ PRONTO
+          </span>
+
+          <h2>
+            ORDO
+            <strong>RPGISTAS</strong>
+          </h2>
+
+          <p className="landing-panel-description">
+            Escolha um sistema, reúna sua mesa e comece uma nova história.
+          </p>
+
+          <div className="landing-panel-system">
+            <div className="landing-panel-system-icon">
+              <Sparkles size={16} />
+            </div>
+
+            <div>
+              <span>SEU MUNDO INICIA UMA</span>
+              <strong>AVENTURA COMEÇA AQUI</strong>
+            </div>
+          </div>
+
+          <div className="landing-panel-actions">
+            <button
+              type="button"
+              className="landing-enter-button"
+              onClick={() => navigateTo("login")}
+            >
+              <span>Entrar</span>
+              <ArrowRight size={17} />
+            </button>
+
+            <button
+              type="button"
+              className="landing-register-button"
+              onClick={() => navigateTo("cadastro")}
+            >
+              <UserPlus size={16} />
+              <span>Criar conta</span>
+            </button>
+          </div>
+
+          <small>Onde histórias ganham vida.</small>
+        </div>
+      </section>
+
+      {/* =========================
+          TEXTO INFERIOR
+      ========================== */}
+
+      <div className="landing-footer-text">
+        ORDO RPGISTAS · DOIS MUNDOS. INFINITAS HISTÓRIAS.
+      </div>
+    </main>
+  );
 }
