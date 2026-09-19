@@ -1,0 +1,41 @@
+.page-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 300px;
+
+    padding: 40px;
+
+    text-align: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+
+    background: rgba(10, 10, 15, 0.48);
+
+    backdrop-filter: blur(14px);
+}
+
+.page-placeholder svg {
+    margin-bottom: 18px;
+
+    opacity: 0.65;
+}
+
+.page-placeholder h2 {
+    margin: 0 0 10px;
+
+    font-size: 24px;
+}
+
+.page-placeholder p {
+    max-width: 550px;
+
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.58);
+
+    line-height: 1.6;
+}
