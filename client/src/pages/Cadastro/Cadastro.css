@@ -1,278 +1,1039 @@
+/* =========================================
+   CADASTRO - ORDO RPGISTAS
+   ========================================= */
+
 .cadastro-page {
+  --cad-purple: #a855f7;
+  --cad-purple-light: #c084fc;
+  --cad-pink: #d946ef;
+  --cad-dark: #07060d;
 
-    display:
-        flex;
+  position: relative;
+  isolation: isolate;
 
-    align-items:
-        center;
+  min-height: 100vh;
+  min-height: 100dvh;
 
-    justify-content:
-        center;
+  overflow-x: hidden;
 
-    min-height:
-        100vh;
+  background: var(--cad-dark);
+  color: #ffffff;
 
-    padding:
-        30px;
-
-    background:
-
-        radial-gradient(
-            circle at 70% 20%,
-            rgba(
-                168,
-                85,
-                247,
-                0.2
-            ),
-            transparent 35%
-        ),
-
-        #050509;
-
+  font-family: Arial, Helvetica, sans-serif;
 }
 
+/* =========================================
+   FUNDOS
+   ========================================= */
 
-.cadastro-card {
+.cadastro-background {
+  position: fixed;
+  inset: 0;
 
-    width:
-        min(
-            100%,
-            500px
-        );
+  z-index: -5;
 
-    padding:
-        36px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.1
-        );
-
-    border-radius:
-        24px;
-
-    background:
-        rgba(
-            10,
-            10,
-            16,
-            0.9
-        );
-
+  pointer-events: none;
 }
 
+.cadastro-background-dnd {
+  background-image: url("/images/Home-dnd.jpg");
+
+  clip-path: polygon(
+    0 0,
+    52% 0,
+    48% 100%,
+    0 100%
+  );
+
+  opacity: 0.72;
+}
+
+.cadastro-background-ordem {
+  background-image: url("/images/Home-ordem.jpg");
+
+  clip-path: polygon(
+    52% 0,
+    100% 0,
+    100% 100%,
+    48% 100%
+  );
+
+  opacity: 0.72;
+}
+
+.cadastro-background-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: -4;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4, 4, 10, 0.72),
+      rgba(7, 6, 13, 0.88) 48%,
+      rgba(7, 6, 13, 0.88)
+    ),
+    linear-gradient(
+      180deg,
+      rgba(3, 3, 8, 0.28),
+      rgba(3, 3, 8, 0.88)
+    );
+
+  pointer-events: none;
+}
+
+/* =========================================
+   PARTÍCULAS
+   ========================================= */
+
+.cadastro-particles {
+  position: fixed;
+  inset: 0;
+
+  z-index: -2;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.cadastro-particle {
+  position: absolute;
+
+  width: 3px;
+  height: 3px;
+
+  border-radius: 50%;
+
+  background: #e9d5ff;
+
+  box-shadow:
+    0 0 7px #c084fc,
+    0 0 15px rgba(168, 85, 247, 0.8);
+
+  opacity: 0.45;
+
+  animation: cadastro-particle-float 5s
+    ease-in-out infinite;
+}
+
+@keyframes cadastro-particle-float {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: translateY(0) scale(0.7);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: translateY(-18px) scale(1.25);
+  }
+}
+
+/* =========================================
+   WRAPPER
+   ========================================= */
+
+.cadastro-wrapper {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  padding: 30px 20px 50px;
+}
+
+/* =========================================
+   VOLTAR
+   ========================================= */
 
 .cadastro-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
-    display:
-        inline-flex;
+  align-self: flex-start;
 
-    align-items:
-        center;
+  margin-bottom: 18px;
 
-    gap:
-        8px;
+  border: 0;
 
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.6
-        );
+  background: transparent;
 
-    cursor:
-        pointer;
+  color: rgba(255, 255, 255, 0.72);
 
-    background:
-        transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
 
+  cursor: pointer;
+
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
 }
 
+.cadastro-back:hover {
+  color: #ffffff;
+
+  transform: translateX(-3px);
+}
+
+/* =========================================
+   CARD
+   ========================================= */
+
+.cadastro-card {
+  position: relative;
+
+  width: min(100%, 510px);
+
+  padding: 34px 38px 28px;
+
+  border: 1px solid
+    rgba(192, 132, 252, 0.42);
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(15, 13, 27, 0.96),
+      rgba(7, 6, 14, 0.985)
+    );
+
+  box-shadow:
+    0 0 0 1px rgba(168, 85, 247, 0.06),
+    0 0 35px rgba(168, 85, 247, 0.14),
+    0 25px 90px rgba(0, 0, 0, 0.72);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.cadastro-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: -1px;
+  left: 12%;
+
+  width: 76%;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #c084fc,
+    transparent
+  );
+
+  box-shadow:
+    0 0 12px rgba(192, 132, 252, 0.8);
+}
+
+/* =========================================
+   CABEÇALHO
+   ========================================= */
+
+.cadastro-header {
+  text-align: center;
+}
 
 .cadastro-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    display:
-        block;
+  width: 48px;
+  height: 48px;
 
-    margin:
-        25px
-        0
-        16px;
+  margin: 0 auto 15px;
 
-    color:
-        #c084fc;
+  border: 1px solid
+    rgba(192, 132, 252, 0.45);
 
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(168, 85, 247, 0.25),
+      rgba(168, 85, 247, 0.05)
+    );
+
+  color: #d8b4fe;
+
+  box-shadow:
+    0 0 18px rgba(168, 85, 247, 0.2);
 }
 
+.cadastro-eyebrow {
+  display: block;
 
-.cadastro-card > span {
+  margin-bottom: 10px;
 
-    font-size:
-        0.65rem;
+  color: #c4b5fd;
 
-    letter-spacing:
-        0.2em;
+  font-size: 9px;
+  font-weight: 800;
 
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.5
-        );
+  letter-spacing: 3px;
 
+  text-transform: uppercase;
 }
 
+.cadastro-header h1 {
+  margin: 0;
 
-.cadastro-card h1 {
+  color: #ffffff;
 
-    margin:
-        10px
-        0;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
-    font-size:
-        2rem;
+  font-size: clamp(27px, 5vw, 36px);
+  font-weight: 800;
 
+  line-height: 1.1;
 }
 
+.cadastro-header h1 span {
+  display: block;
 
-.cadastro-card > p {
+  margin-top: 3px;
 
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.55
-        );
-
-    line-height:
-        1.6;
-
+  color: #c084fc;
 }
 
+.cadastro-header p {
+  max-width: 360px;
 
-.cadastro-card form {
+  margin: 13px auto 0;
 
-    display:
-        flex;
+  color: #a9a3ba;
 
-    flex-direction:
-        column;
+  font-size: 12px;
 
-    gap:
-        14px;
-
-    margin-top:
-        25px;
-
+  line-height: 1.65;
 }
 
+/* =========================================
+   ETAPAS
+   ========================================= */
 
-.cadastro-card label {
+.cadastro-steps {
+  display: flex;
+  align-items: flex-start;
 
-    display:
-        flex;
+  width: 100%;
 
-    flex-direction:
-        column;
-
-    gap:
-        7px;
-
-    font-size:
-        0.8rem;
-
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.7
-        );
-
+  margin: 28px 0 25px;
 }
 
+.cadastro-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-.cadastro-card input {
+  min-width: 70px;
 
-    padding:
-        13px;
+  color: #706a80;
 
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.1
-        );
-
-    border-radius:
-        10px;
-
-    outline:
-        none;
-
-    color:
-        #ffffff;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.04
-        );
-
+  transition: color 180ms ease;
 }
 
-
-.cadastro-card input:focus {
-
-    border-color:
-        #a855f7;
-
+.cadastro-step.active {
+  color: #e9d5ff;
 }
 
+.cadastro-step span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.12);
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.cadastro-step.active span {
+  border-color:
+    rgba(192, 132, 252, 0.75);
+
+  background:
+    rgba(168, 85, 247, 0.16);
+
+  color: #ffffff;
+
+  box-shadow:
+    0 0 14px rgba(168, 85, 247, 0.25);
+}
+
+.cadastro-step small {
+  margin-top: 7px;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.cadastro-step-line {
+  flex: 1;
+
+  height: 1px;
+
+  margin-top: 14px;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  transition:
+    background 250ms ease,
+    box-shadow 250ms ease;
+}
+
+.cadastro-step-line.active {
+  background:
+    linear-gradient(
+      90deg,
+      #a855f7,
+      #d946ef
+    );
+
+  box-shadow:
+    0 0 8px rgba(168, 85, 247, 0.35);
+}
+
+/* =========================================
+   FORMULÁRIO
+   ========================================= */
+
+.cadastro-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+}
+
+.cadastro-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.cadastro-field label {
+  color: #d5d0df;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cadastro-field input {
+  width: 100%;
+  min-height: 46px;
+
+  box-sizing: border-box;
+
+  padding: 12px 14px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.1);
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background:
+    rgba(255, 255, 255, 0.035);
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.cadastro-field input::placeholder {
+  color: #625d70;
+}
+
+.cadastro-field input:focus {
+  border-color:
+    rgba(192, 132, 252, 0.72);
+
+  background:
+    rgba(168, 85, 247, 0.045);
+
+  box-shadow:
+    0 0 0 3px
+      rgba(168, 85, 247, 0.08);
+}
+
+/* =========================================
+   SENHA
+   ========================================= */
+
+.cadastro-password {
+  position: relative;
+}
+
+.cadastro-password input {
+  padding-right: 48px;
+}
+
+.cadastro-password button {
+  position: absolute;
+
+  top: 50%;
+  right: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px;
+
+  transform: translateY(-50%);
+
+  border: 0;
+
+  background: transparent;
+
+  color: #80798f;
+
+  cursor: pointer;
+
+  transition: color 180ms ease;
+}
+
+.cadastro-password button:hover {
+  color: #d8b4fe;
+}
+
+/* =========================================
+   ERROS
+   ========================================= */
 
 .cadastro-error {
+  color: #fca5a5;
 
-    margin:
-        0;
+  font-size: 10px;
+  font-weight: 600;
 
-    color:
-        #fca5a5;
-
+  line-height: 1.4;
 }
 
+/* =========================================
+   BOTÃO PRINCIPAL
+   ========================================= */
+
+.cadastro-primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  width: 100%;
+  min-height: 47px;
+
+  margin-top: 5px;
+
+  border: 1px solid
+    rgba(216, 180, 254, 0.6);
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      100deg,
+      #7e22ce,
+      #a21caf
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 25px
+      rgba(126, 34, 206, 0.2);
+
+  transition:
+    transform 180ms ease,
+    filter 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.cadastro-primary-button:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.13);
+
+  box-shadow:
+    0 10px 30px
+      rgba(168, 85, 247, 0.3),
+    0 0 18px
+      rgba(217, 70, 239, 0.12);
+}
+
+.cadastro-primary-button:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   SISTEMAS
+   ========================================= */
+
+.cadastro-system-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 2px;
+
+  color: #c084fc;
+}
+
+.cadastro-system-title div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.cadastro-system-title strong {
+  color: #ffffff;
+
+  font-size: 13px;
+}
+
+.cadastro-system-title span {
+  color: #858092;
+
+  font-size: 10px;
+}
+
+.cadastro-systems {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+}
+
+.cadastro-system-card {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 0;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.09);
+
+  border-radius: 13px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #ffffff;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.cadastro-system-card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(192, 132, 252, 0.4);
+}
+
+.cadastro-system-card.selected {
+  border-color:
+    rgba(192, 132, 252, 0.9);
+
+  box-shadow:
+    0 0 0 1px
+      rgba(168, 85, 247, 0.2),
+    0 0 22px
+      rgba(168, 85, 247, 0.16);
+}
+
+.cadastro-system-image {
+  width: 100%;
+  height: 120px;
+
+  background-position: center;
+  background-size: cover;
+
+  transition: transform 300ms ease;
+}
+
+.cadastro-system-card:hover
+  .cadastro-system-image {
+  transform: scale(1.04);
+}
+
+.cadastro-system-dnd {
+  background-image:
+    linear-gradient(
+      180deg,
+      transparent 30%,
+      rgba(5, 5, 10, 0.8)
+    ),
+    url("/images/Home-dnd.jpg");
+}
+
+.cadastro-system-ordem {
+  background-image:
+    linear-gradient(
+      180deg,
+      transparent 30%,
+      rgba(5, 5, 10, 0.82)
+    ),
+    url("/images/Home-ordem.jpg");
+}
+
+.cadastro-system-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 12px;
+}
+
+.cadastro-system-info strong {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 13px;
+}
+
+.cadastro-system-info span {
+  color: #8f899d;
+
+  font-size: 9px;
+
+  line-height: 1.45;
+}
+
+.cadastro-system-check {
+  position: absolute;
+
+  top: 9px;
+  right: 9px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.35);
+
+  border-radius: 50%;
+
+  background: #8b2be2;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 0 12px
+      rgba(168, 85, 247, 0.5);
+}
+
+/* =========================================
+   TERMOS
+   ========================================= */
+
+.cadastro-terms {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 9px;
+
+  margin-top: 2px;
+
+  color: #898394;
+
+  font-size: 10px;
+
+  line-height: 1.55;
+
+  cursor: pointer;
+}
+
+.cadastro-terms input {
+  flex-shrink: 0;
+
+  width: 15px;
+  height: 15px;
+
+  margin: 0;
+
+  accent-color: #a855f7;
+
+  cursor: pointer;
+}
+
+/* =========================================
+   AÇÕES DA ETAPA 2
+   ========================================= */
+
+.cadastro-actions {
+  display: grid;
+
+  grid-template-columns: 0.75fr 1.25fr;
+
+  gap: 10px;
+}
+
+.cadastro-actions .cadastro-primary-button {
+  margin-top: 0;
+}
+
+.cadastro-secondary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  min-height: 47px;
+
+  border: 1px solid
+    rgba(192, 132, 252, 0.25);
+
+  border-radius: 9px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #c5bfd0;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.cadastro-secondary-button:hover {
+  border-color:
+    rgba(192, 132, 252, 0.55);
+
+  background:
+    rgba(168, 85, 247, 0.08);
+
+  color: #ffffff;
+}
+
+/* =========================================
+   SUCESSO
+   ========================================= */
+
+.cadastro-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-bottom: 15px;
+
+  padding: 10px 12px;
+
+  border: 1px solid
+    rgba(74, 222, 128, 0.25);
+
+  border-radius: 8px;
+
+  background:
+    rgba(34, 197, 94, 0.08);
+
+  color: #86efac;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* =========================================
+   LOGIN
+   ========================================= */
 
 .cadastro-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    text-align:
-        center;
+  gap: 5px;
 
+  margin-top: 22px;
+  padding-top: 18px;
+
+  border-top: 1px solid
+    rgba(255, 255, 255, 0.06);
+
+  color: #777181;
+
+  font-size: 10px;
 }
 
-
 .cadastro-login button {
+  padding: 0;
 
-    margin-left:
-        5px;
+  border: 0;
 
-    color:
-        #c084fc;
+  background: transparent;
 
-    cursor:
-        pointer;
+  color: #c084fc;
 
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.cadastro-login button:hover {
+  color: #e9d5ff;
+}
+
+/* =========================================
+   RESPONSIVIDADE
+   ========================================= */
+
+@media (max-width: 600px) {
+  .cadastro-wrapper {
+    padding: 20px 14px 35px;
+  }
+
+  .cadastro-card {
+    padding: 28px 22px 23px;
+
+    border-radius: 18px;
+  }
+
+  .cadastro-background-dnd,
+  .cadastro-background-ordem {
+    clip-path: none;
+  }
+
+  .cadastro-background-dnd {
+    opacity: 0;
+  }
+
+  .cadastro-background-ordem {
+    opacity: 0.45;
+  }
+
+  .cadastro-background-overlay {
     background:
-        transparent;
+      linear-gradient(
+        180deg,
+        rgba(5, 4, 11, 0.82),
+        rgba(5, 4, 11, 0.96)
+      );
+  }
 
+  .cadastro-systems {
+    grid-template-columns: 1fr;
+  }
+
+  .cadastro-system-image {
+    height: 135px;
+  }
+}
+
+@media (max-width: 400px) {
+  .cadastro-card {
+    padding: 24px 17px 20px;
+  }
+
+  .cadastro-header h1 {
+    font-size: 27px;
+  }
+
+  .cadastro-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .cadastro-secondary-button {
+    order: 2;
+  }
+
+  .cadastro-primary-button {
+    order: 1;
+  }
+}
+
+/* =========================================
+   ACESSIBILIDADE
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .cadastro-particle {
+    animation: none;
+  }
+
+  .cadastro-card *,
+  .cadastro-card {
+    transition: none !important;
+  }
 }
