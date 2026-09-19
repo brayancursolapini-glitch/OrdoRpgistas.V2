@@ -18,12 +18,13 @@ import ThemeSwitcher
 import ThemeParticles
     from "../../components/ThemeParticles/ThemeParticles";
 
-import ThemeAudio
-    from "../../components/Audio/ThemeAudio";
-
 import {
     useTheme,
 } from "../../context/ThemeContext";
+
+import {
+    useAudio,
+} from "../../context/AudioContext";
 
 import "./Home.css";
 
@@ -36,8 +37,34 @@ export default function Home() {
     } = useTheme();
 
 
+    const {
+        setAudioTheme,
+    } = useAudio();
+
+
     const isDnd =
         theme === "dnd";
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sincroniza o tema visual com o áudio
+    |--------------------------------------------------------------------------
+    */
+
+    function handleThemeChange(
+        nextTheme
+    ) {
+
+        setTheme(
+            nextTheme
+        );
+
+        setAudioTheme(
+            nextTheme
+        );
+
+    }
 
 
     const backgroundImage =
@@ -49,6 +76,7 @@ export default function Home() {
     const currentSystem =
         isDnd
             ? {
+
                 name:
                     "DUNGEONS & DRAGONS",
 
@@ -57,8 +85,10 @@ export default function Home() {
 
                 icon:
                     Sword,
+
             }
             : {
+
                 name:
                     "ORDEM PARANORMAL",
 
@@ -67,6 +97,7 @@ export default function Home() {
 
                 icon:
                     Shield,
+
             };
 
 
@@ -77,19 +108,19 @@ export default function Home() {
     return (
 
         <main
+
             className={
                 `home home-${theme}`
             }
+
             style={{
+
                 backgroundImage:
                     `url(${backgroundImage})`,
+
             }}
+
         >
-
-            {/* ÁUDIO */}
-
-            <ThemeAudio />
-
 
             {/* PARTÍCULAS */}
 
@@ -145,19 +176,33 @@ export default function Home() {
             ===================================== */}
 
             <motion.section
+
                 className="home-hero"
+
                 initial={{
+
                     opacity: 0,
+
                     y: 35,
+
                 }}
+
                 animate={{
+
                     opacity: 1,
+
                     y: 0,
+
                 }}
+
                 transition={{
+
                     duration: 0.8,
+
                     ease: "easeOut",
+
                 }}
+
             >
 
                 <div
@@ -175,18 +220,22 @@ export default function Home() {
                     className="home-hero-eyebrow"
                 >
 
-                    {isDnd
-                        ? "UM MUNDO DE AVENTURAS"
-                        : "A REALIDADE NÃO É O QUE PARECE"}
+                    {
+                        isDnd
+                            ? "UM MUNDO DE AVENTURAS"
+                            : "A REALIDADE NÃO É O QUE PARECE"
+                    }
 
                 </span>
 
 
                 <h1>
 
-                    {isDnd
-                        ? "DUNGEONS & DRAGONS"
-                        : "ORDEM PARANORMAL"}
+                    {
+                        isDnd
+                            ? "DUNGEONS & DRAGONS"
+                            : "ORDEM PARANORMAL"
+                    }
 
                 </h1>
 
@@ -195,9 +244,11 @@ export default function Home() {
                     className="home-hero-description"
                 >
 
-                    {isDnd
-                        ? "Reúna sua mesa e atravesse reinos onde aventuras e lendas aguardam."
-                        : "Entre em uma realidade onde o paranormal observa cada movimento."}
+                    {
+                        isDnd
+                            ? "Reúna sua mesa e atravesse reinos onde aventuras e lendas aguardam."
+                            : "Entre em uma realidade onde o paranormal observa cada movimento."
+                    }
 
                 </p>
 
@@ -230,14 +281,18 @@ export default function Home() {
 
                         <strong>
 
-                            {currentSystem.name}
+                            {
+                                currentSystem.name
+                            }
 
                         </strong>
 
 
                         <span>
 
-                            {currentSystem.description}
+                            {
+                                currentSystem.description
+                            }
 
                         </span>
 
@@ -276,7 +331,9 @@ export default function Home() {
             >
 
                 <button
+
                     type="button"
+
                     className={
                         `home-system-option ${
                             isDnd
@@ -284,13 +341,15 @@ export default function Home() {
                                 : ""
                         }`
                     }
+
                     onClick={() => {
 
-                        setTheme(
+                        handleThemeChange(
                             "dnd"
                         );
 
                     }}
+
                 >
 
                     <Sword
@@ -307,7 +366,9 @@ export default function Home() {
 
 
                 <button
+
                     type="button"
+
                     className={
                         `home-system-option ${
                             !isDnd
@@ -315,13 +376,15 @@ export default function Home() {
                                 : ""
                         }`
                     }
+
                     onClick={() => {
 
-                        setTheme(
+                        handleThemeChange(
                             "ordem"
                         );
 
                     }}
+
                 >
 
                     <Shield
@@ -363,9 +426,11 @@ export default function Home() {
 
                 <span>
 
-                    {isDnd
-                        ? "D&D"
-                        : "ORDEM PARANORMAL"}
+                    {
+                        isDnd
+                            ? "D&D"
+                            : "ORDEM PARANORMAL"
+                    }
 
                 </span>
 
