@@ -8,72 +8,98 @@ import Cadastro from "./pages/Cadastro/Cadastro";
 import Home from "./pages/Home/Home";
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState("landing");
+    const [loading, setLoading] = useState(true);
 
-  /*
-   * Tela de carregamento inicial
-   */
-  if (loading) {
+    const [currentPage, setCurrentPage] =
+        useState("landing");
+
+
+    /*
+    =========================================
+    CARREGAMENTO INICIAL
+    =========================================
+    */
+
+    if (loading) {
+        return (
+            <IntroLoader
+                onComplete={() => {
+                    setLoading(false);
+                }}
+            />
+        );
+    }
+
+
+    /*
+    =========================================
+    LANDING
+    =========================================
+    */
+
+    if (currentPage === "landing") {
+        return (
+            <Landing
+                setCurrentPage={setCurrentPage}
+            />
+        );
+    }
+
+
+    /*
+    =========================================
+    LOGIN
+    =========================================
+    */
+
+    if (currentPage === "login") {
+        return (
+            <Login
+                setCurrentPage={setCurrentPage}
+            />
+        );
+    }
+
+
+    /*
+    =========================================
+    CADASTRO
+    =========================================
+    */
+
+    if (currentPage === "cadastro") {
+        return (
+            <Cadastro
+                setCurrentPage={setCurrentPage}
+            />
+        );
+    }
+
+
+    /*
+    =========================================
+    HOME
+    =========================================
+    */
+
+    if (currentPage === "home") {
+        return (
+            <Home
+                setCurrentPage={setCurrentPage}
+            />
+        );
+    }
+
+
+    /*
+    =========================================
+    FALLBACK
+    =========================================
+    */
+
     return (
-      <IntroLoader
-        onComplete={() => setLoading(false)}
-        duration={2400}
-      />
+        <Landing
+            setCurrentPage={setCurrentPage}
+        />
     );
-  }
-
-  /*
-   * LANDING
-   */
-  if (currentPage === "landing") {
-    return (
-      <Landing
-        setCurrentPage={setCurrentPage}
-      />
-    );
-  }
-
-  /*
-   * LOGIN
-   */
-  if (currentPage === "login") {
-    return (
-      <Login
-        setCurrentPage={setCurrentPage}
-      />
-    );
-  }
-
-  /*
-   * CADASTRO
-   */
-  if (currentPage === "cadastro") {
-    return (
-      <Cadastro
-        setCurrentPage={setCurrentPage}
-      />
-    );
-  }
-
-  /*
-   * HOME
-   */
-  if (currentPage === "home") {
-    return (
-      <Home
-        setCurrentPage={setCurrentPage}
-      />
-    );
-  }
-
-  /*
-   * Caso alguma página inválida seja informada,
-   * volta para a Landing.
-   */
-  return (
-    <Landing
-      setCurrentPage={setCurrentPage}
-    />
-  );
 }
