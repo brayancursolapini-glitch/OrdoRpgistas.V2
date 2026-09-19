@@ -6,7 +6,9 @@ import {
     useState,
 } from "react";
 
-const AudioContext = createContext(null);
+
+const AudioContext =
+    createContext(null);
 
 
 /*
@@ -14,15 +16,12 @@ const AudioContext = createContext(null);
 | PLAYLISTS
 |--------------------------------------------------------------------------
 |
-| Para adicionar novos áudios futuramente, basta colocar uma nova faixa
-| dentro da playlist correspondente.
-|
-| Exemplo:
+| Para adicionar novos áudios no futuro:
 |
 | {
-|     id: "nova-musica",
-|     name: "Minha nova música",
-|     file: "audio/minha-musica.mp3",
+|     id: "id-do-audio",
+|     name: "Nome do áudio",
+|     file: "audio/meu-audio.mp3",
 | }
 |
 */
@@ -31,9 +30,11 @@ const DEFAULT_PLAYLISTS = {
 
     dnd: {
 
-        id: "dnd",
+        id:
+            "dnd",
 
-        name: "D&D",
+        name:
+            "D&D",
 
         description:
             "Músicas e ambientes para aventuras de fantasia.",
@@ -59,7 +60,8 @@ const DEFAULT_PLAYLISTS = {
 
     ordem: {
 
-        id: "ordem",
+        id:
+            "ordem",
 
         name:
             "Ordem Paranormal",
@@ -170,6 +172,7 @@ function getSavedValue(
                 key
             );
 
+
         if (
             value === null
         ) {
@@ -177,6 +180,7 @@ function getSavedValue(
             return fallback;
 
         }
+
 
         return JSON.parse(
             value
@@ -207,7 +211,7 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | CONTROLES
+    | MUTE
     |--------------------------------------------------------------------------
     */
 
@@ -224,6 +228,12 @@ export function AudioProvider({
     );
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | VOLUME
+    |--------------------------------------------------------------------------
+    */
+
     const [
         volume,
         setVolume,
@@ -237,6 +247,12 @@ export function AudioProvider({
     );
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | PLAYLIST ATUAL
+    |--------------------------------------------------------------------------
+    */
+
     const [
         currentPlaylist,
         setCurrentPlaylist,
@@ -249,6 +265,12 @@ export function AudioProvider({
 
     );
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | FAIXA ATUAL
+    |--------------------------------------------------------------------------
+    */
 
     const [
         currentTrack,
@@ -265,7 +287,7 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | TEMA ATUAL
+    | TEMA DO ÁUDIO
     |--------------------------------------------------------------------------
     */
 
@@ -299,7 +321,7 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | SALVAR CONFIGURAÇÕES
+    | SALVAR MUTE
     |--------------------------------------------------------------------------
     */
 
@@ -317,6 +339,12 @@ export function AudioProvider({
     ]);
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | SALVAR VOLUME
+    |--------------------------------------------------------------------------
+    */
+
     useEffect(() => {
 
         localStorage.setItem(
@@ -330,6 +358,12 @@ export function AudioProvider({
         volume,
     ]);
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | SALVAR PLAYLIST
+    |--------------------------------------------------------------------------
+    */
 
     useEffect(() => {
 
@@ -345,6 +379,12 @@ export function AudioProvider({
     ]);
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | SALVAR FAIXA
+    |--------------------------------------------------------------------------
+    */
+
     useEffect(() => {
 
         localStorage.setItem(
@@ -358,6 +398,12 @@ export function AudioProvider({
         currentTrack,
     ]);
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | SALVAR TEMA
+    |--------------------------------------------------------------------------
+    */
 
     useEffect(() => {
 
@@ -375,7 +421,7 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | VOLUME / MUTE
+    | APLICAR VOLUME / MUTE
     |--------------------------------------------------------------------------
     */
 
@@ -383,6 +429,7 @@ export function AudioProvider({
 
         const audio =
             audioRef.current;
+
 
         if (!audio) {
 
@@ -408,43 +455,22 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | CARREGAR E TOCAR FAIXA
+    | FUNÇÃO INTERNA PARA CARREGAR E TOCAR UMA FAIXA
     |--------------------------------------------------------------------------
     */
 
-    useEffect(() => {
+    function loadAndPlayTrack(
+        track
+    ) {
 
         const audio =
             audioRef.current;
 
 
-        if (!audio) {
-
-            return;
-
-        }
-
-
-        if (!currentTrack) {
-
-            audio.pause();
-
-            audio.currentTime = 0;
-
-            return;
-
-        }
-
-
-        const track =
-            tracks.find(
-                item =>
-                    item.id ===
-                    currentTrack
-            );
-
-
-        if (!track) {
+        if (
+            !audio ||
+            !track
+        ) {
 
             return;
 
@@ -457,25 +483,19 @@ export function AudioProvider({
 
         /*
         |--------------------------------------------------------------------------
-        | Evita recarregar a mesma faixa
+        | Define o arquivo
         |--------------------------------------------------------------------------
         */
 
-        if (
-            audio.src !==
-            new URL(
-                source,
-                window.location.href
-            ).href
-        ) {
+        audio.src =
+            source;
 
-            audio.src =
-                source;
 
-            audio.load();
-
-        }
-
+        /*
+        |--------------------------------------------------------------------------
+        | Configura volume
+        |--------------------------------------------------------------------------
+        */
 
         audio.volume =
             muted
@@ -489,122 +509,52 @@ export function AudioProvider({
 
         /*
         |--------------------------------------------------------------------------
-        | Tenta iniciar automaticamente.
-        |
-        | Se o navegador bloquear autoplay,
-        | o erro é simplesmente ignorado.
+        | Carrega o arquivo
         |--------------------------------------------------------------------------
         */
 
-        audio
-            .play()
-            .catch(() => {});
-
-    }, [
-        currentTrack,
-        currentPlaylist,
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | ATUALIZAR ÁUDIO QUANDO O TEMA MUDA
-    |--------------------------------------------------------------------------
-    */
-
-    useEffect(() => {
-
-        const playlist =
-            playlists[theme];
-
-
-        if (!playlist) {
-
-            return;
-
-        }
-
-
-        setCurrentPlaylist(
-            playlist.id
-        );
-
-
-        if (
-            playlist.tracks.length === 0
-        ) {
-
-            setCurrentTrack(
-                null
-            );
-
-            if (
-                audioRef.current
-            ) {
-
-                audioRef.current.pause();
-
-                audioRef.current.currentTime =
-                    0;
-
-                audioRef.current.removeAttribute(
-                    "src"
-                );
-
-                audioRef.current.load();
-
-            }
-
-            return;
-
-        }
+        audio.load();
 
 
         /*
         |--------------------------------------------------------------------------
-        | O primeiro áudio da playlist do tema
-        | passa a ser o áudio ambiente padrão.
+        | PLAY
         |--------------------------------------------------------------------------
+        |
+        | Esta função pode ser chamada diretamente dentro de um clique
+        | do usuário, permitindo que o navegador autorize o áudio.
+        |
         */
 
-        setCurrentTrack(
-            playlist.tracks[0].id
-        );
+        const playPromise =
+            audio.play();
 
-    }, [
-        theme,
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DEFINIR TEMA
-    |--------------------------------------------------------------------------
-    */
-
-    function setAudioTheme(
-        themeId
-    ) {
 
         if (
-            !playlists[themeId]
+            playPromise &&
+            typeof playPromise.catch ===
+                "function"
         ) {
 
-            return;
+            playPromise.catch(
+                error => {
+
+                    console.warn(
+                        "Não foi possível iniciar o áudio:",
+                        error
+                    );
+
+                }
+            );
 
         }
-
-
-        setTheme(
-            themeId
-        );
 
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | MUTE
+    | ALTERAR MUTE
     |--------------------------------------------------------------------------
     */
 
@@ -620,7 +570,7 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | VOLUME
+    | ALTERAR VOLUME
     |--------------------------------------------------------------------------
     */
 
@@ -676,7 +626,7 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | PLAYLIST
+    | ALTERAR PLAYLIST
     |--------------------------------------------------------------------------
     */
 
@@ -684,9 +634,13 @@ export function AudioProvider({
         playlistId
     ) {
 
-        if (
-            !playlists[playlistId]
-        ) {
+        const playlist =
+            playlists[
+                playlistId
+            ];
+
+
+        if (!playlist) {
 
             return;
 
@@ -698,21 +652,10 @@ export function AudioProvider({
         );
 
 
-        const playlistTracks =
-            playlists[
-                playlistId
-            ].tracks;
-
-
         if (
-            playlistTracks.length > 0
+            playlist.tracks.length ===
+            0
         ) {
-
-            setCurrentTrack(
-                playlistTracks[0].id
-            );
-
-        } else {
 
             setCurrentTrack(
                 null
@@ -736,14 +679,30 @@ export function AudioProvider({
 
             }
 
+            return;
+
         }
+
+
+        const firstTrack =
+            playlist.tracks[0];
+
+
+        setCurrentTrack(
+            firstTrack.id
+        );
+
+
+        loadAndPlayTrack(
+            firstTrack
+        );
 
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | FAIXA
+    | ALTERAR FAIXA
     |--------------------------------------------------------------------------
     */
 
@@ -768,6 +727,11 @@ export function AudioProvider({
 
         setCurrentTrack(
             track.id
+        );
+
+
+        loadAndPlayTrack(
+            track
         );
 
     }
@@ -802,14 +766,18 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | CONTINUAR
+    | PLAY
     |--------------------------------------------------------------------------
     */
 
     function playCurrent() {
 
+        const audio =
+            audioRef.current;
+
+
         if (
-            !audioRef.current ||
+            !audio ||
             !currentTrack
         ) {
 
@@ -818,20 +786,25 @@ export function AudioProvider({
         }
 
 
-        audioRef.current
+        audio
             .play()
-            .catch(() => {});
+            .catch(
+                () => {}
+            );
 
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | RETOMAR ÁUDIO DO TEMA
+    | TROCAR TEMA + DAR PLAY
     |--------------------------------------------------------------------------
+    |
+    | ESTA É A PARTE PRINCIPAL DA CORREÇÃO.
+    |
     */
 
-    function playThemeAudio(
+    function setAudioTheme(
         themeId
     ) {
 
@@ -841,10 +814,7 @@ export function AudioProvider({
             ];
 
 
-        if (
-            !playlist ||
-            playlist.tracks.length === 0
-        ) {
+        if (!playlist) {
 
             return;
 
@@ -861,11 +831,142 @@ export function AudioProvider({
         );
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Tema sem áudio
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            playlist.tracks.length ===
+            0
+        ) {
+
+            setCurrentTrack(
+                null
+            );
+
+
+            if (
+                audioRef.current
+            ) {
+
+                audioRef.current.pause();
+
+                audioRef.current.currentTime =
+                    0;
+
+                audioRef.current.removeAttribute(
+                    "src"
+                );
+
+                audioRef.current.load();
+
+            }
+
+            return;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Primeiro áudio da playlist = áudio padrão do tema
+        |--------------------------------------------------------------------------
+        */
+
+        const defaultTrack =
+            playlist.tracks[0];
+
+
         setCurrentTrack(
-            playlist.tracks[0].id
+            defaultTrack.id
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | IMPORTANTE:
+        |
+        | O play acontece imediatamente nesta função,
+        | que foi chamada pelo clique do usuário.
+        |--------------------------------------------------------------------------
+        */
+
+        loadAndPlayTrack(
+            defaultTrack
         );
 
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PLAYLIST ATUAL
+    |--------------------------------------------------------------------------
+    */
+
+    useEffect(() => {
+
+        if (
+            !currentTrack
+        ) {
+
+            return;
+
+        }
+
+
+        const track =
+            tracks.find(
+                item =>
+                    item.id ===
+                    currentTrack
+            );
+
+
+        if (!track) {
+
+            return;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Apenas garante que o estado do áudio acompanha o React.
+        |
+        | O play principal já acontece em loadAndPlayTrack().
+        |--------------------------------------------------------------------------
+        */
+
+        const audio =
+            audioRef.current;
+
+
+        if (!audio) {
+
+            return;
+
+        }
+
+
+        audio.volume =
+            muted
+                ? 0
+                : volume;
+
+
+        audio.muted =
+            muted;
+
+    }, [
+        currentTrack,
+        currentPlaylist,
+        muted,
+        volume,
+        tracks,
+    ]);
 
 
     /*
@@ -909,8 +1010,6 @@ export function AudioProvider({
                 playCurrent,
 
                 setAudioTheme,
-
-                playThemeAudio,
 
             }}
 
