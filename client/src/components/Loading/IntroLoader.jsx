@@ -1,66 +1,139 @@
-import { useEffect, useState } from "react";
+import {
+    useEffect,
+    useState,
+} from "react";
+
+import {
+    Sparkles,
+} from "lucide-react";
 
 import "./IntroLoader.css";
 
-export default function IntroLoader({ onFinish }) {
-  const [closing, setClosing] = useState(false);
 
-  useEffect(() => {
-    const closeTimer = setTimeout(() => {
-      setClosing(true);
-    }, 1500);
+export default function IntroLoader({
+    onComplete,
+    duration = 2400,
+}) {
 
-    const finishTimer = setTimeout(() => {
-      if (typeof onFinish === "function") {
-        onFinish();
-      }
-    }, 1850);
+    const [
+        leaving,
+        setLeaving,
+    ] = useState(false);
 
-    return () => {
-      clearTimeout(closeTimer);
-      clearTimeout(finishTimer);
-    };
-  }, [onFinish]);
 
-  return (
-    <div
-      className={`intro-loader ${
-        closing ? "intro-loader-closing" : ""
-      }`}
-    >
-      <div className="intro-loader-dnd" />
-      <div className="intro-loader-ordem" />
+    useEffect(() => {
 
-      <div className="intro-loader-overlay" />
+        /*
+        =========================================
+        INICIA A SAÍDA DO LOADER
+        =========================================
+        */
 
-      <div className="intro-loader-content">
+        const exitTimer = setTimeout(() => {
 
-        <div className="intro-loader-symbol">
-          ✦
+            setLeaving(true);
+
+        }, duration);
+
+
+        /*
+        =========================================
+        FINALIZA O LOADER
+        =========================================
+        */
+
+        const completeTimer = setTimeout(() => {
+
+            if (typeof onComplete === "function") {
+
+                onComplete();
+
+            }
+
+        }, duration + 500);
+
+
+        /*
+        =========================================
+        LIMPEZA
+        =========================================
+        */
+
+        return () => {
+
+            clearTimeout(exitTimer);
+
+            clearTimeout(completeTimer);
+
+        };
+
+    }, [
+        duration,
+        onComplete,
+    ]);
+
+
+    return (
+        <div
+            className={`
+                intro-loader
+                ${leaving
+                    ? "intro-loader-leaving"
+                    : ""
+                }
+            `}
+        >
+
+            {/* Fundo mágico */}
+
+            <div
+                className="intro-loader-background"
+            />
+
+
+            {/* Conteúdo */}
+
+            <div
+                className="intro-loader-content"
+            >
+
+                <Sparkles
+                    className="intro-loader-icon"
+                    size={42}
+                />
+
+
+                <span
+                    className="intro-loader-small"
+                >
+                    PREPARE-SE PARA ENTRAR
+                </span>
+
+
+                <h1>
+                    ORDO
+
+                    <strong>
+                        RPGISTAS
+                    </strong>
+                </h1>
+
+
+                <div
+                    className="intro-loader-line"
+                >
+
+                    <span />
+
+                </div>
+
+
+                <p>
+                    Onde histórias ganham vida.
+                </p>
+
+            </div>
+
         </div>
-
-        <span className="intro-loader-small">
-          UM MUNDO DE AVENTURAS
-        </span>
-
-        <h1>
-          ORDO
-          <span>RPGISTAS</span>
-        </h1>
-
-        <p>
-          PREPARANDO SUA AVENTURA
-        </p>
-
-        <div className="intro-loader-line">
-          <span />
-        </div>
-
-        <small>
-          Onde histórias ganham vida.
-        </small>
-
-      </div>
-    </div>
-  );
+    );
 }
