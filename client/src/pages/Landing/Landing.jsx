@@ -12,15 +12,13 @@ export default function Landing({ setCurrentPage }) {
   return (
     <main className="landing-page">
 
-      {/* =========================================
+      {/* ================================
           LADO D&D
-      ========================================= */}
+          ================================ */}
       <section className="landing-side landing-dnd">
-
         <div className="landing-overlay" />
 
         <div className="landing-theme-content landing-theme-left">
-
           <span className="landing-eyebrow">
             UM MUNDO DE AVENTURAS
           </span>
@@ -40,20 +38,17 @@ export default function Landing({ setCurrentPage }) {
           <span className="landing-system">
             ◈ SISTEMA D&amp;D
           </span>
-
         </div>
       </section>
 
 
-      {/* =========================================
+      {/* ================================
           LADO ORDEM PARANORMAL
-      ========================================= */}
+          ================================ */}
       <section className="landing-side landing-ordem">
-
         <div className="landing-overlay" />
 
         <div className="landing-theme-content landing-theme-right">
-
           <span className="landing-eyebrow">
             A REALIDADE NÃO É O QUE PARECE
           </span>
@@ -71,35 +66,32 @@ export default function Landing({ setCurrentPage }) {
           <span className="landing-system">
             ◈ SISTEMA ORDEM
           </span>
-
         </div>
       </section>
 
 
-      {/* =========================================
-          PARTÍCULAS
-      ========================================= */}
+      {/* ================================
+          PARTÍCULAS MÁGICAS
+          ================================ */}
       <div className="landing-magic-particles">
-
         {Array.from({ length: 35 }).map((_, index) => (
           <span
             className="landing-particle"
             key={index}
             style={{
-              left: `${(index * 37) % 100}%`,
-              top: `${(index * 61) % 100}%`,
-              animationDelay: `${(index % 7) * 0.7}s`,
-              animationDuration: `${5 + (index % 5)}s`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${4 + Math.random() * 6}s`,
             }}
           />
         ))}
-
       </div>
 
 
-      {/* =========================================
-          DIVISÓRIA MÁGICA
-      ========================================= */}
+      {/* ================================
+          DIVISÓRIA CENTRAL
+          ================================ */}
       <div className="landing-magic-divider">
 
         <div className="landing-divider-glow" />
@@ -118,15 +110,15 @@ export default function Landing({ setCurrentPage }) {
       </div>
 
 
-      {/* =========================================
-          CONTORNO
-      ========================================= */}
+      {/* ================================
+          BORDA MÁGICA
+          ================================ */}
       <div className="landing-magic-border" />
 
 
-      {/* =========================================
+      {/* ================================
           PAINEL CENTRAL
-      ========================================= */}
+          ================================ */}
       <section className="landing-panel-wrapper">
 
         <div className="landing-panel">
@@ -158,6 +150,8 @@ export default function Landing({ setCurrentPage }) {
             </strong>
           </p>
 
+
+          {/* BOTÃO ENTRAR */}
           <button
             type="button"
             className="landing-enter-button"
@@ -168,6 +162,8 @@ export default function Landing({ setCurrentPage }) {
             <ArrowRight size={17} />
           </button>
 
+
+          {/* BOTÃO CRIAR CONTA */}
           <button
             type="button"
             className="landing-register-button"
@@ -175,8 +171,11 @@ export default function Landing({ setCurrentPage }) {
           >
             <UserPlus size={16} />
 
-            <span>Criar conta</span>
+            <span>
+              Criar conta
+            </span>
           </button>
+
 
           <small>
             Onde histórias ganham vida.
@@ -187,9 +186,9 @@ export default function Landing({ setCurrentPage }) {
       </section>
 
 
-      {/* =========================================
+      {/* ================================
           RODAPÉ
-      ========================================= */}
+          ================================ */}
       <div className="landing-footer">
         ORDO RPGISTAS · DOIS MUNDOS. INFINITAS HISTÓRIAS.
       </div>
