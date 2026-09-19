@@ -5,20 +5,12 @@ import IntroLoader from "./components/Loading/IntroLoader";
 import Landing from "./pages/Landing/Landing";
 import Login from "./pages/Login/Login";
 import Cadastro from "./pages/Cadastro/Cadastro";
-import Home from "./pages/Home/Home";
+
+import AppNavigation from "./navigation/AppNavigation";
 
 export default function App() {
     const [loading, setLoading] = useState(true);
-
-    const [currentPage, setCurrentPage] =
-        useState("landing");
-
-
-    /*
-    =========================================
-    CARREGAMENTO INICIAL
-    =========================================
-    */
+    const [currentPage, setCurrentPage] = useState("landing");
 
     if (loading) {
         return (
@@ -30,13 +22,6 @@ export default function App() {
         );
     }
 
-
-    /*
-    =========================================
-    LANDING
-    =========================================
-    */
-
     if (currentPage === "landing") {
         return (
             <Landing
@@ -44,13 +29,6 @@ export default function App() {
             />
         );
     }
-
-
-    /*
-    =========================================
-    LOGIN
-    =========================================
-    */
 
     if (currentPage === "login") {
         return (
@@ -60,13 +38,6 @@ export default function App() {
         );
     }
 
-
-    /*
-    =========================================
-    CADASTRO
-    =========================================
-    */
-
     if (currentPage === "cadastro") {
         return (
             <Cadastro
@@ -75,30 +46,9 @@ export default function App() {
         );
     }
 
-
-    /*
-    =========================================
-    HOME
-    =========================================
-    */
-
-    if (currentPage === "home") {
-        return (
-            <Home
-                setCurrentPage={setCurrentPage}
-            />
-        );
-    }
-
-
-    /*
-    =========================================
-    FALLBACK
-    =========================================
-    */
-
     return (
-        <Landing
+        <AppNavigation
+            currentPage={currentPage}
             setCurrentPage={setCurrentPage}
         />
     );
