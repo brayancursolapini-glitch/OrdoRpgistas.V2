@@ -11,11 +11,16 @@ export default function Landing({ setCurrentPage }) {
 
   return (
     <main className="landing-page">
-      {/* Fundo D&D */}
+
+      {/* =========================================
+          LADO D&D
+      ========================================= */}
       <section className="landing-side landing-dnd">
+
         <div className="landing-overlay" />
 
         <div className="landing-theme-content landing-theme-left">
+
           <span className="landing-eyebrow">
             UM MUNDO DE AVENTURAS
           </span>
@@ -35,14 +40,20 @@ export default function Landing({ setCurrentPage }) {
           <span className="landing-system">
             ◈ SISTEMA D&amp;D
           </span>
+
         </div>
       </section>
 
-      {/* Fundo Ordem */}
+
+      {/* =========================================
+          LADO ORDEM PARANORMAL
+      ========================================= */}
       <section className="landing-side landing-ordem">
+
         <div className="landing-overlay" />
 
         <div className="landing-theme-content landing-theme-right">
+
           <span className="landing-eyebrow">
             A REALIDADE NÃO É O QUE PARECE
           </span>
@@ -60,27 +71,37 @@ export default function Landing({ setCurrentPage }) {
           <span className="landing-system">
             ◈ SISTEMA ORDEM
           </span>
+
         </div>
       </section>
 
-      {/* Partículas mágicas */}
+
+      {/* =========================================
+          PARTÍCULAS
+      ========================================= */}
       <div className="landing-magic-particles">
+
         {Array.from({ length: 35 }).map((_, index) => (
           <span
             className="landing-particle"
             key={index}
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${4 + Math.random() * 6}s`,
+              left: `${(index * 37) % 100}%`,
+              top: `${(index * 61) % 100}%`,
+              animationDelay: `${(index % 7) * 0.7}s`,
+              animationDuration: `${5 + (index % 5)}s`,
             }}
           />
         ))}
+
       </div>
 
-      {/* Divisória mágica */}
+
+      {/* =========================================
+          DIVISÓRIA MÁGICA
+      ========================================= */}
       <div className="landing-magic-divider">
+
         <div className="landing-divider-glow" />
 
         {Array.from({ length: 20 }).map((_, index) => (
@@ -93,14 +114,23 @@ export default function Landing({ setCurrentPage }) {
             }}
           />
         ))}
+
       </div>
 
-      {/* Contorno mágico */}
+
+      {/* =========================================
+          CONTORNO
+      ========================================= */}
       <div className="landing-magic-border" />
 
-      {/* Painel */}
+
+      {/* =========================================
+          PAINEL CENTRAL
+      ========================================= */}
       <section className="landing-panel-wrapper">
+
         <div className="landing-panel">
+
           <Sparkles
             className="landing-panel-icon"
             size={22}
@@ -111,7 +141,8 @@ export default function Landing({ setCurrentPage }) {
           </span>
 
           <h2>
-            ORDO<span>RPGISTAS</span>
+            ORDO
+            <span>RPGISTAS</span>
           </h2>
 
           <p className="landing-panel-description">
@@ -122,7 +153,9 @@ export default function Landing({ setCurrentPage }) {
 
           <p className="landing-panel-highlight">
             SEU MUNDO INICIA
-            <strong> SUA AVENTURA COMEÇA AQUI</strong>
+            <strong>
+              SUA AVENTURA COMEÇA AQUI
+            </strong>
           </p>
 
           <button
@@ -148,13 +181,19 @@ export default function Landing({ setCurrentPage }) {
           <small>
             Onde histórias ganham vida.
           </small>
+
         </div>
+
       </section>
 
-      {/* Rodapé */}
+
+      {/* =========================================
+          RODAPÉ
+      ========================================= */}
       <div className="landing-footer">
         ORDO RPGISTAS · DOIS MUNDOS. INFINITAS HISTÓRIAS.
       </div>
+
     </main>
   );
 }
