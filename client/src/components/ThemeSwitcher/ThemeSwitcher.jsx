@@ -7,6 +7,10 @@ import {
     useTheme,
 } from "../../context/ThemeContext";
 
+import {
+    useAudio,
+} from "../../context/AudioContext";
+
 import "./ThemeSwitcher.css";
 
 
@@ -18,8 +22,46 @@ export default function ThemeSwitcher() {
     } = useTheme();
 
 
+    const {
+        setAudioTheme,
+    } = useAudio();
+
+
     const isDnd =
         theme === "dnd";
+
+
+    function handleThemeChange() {
+
+        const nextTheme =
+            theme === "dnd"
+                ? "ordem"
+                : "dnd";
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Troca o tema visual
+        |--------------------------------------------------------------------------
+        */
+
+        toggleTheme();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Troca o áudio e dá PLAY imediatamente.
+        |
+        | Essa chamada acontece dentro do clique do usuário,
+        | permitindo que o navegador autorize a reprodução.
+        |--------------------------------------------------------------------------
+        */
+
+        setAudioTheme(
+            nextTheme
+        );
+
+    }
 
 
     return (
@@ -38,7 +80,7 @@ export default function ThemeSwitcher() {
             `}
 
             onClick={
-                toggleTheme
+                handleThemeChange
             }
 
         >
@@ -46,8 +88,16 @@ export default function ThemeSwitcher() {
             {
 
                 isDnd
-                    ? <Sun size={16} />
-                    : <Moon size={16} />
+                    ? (
+                        <Sun
+                            size={16}
+                        />
+                    )
+                    : (
+                        <Moon
+                            size={16}
+                        />
+                    )
 
             }
 
