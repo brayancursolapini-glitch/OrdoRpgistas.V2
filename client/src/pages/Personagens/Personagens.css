@@ -1,1 +1,69 @@
+.personagens-grid {
+    display: grid;
 
+    grid-template-columns:
+        repeat(auto-fit, minmax(280px, 1fr));
+
+    gap: 20px;
+}
+
+.personagens-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 300px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+
+    background: rgba(10, 10, 15, 0.48);
+
+    backdrop-filter: blur(14px);
+}
+
+.personagens-empty svg {
+    opacity: 0.65;
+
+    margin-bottom: 15px;
+}
+
+.personagens-empty h2 {
+    margin: 0 0 10px;
+}
+
+.personagens-empty p {
+    max-width: 480px;
+
+    margin: 0 0 25px;
+
+    color: rgba(255, 255, 255, 0.58);
+
+    line-height: 1.6;
+}
+
+.personagens-empty button {
+    padding: 12px 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.07);
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.personagens-empty button:hover {
+    background: rgba(255, 255, 255, 0.13);
+
+    transform: translateY(-2px);
+}
