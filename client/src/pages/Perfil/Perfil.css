@@ -1,1 +1,62 @@
+.perfil-card {
+    display: flex;
+    align-items: center;
 
+    gap: 25px;
+
+    padding: 30px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+
+    background: rgba(10, 10, 15, 0.48);
+
+    backdrop-filter: blur(14px);
+}
+
+.perfil-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 90px;
+    height: 90px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.perfil-info span {
+    font-size: 10px;
+
+    letter-spacing: 0.2em;
+
+    opacity: 0.5;
+}
+
+.perfil-info h2 {
+    margin: 8px 0;
+
+    font-size: 25px;
+}
+
+.perfil-info p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.62);
+
+    line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+    .perfil-card {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+}
