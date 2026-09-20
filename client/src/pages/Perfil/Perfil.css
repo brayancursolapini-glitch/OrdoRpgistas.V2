@@ -7,6 +7,7 @@
     padding: 30px;
 
     border: 1px solid rgba(255, 255, 255, 0.12);
+
     border-radius: 20px;
 
     background: rgba(10, 10, 15, 0.48);
@@ -54,9 +55,11 @@
 }
 
 @media (max-width: 600px) {
+
     .perfil-card {
         flex-direction: column;
 
         align-items: flex-start;
     }
+
 }
