@@ -29,7 +29,9 @@ import {
 import "./Home.css";
 
 
-export default function Home() {
+export default function Home({
+    onNavigate,
+}) {
 
     const {
         theme,
@@ -136,7 +138,11 @@ export default function Home() {
 
             {/* MENU */}
 
-            <SideMenu />
+            <SideMenu
+                onNavigate={
+                    onNavigate
+                }
+            />
 
 
             {/* =====================================
@@ -156,6 +162,7 @@ export default function Home() {
                         ORDO
 
                     </span>
+
 
                     <strong>
 
