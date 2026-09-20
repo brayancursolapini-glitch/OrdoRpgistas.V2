@@ -1,6 +1,7 @@
 import { Settings } from "lucide-react";
 
 import PageBase from "../PageBase";
+import "../page-placeholder.css";
 
 export default function Configuracoes({ onNavigate }) {
     return (
