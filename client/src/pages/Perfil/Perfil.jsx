@@ -13,20 +13,28 @@ export default function Perfil({ onNavigate }) {
             onNavigate={onNavigate}
         >
             <div className="perfil-card">
+
                 <div className="perfil-avatar">
                     <UserRound size={42} />
                 </div>
 
                 <div className="perfil-info">
-                    <span>AVENTUREIRO</span>
 
-                    <h2>Seu perfil</h2>
+                    <span>
+                        AVENTUREIRO
+                    </span>
+
+                    <h2>
+                        Seu perfil
+                    </h2>
 
                     <p>
                         Aqui ficarão suas informações,
                         personagens, campanhas e atividades.
                     </p>
+
                 </div>
+
             </div>
         </PageBase>
     );
