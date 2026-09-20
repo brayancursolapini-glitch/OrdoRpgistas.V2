@@ -1,6 +1,7 @@
 import { Map } from "lucide-react";
 
 import PageBase from "../PageBase";
+import "../page-placeholder.css";
 
 export default function Mapas({ onNavigate }) {
     return (
