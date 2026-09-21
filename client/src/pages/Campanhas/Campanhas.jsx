@@ -12,14 +12,18 @@ export default function Campanhas({ onNavigate }) {
             onNavigate={onNavigate}
         >
             <div className="page-placeholder">
+
                 <Crown size={42} />
 
-                <h2>Suas campanhas</h2>
+                <h2>
+                    Suas campanhas
+                </h2>
 
                 <p>
                     Aqui ficarão suas campanhas,
                     mestres e grupos de aventura.
                 </p>
+
             </div>
         </PageBase>
     );
