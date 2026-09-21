@@ -1,20 +1,26 @@
 .page-base {
     position: relative;
 
-    min-height: 100vh;
     width: 100%;
+    min-height: 100vh;
+
+    overflow-x: hidden;
 
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 
-    overflow-x: hidden;
-
     color: #ffffff;
 }
 
+
+/* =========================================
+   OVERLAY
+========================================= */
+
 .page-base-overlay {
     position: fixed;
+
     inset: 0;
 
     z-index: 1;
@@ -25,11 +31,18 @@
         linear-gradient(
             90deg,
             rgba(5, 7, 12, 0.94) 0%,
-            rgba(5, 7, 12, 0.78) 35%,
-            rgba(5, 7, 12, 0.72) 65%,
-            rgba(5, 7, 12, 0.90) 100%
+            rgba(5, 7, 12, 0.82) 30%,
+            rgba(5, 7, 12, 0.72) 55%,
+            rgba(5, 7, 12, 0.82) 78%,
+            rgba(5, 7, 12, 0.94) 100%
         );
+
 }
+
+
+/* =========================================
+   HEADER
+========================================= */
 
 .page-base-header {
     position: relative;
@@ -37,77 +50,166 @@
     z-index: 10;
 
     display: flex;
+
     align-items: center;
     justify-content: space-between;
 
-    padding: 28px 38px 0 110px;
+    width: 100%;
+
+    padding:
+        28px
+        38px
+        0
+        110px;
+
+    box-sizing: border-box;
 }
+
+
+/* =========================================
+   LOGO
+========================================= */
 
 .page-base-logo {
     display: flex;
+
     flex-direction: column;
 
     line-height: 0.9;
 
     letter-spacing: 0.12em;
+
+    user-select: none;
 }
 
 .page-base-logo span {
-    font-size: 12px;
+    margin-bottom: 3px;
 
-    opacity: 0.7;
+    color: rgba(255, 255, 255, 0.62);
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.22em;
 }
 
 .page-base-logo strong {
+    color: #ffffff;
+
     font-size: 20px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
 }
+
+
+/* =========================================
+   CONTEÚDO
+========================================= */
 
 .page-base-content {
     position: relative;
 
     z-index: 5;
 
-    width: min(1100px, calc(100% - 60px));
+    width: min(
+        1100px,
+        calc(100% - 60px)
+    );
 
     margin: 0 auto;
 
-    padding: 55px 0 80px;
+    padding:
+        55px
+        0
+        90px;
+
+    box-sizing: border-box;
 }
+
+
+/* =========================================
+   BOTÃO VOLTAR
+========================================= */
 
 .page-base-back {
     display: inline-flex;
+
     align-items: center;
+
+    justify-content: center;
+
     gap: 8px;
 
     margin-bottom: 35px;
 
-    padding: 10px 15px;
+    padding:
+        10px
+        15px;
 
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.16);
+
     border-radius: 10px;
 
-    background: rgba(0, 0, 0, 0.24);
+    background:
+        rgba(0, 0, 0, 0.24);
 
-    color: rgba(255, 255, 255, 0.78);
+    color:
+        rgba(255, 255, 255, 0.78);
+
+    font-family: inherit;
+
+    font-size: 14px;
 
     cursor: pointer;
 
+    backdrop-filter: blur(8px);
+
+    -webkit-backdrop-filter: blur(8px);
+
     transition:
         background 0.25s ease,
+        border-color 0.25s ease,
         color 0.25s ease,
-        transform 0.25s ease;
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .page-base-back:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    border-color:
+        rgba(255, 255, 255, 0.26);
 
     color: #ffffff;
 
-    transform: translateX(-3px);
+    transform:
+        translateX(-3px);
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.18);
 }
+
+.page-base-back:active {
+    transform:
+        translateX(-3px)
+        scale(0.98);
+}
+
+
+/* =========================================
+   TÍTULO DA PÁGINA
+========================================= */
 
 .page-base-title {
     display: flex;
+
     align-items: center;
 
     gap: 22px;
@@ -115,21 +217,50 @@
     margin-bottom: 38px;
 }
 
+
+/* =========================================
+   ÍCONE
+========================================= */
+
 .page-base-icon {
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     width: 62px;
     height: 62px;
 
+    flex-shrink: 0;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.20);
+
     border-radius: 16px;
 
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background:
+        rgba(0, 0, 0, 0.28);
 
-    background: rgba(0, 0, 0, 0.28);
+    color: #ffffff;
 
     backdrop-filter: blur(10px);
+
+    -webkit-backdrop-filter: blur(10px);
+
+    transition:
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+}
+
+
+/* =========================================
+   TEXTO DO TÍTULO
+========================================= */
+
+.page-base-title-text {
+    min-width: 0;
 }
 
 .page-base-title span {
@@ -137,17 +268,29 @@
 
     margin-bottom: 7px;
 
+    color:
+        rgba(255, 255, 255, 0.55);
+
     font-size: 11px;
 
-    letter-spacing: 0.2em;
+    font-weight: 500;
 
-    opacity: 0.55;
+    letter-spacing: 0.2em;
 }
 
 .page-base-title h1 {
     margin: 0;
 
-    font-size: clamp(32px, 5vw, 52px);
+    color: #ffffff;
+
+    font-size:
+        clamp(
+            32px,
+            5vw,
+            52px
+        );
+
+    font-weight: 700;
 
     line-height: 1;
 
@@ -155,65 +298,177 @@
 }
 
 .page-base-title p {
-    margin: 12px 0 0;
-
     max-width: 650px;
 
-    color: rgba(255, 255, 255, 0.68);
+    margin:
+        12px
+        0
+        0;
+
+    color:
+        rgba(255, 255, 255, 0.68);
 
     font-size: 15px;
 
     line-height: 1.6;
 }
 
+
+/* =========================================
+   CORPO
+========================================= */
+
 .page-base-body {
     width: 100%;
 }
 
+
+/* =========================================
+   EFEITOS D&D
+========================================= */
+
 .page-base-dnd .page-base-icon {
+    border-color:
+        rgba(220, 150, 70, 0.25);
+
     box-shadow:
-        0 0 30px rgba(220, 150, 70, 0.12);
+        0 0 30px
+        rgba(220, 150, 70, 0.12);
 }
+
+.page-base-dnd .page-base-back:hover {
+    border-color:
+        rgba(220, 150, 70, 0.30);
+
+    box-shadow:
+        0 0 25px
+        rgba(220, 150, 70, 0.10);
+}
+
+
+/* =========================================
+   EFEITOS ORDEM PARANORMAL
+========================================= */
 
 .page-base-ordem .page-base-icon {
+    border-color:
+        rgba(180, 20, 35, 0.30);
+
     box-shadow:
-        0 0 30px rgba(180, 20, 35, 0.18);
+        0 0 30px
+        rgba(180, 20, 35, 0.18);
 }
 
+.page-base-ordem .page-base-back:hover {
+    border-color:
+        rgba(180, 20, 35, 0.35);
+
+    box-shadow:
+        0 0 25px
+        rgba(180, 20, 35, 0.12);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
 @media (max-width: 800px) {
+
     .page-base-header {
-        padding: 22px 20px 0 78px;
+        padding:
+            22px
+            20px
+            0
+            78px;
     }
 
+
     .page-base-content {
-        width: calc(100% - 35px);
+        width:
+            calc(100% - 35px);
 
         padding-top: 40px;
     }
 
+
     .page-base-title {
         align-items: flex-start;
     }
+
 }
 
+
+/* =========================================
+   CELULAR
+========================================= */
+
 @media (max-width: 560px) {
+
     .page-base-header {
-        padding-right: 15px;
+        padding:
+            20px
+            15px
+            0
+            70px;
     }
+
+
+    .page-base-logo strong {
+        font-size: 17px;
+    }
+
+
+    .page-base-logo span {
+        font-size: 9px;
+    }
+
 
     .page-base-content {
-        width: calc(100% - 25px);
+        width:
+            calc(100% - 25px);
 
         padding-top: 30px;
+
+        padding-bottom: 60px;
     }
+
+
+    .page-base-back {
+        margin-bottom: 28px;
+
+        padding:
+            9px
+            12px;
+
+        font-size: 13px;
+    }
+
 
     .page-base-title {
         flex-direction: column;
 
+        align-items: flex-start;
+
         gap: 15px;
+
+        margin-bottom: 30px;
     }
+
+
+    .page-base-icon {
+        width: 56px;
+        height: 56px;
+    }
+
 
     .page-base-title h1 {
         font-size: 34px;
     }
+
+
+    .page-base-title p {
+        font-size: 14px;
+    }
+
 }
