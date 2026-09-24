@@ -14,42 +14,152 @@ export default function AppNavigation({
     currentPage,
     setCurrentPage,
 }) {
+
     function navigate(page) {
         setCurrentPage(page);
     }
 
+
     switch (currentPage) {
+
+        /* =========================================
+           HOME
+        ========================================= */
+
         case "home":
-            return <Home onNavigate={navigate} />;
+            return (
+                <Home
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           PERFIL
+        ========================================= */
 
         case "perfil":
-            return <Perfil onNavigate={navigate} />;
+        case "profile":
+            return (
+                <Perfil
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           PERSONAGENS
+        ========================================= */
 
         case "personagens":
-            return <Personagens onNavigate={navigate} />;
+        case "characters":
+            return (
+                <Personagens
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           CAMPANHAS
+        ========================================= */
 
         case "campanhas":
-            return <Campanhas onNavigate={navigate} />;
+        case "campaigns":
+            return (
+                <Campanhas
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           MAPAS
+        ========================================= */
 
         case "mapas":
-            return <Mapas onNavigate={navigate} />;
+        case "maps":
+            return (
+                <Mapas
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           LIVROS
+        ========================================= */
 
         case "livros":
-            return <Livros onNavigate={navigate} />;
+        case "books":
+            return (
+                <Livros
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           GRUPOS
+        ========================================= */
 
         case "grupos":
-            return <Grupos onNavigate={navigate} />;
+        case "groups":
+            return (
+                <Grupos
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           PROCURAR JOGADORES
+        ========================================= */
 
         case "procurar-jogadores":
-            return <ProcurarJogadores onNavigate={navigate} />;
+        case "players":
+            return (
+                <ProcurarJogadores
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           CONFIGURAÇÕES
+        ========================================= */
 
         case "configuracoes":
-            return <Configuracoes onNavigate={navigate} />;
+        case "settings":
+            return (
+                <Configuracoes
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           DOAÇÃO
+        ========================================= */
 
         case "doacao":
-            return <Doacao onNavigate={navigate} />;
+        case "donation":
+            return (
+                <Doacao
+                    onNavigate={navigate}
+                />
+            );
+
+
+        /* =========================================
+           PADRÃO
+        ========================================= */
 
         default:
-            return <Home onNavigate={navigate} />;
+            return (
+                <Home
+                    onNavigate={navigate}
+                />
+            );
     }
 }
