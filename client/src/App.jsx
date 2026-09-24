@@ -10,7 +10,15 @@ import AppNavigation from "./navigation/AppNavigation";
 
 export default function App() {
     const [loading, setLoading] = useState(true);
+
     const [currentPage, setCurrentPage] = useState("landing");
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | INTRO LOADER
+    |--------------------------------------------------------------------------
+    */
 
     if (loading) {
         return (
@@ -22,6 +30,13 @@ export default function App() {
         );
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | LANDING
+    |--------------------------------------------------------------------------
+    */
+
     if (currentPage === "landing") {
         return (
             <Landing
@@ -29,6 +44,13 @@ export default function App() {
             />
         );
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOGIN
+    |--------------------------------------------------------------------------
+    */
 
     if (currentPage === "login") {
         return (
@@ -38,6 +60,13 @@ export default function App() {
         );
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | CADASTRO
+    |--------------------------------------------------------------------------
+    */
+
     if (currentPage === "cadastro") {
         return (
             <Cadastro
@@ -45,6 +74,29 @@ export default function App() {
             />
         );
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | APLICAÇÃO PRINCIPAL
+    |--------------------------------------------------------------------------
+    |
+    | Todas as páginas internas passam pelo AppNavigation.
+    |
+    | Exemplos:
+    |
+    | home
+    | perfil
+    | personagens
+    | campanhas
+    | mapas
+    | livros
+    | grupos
+    | procurar-jogadores
+    | configuracoes
+    | doacao
+    |
+    */
 
     return (
         <AppNavigation
