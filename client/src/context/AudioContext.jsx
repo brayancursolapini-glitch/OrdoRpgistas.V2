@@ -7,148 +7,102 @@ import {
 } from "react";
 
 
-const AudioContext =
-    createContext(null);
+const AudioContext = createContext(null);
 
 
 /*
 |--------------------------------------------------------------------------
 | PLAYLISTS
 |--------------------------------------------------------------------------
-|
-| Para adicionar novos áudios no futuro:
-|
-| {
-|     id: "id-do-audio",
-|     name: "Nome do áudio",
-|     file: "audio/meu-audio.mp3",
-| }
-|
 */
 
 const DEFAULT_PLAYLISTS = {
 
     dnd: {
+        id: "dnd",
 
-        id:
-            "dnd",
-
-        name:
-            "D&D",
+        name: "D&D",
 
         description:
             "Músicas e ambientes para aventuras de fantasia.",
 
         tracks: [
-
             {
-                id:
-                    "dnd-ambient-01",
+                id: "dnd-ambient-01",
 
-                name:
-                    "D&D — Ambiente",
+                name: "D&D — Ambiente",
 
-                file:
-                    "audio/dnd-ambient.mp3",
-
+                file: "audio/dnd-ambient.mp3",
             },
-
         ],
-
     },
 
 
     ordem: {
+        id: "ordem",
 
-        id:
-            "ordem",
-
-        name:
-            "Ordem Paranormal",
+        name: "Ordem Paranormal",
 
         description:
             "Sons para investigações e situações paranormais.",
 
         tracks: [
-
             {
-                id:
-                    "ordem-ambient-01",
+                id: "ordem-ambient-01",
 
-                name:
-                    "Ordem — Ambiente",
+                name: "Ordem — Ambiente",
 
-                file:
-                    "audio/ordem-ambient.mp3",
-
+                file: "audio/ordem-ambient.mp3",
             },
-
         ],
-
     },
 
 
     fantasia: {
+        id: "fantasia",
 
-        id:
-            "fantasia",
-
-        name:
-            "Fantasia & Aventura",
+        name: "Fantasia & Aventura",
 
         description:
             "Ambientes para mundos fantásticos.",
 
         tracks: [],
-
     },
 
 
     natureza: {
+        id: "natureza",
 
-        id:
-            "natureza",
-
-        name:
-            "Natureza",
+        name: "Natureza",
 
         description:
             "Chuva, floresta, vento e outros ambientes.",
 
         tracks: [],
-
     },
 
 
     taverna: {
+        id: "taverna",
 
-        id:
-            "taverna",
-
-        name:
-            "Taverna",
+        name: "Taverna",
 
         description:
             "Ambientes aconchegantes para sua mesa.",
 
         tracks: [],
-
     },
 
 
     combate: {
+        id: "combate",
 
-        id:
-            "combate",
-
-        name:
-            "Combate",
+        name: "Combate",
 
         description:
             "Trilhas para batalhas e momentos intensos.",
 
         tracks: [],
-
     },
 
 };
@@ -160,31 +114,18 @@ const DEFAULT_PLAYLISTS = {
 |--------------------------------------------------------------------------
 */
 
-function getSavedValue(
-    key,
-    fallback
-) {
+function getSavedValue(key, fallback) {
 
     try {
 
         const value =
-            localStorage.getItem(
-                key
-            );
+            localStorage.getItem(key);
 
-
-        if (
-            value === null
-        ) {
-
+        if (value === null) {
             return fallback;
-
         }
 
-
-        return JSON.parse(
-            value
-        );
+        return JSON.parse(value);
 
     } catch {
 
@@ -197,16 +138,16 @@ function getSavedValue(
 
 /*
 |--------------------------------------------------------------------------
-| AUDIO PROVIDER
+| PROVIDER
 |--------------------------------------------------------------------------
 */
 
-export function AudioProvider({
-    children,
-}) {
+export function AudioProvider({ children }) {
 
-    const audioRef =
-        useRef(null);
+    const audioRef = useRef(null);
+
+    const firstInteractionRef =
+        useRef(false);
 
 
     /*
@@ -215,16 +156,11 @@ export function AudioProvider({
     |--------------------------------------------------------------------------
     */
 
-    const [
-        muted,
-        setMuted,
-    ] = useState(() =>
-
+    const [muted, setMuted] = useState(() =>
         getSavedValue(
             "ordo-rpgistas-audio-muted",
             false
         )
-
     );
 
 
@@ -234,73 +170,55 @@ export function AudioProvider({
     |--------------------------------------------------------------------------
     */
 
-    const [
-        volume,
-        setVolume,
-    ] = useState(() =>
-
+    const [volume, setVolume] = useState(() =>
         getSavedValue(
             "ordo-rpgistas-audio-volume",
             0.45
         )
-
     );
 
 
     /*
     |--------------------------------------------------------------------------
-    | PLAYLIST ATUAL
+    | PLAYLIST
     |--------------------------------------------------------------------------
     */
 
-    const [
-        currentPlaylist,
-        setCurrentPlaylist,
-    ] = useState(() =>
-
-        getSavedValue(
-            "ordo-rpgistas-audio-playlist",
-            "dnd"
-        )
-
-    );
+    const [currentPlaylist, setCurrentPlaylist] =
+        useState(() =>
+            getSavedValue(
+                "ordo-rpgistas-audio-playlist",
+                "dnd"
+            )
+        );
 
 
     /*
     |--------------------------------------------------------------------------
-    | FAIXA ATUAL
+    | FAIXA
     |--------------------------------------------------------------------------
     */
 
-    const [
-        currentTrack,
-        setCurrentTrack,
-    ] = useState(() =>
-
-        getSavedValue(
-            "ordo-rpgistas-audio-track",
-            null
-        )
-
-    );
+    const [currentTrack, setCurrentTrack] =
+        useState(() =>
+            getSavedValue(
+                "ordo-rpgistas-audio-track",
+                null
+            )
+        );
 
 
     /*
     |--------------------------------------------------------------------------
-    | TEMA DO ÁUDIO
+    | TEMA
     |--------------------------------------------------------------------------
     */
 
-    const [
-        theme,
-        setTheme,
-    ] = useState(() =>
-
+    const [theme, setTheme] = useState(() =>
         getSavedValue(
             "ordo-rpgistas-audio-theme",
             "dnd"
         )
-
     );
 
 
@@ -309,9 +227,7 @@ export function AudioProvider({
 
 
     const currentPlaylistData =
-        playlists[
-            currentPlaylist
-        ] ||
+        playlists[currentPlaylist] ||
         playlists.dnd;
 
 
@@ -321,7 +237,7 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | SALVAR MUTE
+    | SALVAR CONFIGURAÇÕES
     |--------------------------------------------------------------------------
     */
 
@@ -329,99 +245,55 @@ export function AudioProvider({
 
         localStorage.setItem(
             "ordo-rpgistas-audio-muted",
-            JSON.stringify(
-                muted
-            )
+            JSON.stringify(muted)
         );
 
-    }, [
-        muted,
-    ]);
+    }, [muted]);
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | SALVAR VOLUME
-    |--------------------------------------------------------------------------
-    */
 
     useEffect(() => {
 
         localStorage.setItem(
             "ordo-rpgistas-audio-volume",
-            JSON.stringify(
-                volume
-            )
+            JSON.stringify(volume)
         );
 
-    }, [
-        volume,
-    ]);
+    }, [volume]);
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | SALVAR PLAYLIST
-    |--------------------------------------------------------------------------
-    */
 
     useEffect(() => {
 
         localStorage.setItem(
             "ordo-rpgistas-audio-playlist",
-            JSON.stringify(
-                currentPlaylist
-            )
+            JSON.stringify(currentPlaylist)
         );
 
-    }, [
-        currentPlaylist,
-    ]);
+    }, [currentPlaylist]);
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | SALVAR FAIXA
-    |--------------------------------------------------------------------------
-    */
 
     useEffect(() => {
 
         localStorage.setItem(
             "ordo-rpgistas-audio-track",
-            JSON.stringify(
-                currentTrack
-            )
+            JSON.stringify(currentTrack)
         );
 
-    }, [
-        currentTrack,
-    ]);
+    }, [currentTrack]);
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | SALVAR TEMA
-    |--------------------------------------------------------------------------
-    */
 
     useEffect(() => {
 
         localStorage.setItem(
             "ordo-rpgistas-audio-theme",
-            JSON.stringify(
-                theme
-            )
+            JSON.stringify(theme)
         );
 
-    }, [
-        theme,
-    ]);
+    }, [theme]);
 
 
     /*
     |--------------------------------------------------------------------------
-    | APLICAR VOLUME / MUTE
+    | APLICAR VOLUME
     |--------------------------------------------------------------------------
     */
 
@@ -430,19 +302,14 @@ export function AudioProvider({
         const audio =
             audioRef.current;
 
-
         if (!audio) {
-
             return;
-
         }
-
 
         audio.volume =
             muted
                 ? 0
                 : volume;
-
 
         audio.muted =
             muted;
@@ -455,36 +322,46 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | FUNÇÃO INTERNA PARA CARREGAR E TOCAR UMA FAIXA
+    | PEGAR URL DO ÁUDIO
     |--------------------------------------------------------------------------
     */
 
-    function loadAndPlayTrack(
-        track
-    ) {
+    function getAudioSource(file) {
+
+        return `${import.meta.env.BASE_URL}${file}`;
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CARREGAR E TOCAR
+    |--------------------------------------------------------------------------
+    */
+
+    function loadAndPlayTrack(track) {
 
         const audio =
             audioRef.current;
 
-
-        if (
-            !audio ||
-            !track
-        ) {
-
+        if (!audio || !track) {
             return;
-
         }
 
 
         const source =
-            `${import.meta.env.BASE_URL}${track.file}`;
+            getAudioSource(track.file);
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Define o arquivo
-        |--------------------------------------------------------------------------
+        | Pausa o áudio anterior
+        */
+
+        audio.pause();
+
+
+        /*
+        | Define novo arquivo
         */
 
         audio.src =
@@ -492,9 +369,7 @@ export function AudioProvider({
 
 
         /*
-        |--------------------------------------------------------------------------
         | Configura volume
-        |--------------------------------------------------------------------------
         */
 
         audio.volume =
@@ -502,50 +377,46 @@ export function AudioProvider({
                 ? 0
                 : volume;
 
-
         audio.muted =
             muted;
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Carrega o arquivo
-        |--------------------------------------------------------------------------
+        | Reinicia
+        */
+
+        audio.currentTime = 0;
+
+
+        /*
+        | Carrega
         */
 
         audio.load();
 
 
         /*
-        |--------------------------------------------------------------------------
-        | PLAY
-        |--------------------------------------------------------------------------
-        |
-        | Esta função pode ser chamada diretamente dentro de um clique
-        | do usuário, permitindo que o navegador autorize o áudio.
-        |
+        | Toca
         */
 
-        const playPromise =
+        const promise =
             audio.play();
 
 
         if (
-            playPromise &&
-            typeof playPromise.catch ===
-                "function"
+            promise &&
+            typeof promise.catch === "function"
         ) {
 
-            playPromise.catch(
-                error => {
+            promise.catch(error => {
 
-                    console.warn(
-                        "Não foi possível iniciar o áudio:",
-                        error
-                    );
+                console.warn(
+                    "Áudio bloqueado ou não encontrado:",
+                    source,
+                    error
+                );
 
-                }
-            );
+            });
 
         }
 
@@ -554,44 +425,30 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | ALTERAR MUTE
+    | MUTE
     |--------------------------------------------------------------------------
     */
 
     function toggleMute() {
 
-        setMuted(
-            current =>
-                !current
-        );
+        setMuted(current => !current);
 
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | ALTERAR VOLUME
+    | VOLUME
     |--------------------------------------------------------------------------
     */
 
-    function changeVolume(
-        value
-    ) {
+    function changeVolume(value) {
 
         const newVolume =
-            Number(
-                value
-            );
+            Number(value);
 
-
-        if (
-            Number.isNaN(
-                newVolume
-            )
-        ) {
-
+        if (Number.isNaN(newVolume)) {
             return;
-
         }
 
 
@@ -615,9 +472,7 @@ export function AudioProvider({
             muted
         ) {
 
-            setMuted(
-                false
-            );
+            setMuted(false);
 
         }
 
@@ -626,24 +481,17 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | ALTERAR PLAYLIST
+    | SELECIONAR PLAYLIST
     |--------------------------------------------------------------------------
     */
 
-    function selectPlaylist(
-        playlistId
-    ) {
+    function selectPlaylist(playlistId) {
 
         const playlist =
-            playlists[
-                playlistId
-            ];
-
+            playlists[playlistId];
 
         if (!playlist) {
-
             return;
-
         }
 
 
@@ -653,34 +501,14 @@ export function AudioProvider({
 
 
         if (
-            playlist.tracks.length ===
-            0
+            playlist.tracks.length === 0
         ) {
 
-            setCurrentTrack(
-                null
-            );
+            setCurrentTrack(null);
 
-
-            if (
-                audioRef.current
-            ) {
-
-                audioRef.current.pause();
-
-                audioRef.current.currentTime =
-                    0;
-
-                audioRef.current.removeAttribute(
-                    "src"
-                );
-
-                audioRef.current.load();
-
-            }
+            stopAudio();
 
             return;
-
         }
 
 
@@ -702,26 +530,21 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | ALTERAR FAIXA
+    | SELECIONAR FAIXA
     |--------------------------------------------------------------------------
     */
 
-    function selectTrack(
-        trackId
-    ) {
+    function selectTrack(trackId) {
 
         const track =
             tracks.find(
                 item =>
-                    item.id ===
-                    trackId
+                    item.id === trackId
             );
 
 
         if (!track) {
-
             return;
-
         }
 
 
@@ -745,28 +568,28 @@ export function AudioProvider({
 
     function stopAudio() {
 
-        setCurrentTrack(
-            null
-        );
+        const audio =
+            audioRef.current;
 
 
-        if (
-            audioRef.current
-        ) {
+        setCurrentTrack(null);
 
-            audioRef.current.pause();
 
-            audioRef.current.currentTime =
-                0;
-
+        if (!audio) {
+            return;
         }
+
+
+        audio.pause();
+
+        audio.currentTime = 0;
 
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | PLAY
+    | TOCAR ATUAL
     |--------------------------------------------------------------------------
     */
 
@@ -776,48 +599,67 @@ export function AudioProvider({
             audioRef.current;
 
 
-        if (
-            !audio ||
-            !currentTrack
-        ) {
-
+        if (!audio) {
             return;
-
         }
 
 
-        audio
-            .play()
-            .catch(
-                () => {}
-            );
+        if (!currentTrack) {
+
+            const playlist =
+                playlists[currentPlaylist];
+
+
+            const firstTrack =
+                playlist?.tracks?.[0];
+
+
+            if (firstTrack) {
+
+                setCurrentTrack(
+                    firstTrack.id
+                );
+
+                loadAndPlayTrack(
+                    firstTrack
+                );
+
+            }
+
+            return;
+        }
+
+
+        const promise =
+            audio.play();
+
+
+        if (
+            promise &&
+            typeof promise.catch === "function"
+        ) {
+
+            promise.catch(() => {});
+
+        }
 
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | TROCAR TEMA + DAR PLAY
+    | TROCAR TEMA + ÁUDIO
     |--------------------------------------------------------------------------
-    |
-    | ESTA É A PARTE PRINCIPAL DA CORREÇÃO.
-    |
     */
 
-    function setAudioTheme(
-        themeId
-    ) {
+    function setAudioTheme(themeId) {
 
         const playlist =
-            playlists[
-                themeId
-            ];
+            playlists[themeId];
 
 
         if (!playlist) {
-
             return;
-
         }
 
 
@@ -831,49 +673,17 @@ export function AudioProvider({
         );
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Tema sem áudio
-        |--------------------------------------------------------------------------
-        */
-
         if (
-            playlist.tracks.length ===
-            0
+            playlist.tracks.length === 0
         ) {
 
-            setCurrentTrack(
-                null
-            );
+            setCurrentTrack(null);
 
-
-            if (
-                audioRef.current
-            ) {
-
-                audioRef.current.pause();
-
-                audioRef.current.currentTime =
-                    0;
-
-                audioRef.current.removeAttribute(
-                    "src"
-                );
-
-                audioRef.current.load();
-
-            }
+            stopAudio();
 
             return;
-
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Primeiro áudio da playlist = áudio padrão do tema
-        |--------------------------------------------------------------------------
-        */
 
         const defaultTrack =
             playlist.tracks[0];
@@ -885,12 +695,13 @@ export function AudioProvider({
 
 
         /*
-        |--------------------------------------------------------------------------
         | IMPORTANTE:
         |
-        | O play acontece imediatamente nesta função,
-        | que foi chamada pelo clique do usuário.
-        |--------------------------------------------------------------------------
+        | Esta função é chamada pelo clique
+        | do ThemeSwitcher.
+        |
+        | Assim o navegador reconhece
+        | a reprodução como uma ação do usuário.
         */
 
         loadAndPlayTrack(
@@ -902,71 +713,95 @@ export function AudioProvider({
 
     /*
     |--------------------------------------------------------------------------
-    | PLAYLIST ATUAL
+    | INICIAR ÁUDIO NA PRIMEIRA INTERAÇÃO
     |--------------------------------------------------------------------------
+    |
+    | O navegador normalmente bloqueia autoplay com som.
+    |
+    | Então, na primeira interação do usuário,
+    | tentamos iniciar o áudio do tema atual.
+    |
     */
 
     useEffect(() => {
 
-        if (
-            !currentTrack
-        ) {
+        function handleFirstInteraction() {
 
-            return;
+            if (
+                firstInteractionRef.current
+            ) {
+                return;
+            }
 
-        }
+
+            firstInteractionRef.current =
+                true;
 
 
-        const track =
-            tracks.find(
-                item =>
-                    item.id ===
-                    currentTrack
+            const playlist =
+                playlists[theme];
+
+
+            const firstTrack =
+                playlist?.tracks?.[0];
+
+
+            if (!firstTrack) {
+                return;
+            }
+
+
+            setCurrentPlaylist(
+                playlist.id
             );
 
 
-        if (!track) {
-
-            return;
-
-        }
+            setCurrentTrack(
+                firstTrack.id
+            );
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Apenas garante que o estado do áudio acompanha o React.
-        |
-        | O play principal já acontece em loadAndPlayTrack().
-        |--------------------------------------------------------------------------
-        */
-
-        const audio =
-            audioRef.current;
-
-
-        if (!audio) {
-
-            return;
+            loadAndPlayTrack(
+                firstTrack
+            );
 
         }
 
 
-        audio.volume =
-            muted
-                ? 0
-                : volume;
+        window.addEventListener(
+            "pointerdown",
+            handleFirstInteraction,
+            {
+                once: true,
+            }
+        );
 
 
-        audio.muted =
-            muted;
+        window.addEventListener(
+            "keydown",
+            handleFirstInteraction,
+            {
+                once: true,
+            }
+        );
 
-    }, [
-        currentTrack,
-        currentPlaylist,
-        muted,
-        volume,
-        tracks,
-    ]);
+
+        return () => {
+
+            window.removeEventListener(
+                "pointerdown",
+                handleFirstInteraction
+            );
+
+
+            window.removeEventListener(
+                "keydown",
+                handleFirstInteraction
+            );
+
+        };
+
+    }, []);
 
 
     /*
@@ -978,9 +813,7 @@ export function AudioProvider({
     return (
 
         <AudioContext.Provider
-
             value={{
-
                 muted,
 
                 volume,
@@ -1010,21 +843,13 @@ export function AudioProvider({
                 playCurrent,
 
                 setAudioTheme,
-
             }}
-
         >
 
             <audio
-
-                ref={
-                    audioRef
-                }
-
+                ref={audioRef}
                 loop
-
                 preload="auto"
-
             />
 
             {children}
