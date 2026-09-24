@@ -40,21 +40,14 @@ export default function ThemeSwitcher() {
 
 
         /*
-        |--------------------------------------------------------------------------
         | Troca o tema visual
-        |--------------------------------------------------------------------------
         */
 
         toggleTheme();
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Troca o áudio e dá PLAY imediatamente.
-        |
-        | Essa chamada acontece dentro do clique do usuário,
-        | permitindo que o navegador autorize a reprodução.
-        |--------------------------------------------------------------------------
+        | Troca o áudio imediatamente
         */
 
         setAudioTheme(
@@ -67,7 +60,6 @@ export default function ThemeSwitcher() {
     return (
 
         <button
-
             type="button"
 
             className={`
@@ -86,7 +78,6 @@ export default function ThemeSwitcher() {
         >
 
             {
-
                 isDnd
                     ? (
                         <Sun
@@ -98,18 +89,15 @@ export default function ThemeSwitcher() {
                             size={16}
                         />
                     )
-
             }
 
 
             <span>
 
                 {
-
                     isDnd
                         ? "D&D"
                         : "ORDEM"
-
                 }
 
             </span>
