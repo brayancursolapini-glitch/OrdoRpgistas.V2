@@ -10,220 +10,132 @@ import {
 const AudioContext = createContext(null);
 
 
-/*
-|--------------------------------------------------------------------------
-| PLAYLISTS
-|--------------------------------------------------------------------------
-*/
-
-const DEFAULT_PLAYLISTS = {
+const playlists = {
 
     dnd: {
-        id: "dnd",
-
         name: "D&D",
-
-        description:
-            "Músicas e ambientes para aventuras de fantasia.",
-
         tracks: [
             {
-                id: "dnd-ambient-01",
-
-                name: "D&D — Ambiente",
-
+                id: "dnd-ambient",
+                name: "Ambiente D&D",
                 file: "audio/dnd-ambient.mp3",
             },
         ],
     },
 
-
     ordem: {
-        id: "ordem",
-
         name: "Ordem Paranormal",
-
-        description:
-            "Sons para investigações e situações paranormais.",
-
         tracks: [
             {
-                id: "ordem-ambient-01",
-
-                name: "Ordem — Ambiente",
-
+                id: "ordem-ambient",
+                name: "Ambiente Ordem Paranormal",
                 file: "audio/ordem-ambient.mp3",
             },
         ],
     },
 
-
     fantasia: {
-        id: "fantasia",
-
-        name: "Fantasia & Aventura",
-
-        description:
-            "Ambientes para mundos fantásticos.",
-
+        name: "Fantasia",
         tracks: [],
     },
-
 
     natureza: {
-        id: "natureza",
-
         name: "Natureza",
-
-        description:
-            "Chuva, floresta, vento e outros ambientes.",
-
         tracks: [],
     },
-
 
     taverna: {
-        id: "taverna",
-
         name: "Taverna",
-
-        description:
-            "Ambientes aconchegantes para sua mesa.",
-
         tracks: [],
     },
 
-
     combate: {
-        id: "combate",
-
         name: "Combate",
-
-        description:
-            "Trilhas para batalhas e momentos intensos.",
-
         tracks: [],
     },
 
 };
 
 
-/*
-|--------------------------------------------------------------------------
-| LOCAL STORAGE
-|--------------------------------------------------------------------------
-*/
-
-function getSavedValue(key, fallback) {
-
-    try {
-
-        const value =
-            localStorage.getItem(key);
-
-        if (value === null) {
-            return fallback;
-        }
-
-        return JSON.parse(value);
-
-    } catch {
-
-        return fallback;
-
-    }
-
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| PROVIDER
-|--------------------------------------------------------------------------
-*/
-
 export function AudioProvider({ children }) {
 
     const audioRef = useRef(null);
 
-    const firstInteractionRef =
-        useRef(false);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | MUTE
-    |--------------------------------------------------------------------------
-    */
-
-    const [muted, setMuted] = useState(() =>
-        getSavedValue(
-            "ordo-rpgistas-audio-muted",
-            false
-        )
+    const themeRef = useRef(
+        localStorage.getItem("ordo-rpgistas-theme") || "dnd"
     );
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | VOLUME
-    |--------------------------------------------------------------------------
-    */
+    const [muted, setMuted] = useState(() => {
 
-    const [volume, setVolume] = useState(() =>
-        getSavedValue(
-            "ordo-rpgistas-audio-volume",
-            0.45
-        )
-    );
+        return (
+            localStorage.getItem(
+                "ordo-rpgistas-muted"
+            ) === "true"
+        );
+
+    });
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | PLAYLIST
-    |--------------------------------------------------------------------------
-    */
+    const [volume, setVolume] = useState(() => {
+
+        const saved =
+            localStorage.getItem(
+                "ordo-rpgistas-volume"
+            );
+
+        return saved !== null
+            ? Number(saved)
+            : 0.65;
+
+    });
+
+
+    const [theme, setTheme] = useState(() => {
+
+        const saved =
+            localStorage.getItem(
+                "ordo-rpgistas-audio-theme"
+            );
+
+        if (
+            saved === "dnd" ||
+            saved === "ordem"
+        ) {
+            return saved;
+        }
+
+        return (
+            localStorage.getItem(
+                "ordo-rpgistas-theme"
+            ) || "dnd"
+        );
+
+    });
+
 
     const [currentPlaylist, setCurrentPlaylist] =
-        useState(() =>
-            getSavedValue(
-                "ordo-rpgistas-audio-playlist",
-                "dnd"
-            )
-        );
+        useState(() => {
 
+            return (
+                localStorage.getItem(
+                    "ordo-rpgistas-playlist"
+                ) || "dnd"
+            );
 
-    /*
-    |--------------------------------------------------------------------------
-    | FAIXA
-    |--------------------------------------------------------------------------
-    */
+        });
+
 
     const [currentTrack, setCurrentTrack] =
-        useState(() =>
-            getSavedValue(
-                "ordo-rpgistas-audio-track",
-                null
-            )
-        );
+        useState(() => {
 
+            return (
+                localStorage.getItem(
+                    "ordo-rpgistas-track"
+                ) || "dnd-ambient"
+            );
 
-    /*
-    |--------------------------------------------------------------------------
-    | TEMA
-    |--------------------------------------------------------------------------
-    */
-
-    const [theme, setTheme] = useState(() =>
-        getSavedValue(
-            "ordo-rpgistas-audio-theme",
-            "dnd"
-        )
-    );
-
-
-    const playlists =
-        DEFAULT_PLAYLISTS;
+        });
 
 
     const currentPlaylistData =
@@ -235,97 +147,6 @@ export function AudioProvider({ children }) {
         currentPlaylistData.tracks;
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | SALVAR CONFIGURAÇÕES
-    |--------------------------------------------------------------------------
-    */
-
-    useEffect(() => {
-
-        localStorage.setItem(
-            "ordo-rpgistas-audio-muted",
-            JSON.stringify(muted)
-        );
-
-    }, [muted]);
-
-
-    useEffect(() => {
-
-        localStorage.setItem(
-            "ordo-rpgistas-audio-volume",
-            JSON.stringify(volume)
-        );
-
-    }, [volume]);
-
-
-    useEffect(() => {
-
-        localStorage.setItem(
-            "ordo-rpgistas-audio-playlist",
-            JSON.stringify(currentPlaylist)
-        );
-
-    }, [currentPlaylist]);
-
-
-    useEffect(() => {
-
-        localStorage.setItem(
-            "ordo-rpgistas-audio-track",
-            JSON.stringify(currentTrack)
-        );
-
-    }, [currentTrack]);
-
-
-    useEffect(() => {
-
-        localStorage.setItem(
-            "ordo-rpgistas-audio-theme",
-            JSON.stringify(theme)
-        );
-
-    }, [theme]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | APLICAR VOLUME
-    |--------------------------------------------------------------------------
-    */
-
-    useEffect(() => {
-
-        const audio =
-            audioRef.current;
-
-        if (!audio) {
-            return;
-        }
-
-        audio.volume =
-            muted
-                ? 0
-                : volume;
-
-        audio.muted =
-            muted;
-
-    }, [
-        muted,
-        volume,
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | PEGAR URL DO ÁUDIO
-    |--------------------------------------------------------------------------
-    */
-
     function getAudioSource(file) {
 
         return `${import.meta.env.BASE_URL}${file}`;
@@ -333,11 +154,28 @@ export function AudioProvider({ children }) {
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | CARREGAR E TOCAR
-    |--------------------------------------------------------------------------
-    */
+    function findTrack(trackId) {
+
+        for (
+            const playlist of Object.values(playlists)
+        ) {
+
+            const found =
+                playlist.tracks.find(
+                    track =>
+                        track.id === trackId
+                );
+
+            if (found) {
+                return found;
+            }
+
+        }
+
+        return null;
+
+    }
+
 
     function loadAndPlayTrack(track) {
 
@@ -353,137 +191,89 @@ export function AudioProvider({ children }) {
             getAudioSource(track.file);
 
 
-        /*
-        | Pausa o áudio anterior
-        */
+        console.log(
+            "[ORDO AUDIO] Tentando tocar:",
+            source
+        );
+
 
         audio.pause();
 
-
-        /*
-        | Define novo arquivo
-        */
-
-        audio.src =
-            source;
-
-
-        /*
-        | Configura volume
-        */
-
-        audio.volume =
-            muted
-                ? 0
-                : volume;
-
-        audio.muted =
-            muted;
-
-
-        /*
-        | Reinicia
-        */
-
         audio.currentTime = 0;
 
+        audio.src = source;
 
-        /*
-        | Carrega
-        */
+        audio.volume = volume;
+
+        audio.muted = muted;
 
         audio.load();
 
 
-        /*
-        | Toca
-        */
-
-        const promise =
+        const playPromise =
             audio.play();
 
 
-        if (
-            promise &&
-            typeof promise.catch === "function"
-        ) {
+        if (playPromise) {
 
-            promise.catch(error => {
+            playPromise
+                .then(() => {
 
-                console.warn(
-                    "Áudio bloqueado ou não encontrado:",
-                    source,
-                    error
-                );
+                    console.log(
+                        "[ORDO AUDIO] Áudio reproduzindo:",
+                        source
+                    );
 
-            });
+                })
+                .catch(error => {
+
+                    console.error(
+                        "[ORDO AUDIO] Não foi possível reproduzir:",
+                        error
+                    );
+
+                });
 
         }
 
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | MUTE
-    |--------------------------------------------------------------------------
-    */
+    function playCurrent() {
 
-    function toggleMute() {
+        const track =
+            findTrack(currentTrack);
 
-        setMuted(current => !current);
+        if (!track) {
+
+            console.warn(
+                "[ORDO AUDIO] Nenhuma faixa encontrada."
+            );
+
+            return;
+
+        }
+
+        loadAndPlayTrack(track);
 
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | VOLUME
-    |--------------------------------------------------------------------------
-    */
+    function stopAudio() {
 
-    function changeVolume(value) {
+        const audio =
+            audioRef.current;
 
-        const newVolume =
-            Number(value);
-
-        if (Number.isNaN(newVolume)) {
+        if (!audio) {
             return;
         }
 
+        audio.pause();
 
-        const safeVolume =
-            Math.min(
-                1,
-                Math.max(
-                    0,
-                    newVolume
-                )
-            );
-
-
-        setVolume(
-            safeVolume
-        );
-
-
-        if (
-            safeVolume > 0 &&
-            muted
-        ) {
-
-            setMuted(false);
-
-        }
+        audio.currentTime = 0;
 
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | SELECIONAR PLAYLIST
-    |--------------------------------------------------------------------------
-    */
 
     function selectPlaylist(playlistId) {
 
@@ -500,48 +290,48 @@ export function AudioProvider({ children }) {
         );
 
 
+        localStorage.setItem(
+            "ordo-rpgistas-playlist",
+            playlistId
+        );
+
+
         if (
-            playlist.tracks.length === 0
+            playlist.tracks.length > 0
         ) {
 
-            setCurrentTrack(null);
+            const firstTrack =
+                playlist.tracks[0];
+
+
+            setCurrentTrack(
+                firstTrack.id
+            );
+
+
+            localStorage.setItem(
+                "ordo-rpgistas-track",
+                firstTrack.id
+            );
+
+
+            loadAndPlayTrack(
+                firstTrack
+            );
+
+        } else {
 
             stopAudio();
 
-            return;
         }
-
-
-        const firstTrack =
-            playlist.tracks[0];
-
-
-        setCurrentTrack(
-            firstTrack.id
-        );
-
-
-        loadAndPlayTrack(
-            firstTrack
-        );
 
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | SELECIONAR FAIXA
-    |--------------------------------------------------------------------------
-    */
-
     function selectTrack(trackId) {
 
         const track =
-            tracks.find(
-                item =>
-                    item.id === trackId
-            );
-
+            findTrack(trackId);
 
         if (!track) {
             return;
@@ -549,6 +339,144 @@ export function AudioProvider({ children }) {
 
 
         setCurrentTrack(
+            trackId
+        );
+
+
+        localStorage.setItem(
+            "ordo-rpgistas-track",
+            trackId
+        );
+
+
+        loadAndPlayTrack(
+            track
+        );
+
+    }
+
+
+    function toggleMute() {
+
+        setMuted(current => {
+
+            const next =
+                !current;
+
+
+            localStorage.setItem(
+                "ordo-rpgistas-muted",
+                String(next)
+            );
+
+
+            if (audioRef.current) {
+
+                audioRef.current.muted =
+                    next;
+
+            }
+
+
+            return next;
+
+        });
+
+    }
+
+
+    function changeVolume(value) {
+
+        const nextVolume =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    Number(value)
+                )
+            );
+
+
+        setVolume(
+            nextVolume
+        );
+
+
+        localStorage.setItem(
+            "ordo-rpgistas-volume",
+            String(nextVolume)
+        );
+
+
+        if (audioRef.current) {
+
+            audioRef.current.volume =
+                nextVolume;
+
+        }
+
+    }
+
+
+    function setAudioTheme(nextTheme) {
+
+        if (
+            nextTheme !== "dnd" &&
+            nextTheme !== "ordem"
+        ) {
+            return;
+        }
+
+
+        themeRef.current =
+            nextTheme;
+
+
+        setTheme(
+            nextTheme
+        );
+
+
+        localStorage.setItem(
+            "ordo-rpgistas-audio-theme",
+            nextTheme
+        );
+
+
+        const playlist =
+            playlists[nextTheme];
+
+
+        if (
+            !playlist ||
+            playlist.tracks.length === 0
+        ) {
+            return;
+        }
+
+
+        const track =
+            playlist.tracks[0];
+
+
+        setCurrentPlaylist(
+            nextTheme
+        );
+
+
+        setCurrentTrack(
+            track.id
+        );
+
+
+        localStorage.setItem(
+            "ordo-rpgistas-playlist",
+            nextTheme
+        );
+
+
+        localStorage.setItem(
+            "ordo-rpgistas-track",
             track.id
         );
 
@@ -562,226 +490,230 @@ export function AudioProvider({ children }) {
 
     /*
     |--------------------------------------------------------------------------
-    | PARAR
+    | ELEMENTO DE ÁUDIO
     |--------------------------------------------------------------------------
     */
 
-    function stopAudio() {
+    useEffect(() => {
 
         const audio =
-            audioRef.current;
+            new Audio();
+
+        audio.loop = true;
+
+        audio.preload = "auto";
+
+        audio.volume =
+            volume;
+
+        audio.muted =
+            muted;
 
 
-        setCurrentTrack(null);
+        audio.addEventListener(
+            "error",
+            () => {
 
-
-        if (!audio) {
-            return;
-        }
-
-
-        audio.pause();
-
-        audio.currentTime = 0;
-
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | TOCAR ATUAL
-    |--------------------------------------------------------------------------
-    */
-
-    function playCurrent() {
-
-        const audio =
-            audioRef.current;
-
-
-        if (!audio) {
-            return;
-        }
-
-
-        if (!currentTrack) {
-
-            const playlist =
-                playlists[currentPlaylist];
-
-
-            const firstTrack =
-                playlist?.tracks?.[0];
-
-
-            if (firstTrack) {
-
-                setCurrentTrack(
-                    firstTrack.id
+                console.error(
+                    "[ORDO AUDIO] ERRO AO CARREGAR O ARQUIVO.",
+                    audio.error
                 );
 
-                loadAndPlayTrack(
-                    firstTrack
+                console.error(
+                    "[ORDO AUDIO] URL:",
+                    audio.src
                 );
 
             }
-
-            return;
-        }
+        );
 
 
-        const promise =
-            audio.play();
+        audioRef.current =
+            audio;
 
 
-        if (
-            promise &&
-            typeof promise.catch === "function"
-        ) {
+        return () => {
 
-            promise.catch(() => {});
+            audio.pause();
 
-        }
+            audio.src = "";
 
-    }
+            audioRef.current =
+                null;
+
+        };
+
+    }, []);
 
 
     /*
     |--------------------------------------------------------------------------
-    | TROCAR TEMA + ÁUDIO
+    | VOLUME
     |--------------------------------------------------------------------------
     */
 
-    function setAudioTheme(themeId) {
+    useEffect(() => {
 
-        const playlist =
-            playlists[themeId];
-
-
-        if (!playlist) {
+        if (!audioRef.current) {
             return;
         }
 
+        audioRef.current.volume =
+            volume;
 
-        setTheme(
-            themeId
-        );
-
-
-        setCurrentPlaylist(
-            playlist.id
-        );
-
-
-        if (
-            playlist.tracks.length === 0
-        ) {
-
-            setCurrentTrack(null);
-
-            stopAudio();
-
-            return;
-        }
-
-
-        const defaultTrack =
-            playlist.tracks[0];
-
-
-        setCurrentTrack(
-            defaultTrack.id
-        );
-
-
-        /*
-        | IMPORTANTE:
-        |
-        | Esta função é chamada pelo clique
-        | do ThemeSwitcher.
-        |
-        | Assim o navegador reconhece
-        | a reprodução como uma ação do usuário.
-        */
-
-        loadAndPlayTrack(
-            defaultTrack
-        );
-
-    }
+    }, [volume]);
 
 
     /*
     |--------------------------------------------------------------------------
-    | INICIAR ÁUDIO NA PRIMEIRA INTERAÇÃO
+    | MUTE
+    |--------------------------------------------------------------------------
+    */
+
+    useEffect(() => {
+
+        if (!audioRef.current) {
+            return;
+        }
+
+        audioRef.current.muted =
+            muted;
+
+    }, [muted]);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PRIMEIRA INTERAÇÃO
     |--------------------------------------------------------------------------
     |
-    | O navegador normalmente bloqueia autoplay com som.
-    |
-    | Então, na primeira interação do usuário,
-    | tentamos iniciar o áudio do tema atual.
+    | O navegador normalmente bloqueia autoplay.
+    | Assim que o usuário clicar/pressionar uma tecla,
+    | tentamos iniciar o tema atual.
     |
     */
 
     useEffect(() => {
 
-        function handleFirstInteraction() {
+        let started = false;
+
+
+        async function startAfterInteraction() {
+
+            if (started) {
+                return;
+            }
+
+
+            if (muted) {
+                return;
+            }
+
+
+            const audio =
+                audioRef.current;
+
+            if (!audio) {
+                return;
+            }
+
+
+            const playlist =
+                playlists[
+                    themeRef.current
+                ];
+
 
             if (
-                firstInteractionRef.current
+                !playlist ||
+                playlist.tracks.length === 0
             ) {
                 return;
             }
 
 
-            firstInteractionRef.current =
-                true;
+            const track =
+                playlist.tracks[0];
 
 
-            const playlist =
-                playlists[theme];
+            started = true;
 
 
-            const firstTrack =
-                playlist?.tracks?.[0];
+            try {
+
+                if (
+                    audio.src !==
+                    getAudioSource(
+                        track.file
+                    )
+                ) {
+
+                    audio.src =
+                        getAudioSource(
+                            track.file
+                        );
+
+                    audio.load();
+
+                }
 
 
-            if (!firstTrack) {
-                return;
+                audio.volume =
+                    volume;
+
+                audio.muted =
+                    false;
+
+
+                await audio.play();
+
+
+                console.log(
+                    "[ORDO AUDIO] Iniciado após interação do usuário."
+                );
+
+
+                window.removeEventListener(
+                    "pointerdown",
+                    startAfterInteraction
+                );
+
+                window.removeEventListener(
+                    "keydown",
+                    startAfterInteraction
+                );
+
+            } catch (error) {
+
+                started = false;
+
+
+                console.error(
+                    "[ORDO AUDIO] Falha no primeiro play:",
+                    error
+                );
+
             }
-
-
-            setCurrentPlaylist(
-                playlist.id
-            );
-
-
-            setCurrentTrack(
-                firstTrack.id
-            );
-
-
-            loadAndPlayTrack(
-                firstTrack
-            );
 
         }
 
 
         window.addEventListener(
             "pointerdown",
-            handleFirstInteraction,
+            startAfterInteraction,
             {
-                once: true,
+                passive: true,
+                once: false,
             }
         );
 
 
         window.addEventListener(
             "keydown",
-            handleFirstInteraction,
+            startAfterInteraction,
             {
-                once: true,
+                passive: true,
+                once: false,
             }
         );
 
@@ -790,18 +722,31 @@ export function AudioProvider({ children }) {
 
             window.removeEventListener(
                 "pointerdown",
-                handleFirstInteraction
+                startAfterInteraction
             );
-
 
             window.removeEventListener(
                 "keydown",
-                handleFirstInteraction
+                startAfterInteraction
             );
 
         };
 
-    }, []);
+    }, [muted, volume]);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SINCRONIZA TEMA
+    |--------------------------------------------------------------------------
+    */
+
+    useEffect(() => {
+
+        themeRef.current =
+            theme;
+
+    }, [theme]);
 
 
     /*
@@ -811,9 +756,9 @@ export function AudioProvider({ children }) {
     */
 
     return (
-
         <AudioContext.Provider
             value={{
+
                 muted,
 
                 volume,
@@ -843,29 +788,17 @@ export function AudioProvider({ children }) {
                 playCurrent,
 
                 setAudioTheme,
+
             }}
         >
-
-            <audio
-                ref={audioRef}
-                loop
-                preload="auto"
-            />
 
             {children}
 
         </AudioContext.Provider>
-
     );
 
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| HOOK
-|--------------------------------------------------------------------------
-*/
 
 export function useAudio() {
 
