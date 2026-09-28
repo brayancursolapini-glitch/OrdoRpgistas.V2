@@ -1,69 +1,632 @@
+.personagens-page {
+    width: 100%;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.personagens-toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.personagens-toolbar-info {
+    min-width: 0;
+}
+
+.personagens-section-label {
+    display: block;
+    margin-bottom: 7px;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+}
+
+.personagens-toolbar h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.personagens-toolbar h2 span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 25px;
+    height: 25px;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 12px;
+}
+
+.personagens-toolbar p {
+    margin: 8px 0 0;
+    color: rgba(255, 255, 255, 0.52);
+    font-size: 14px;
+}
+
+/* =========================================================
+   BOTÃO CRIAR
+========================================================= */
+
+.personagens-create-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 46px;
+    padding: 0 19px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.2);
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.personagens-create-button:hover {
+    background: rgba(255, 255, 255, 0.13);
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================================================
+   CONTROLES
+========================================================= */
+
+.personagens-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 28px;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(16px);
+}
+
+.personagens-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: min(430px, 100%);
+    height: 42px;
+    padding: 0 13px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.045);
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.personagens-search:focus-within {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.065);
+}
+
+.personagens-search input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: #ffffff;
+    font: inherit;
+}
+
+.personagens-search input::placeholder {
+    color: rgba(255, 255, 255, 0.38);
+}
+
+.personagens-search-clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.65);
+    cursor: pointer;
+    font-size: 17px;
+}
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.personagens-filters {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.personagens-filters button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 38px;
+    padding: 0 13px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.48);
+    font-size: 13px;
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.personagens-filters button:hover {
+    color: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.personagens-filters button.active {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.09);
+    color: #ffffff;
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+
 .personagens-grid {
     display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit, minmax(280px, 1fr));
-
-    gap: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
 }
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.personagem-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.075),
+            rgba(255, 255, 255, 0.025)
+        );
+    backdrop-filter: blur(18px);
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.18);
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.personagem-card::before {
+    content: "";
+    position: absolute;
+    top: -90px;
+    right: -80px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.5;
+    filter: blur(40px);
+}
+
+.personagem-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow:
+        0 22px 55px rgba(0, 0, 0, 0.27);
+}
+
+/* D&D */
+
+.personagem-card-dnd::before {
+    background: rgba(205, 137, 57, 0.28);
+}
+
+/* ORDEM */
+
+.personagem-card-ordem::before {
+    background: rgba(170, 25, 40, 0.3);
+}
+
+/* =========================================================
+   CARD TOPO
+========================================================= */
+
+.personagem-card-top {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.personagem-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 66px;
+    height: 66px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.personagem-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.personagem-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.personagem-menu-button:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #ffffff;
+}
+
+/* =========================================================
+   INFORMAÇÕES
+========================================================= */
+
+.personagem-card-info {
+    position: relative;
+    z-index: 2;
+    margin-top: 19px;
+}
+
+.personagem-system {
+    display: inline-block;
+    margin-bottom: 7px;
+    color: rgba(255, 255, 255, 0.42);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+}
+
+.personagem-card-info h3 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.1;
+}
+
+.personagem-card-info p {
+    margin: 8px 0 0;
+    color: rgba(255, 255, 255, 0.52);
+    font-size: 13px;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.personagem-card-stats {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.personagem-card-stats > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.16);
+}
+
+.personagem-card-stats span {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+.personagem-card-stats strong {
+    font-size: 13px;
+}
+
+/* =========================================================
+   AÇÕES
+========================================================= */
+
+.personagem-card-actions {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 18px;
+}
+
+.personagem-card-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 38px;
+    height: 37px;
+    padding: 0 11px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.045);
+    color: rgba(255, 255, 255, 0.63);
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.personagem-card-actions button:first-child {
+    flex: 1;
+}
+
+.personagem-card-actions button:hover {
+    border-color: rgba(255, 255, 255, 0.17);
+    background: rgba(255, 255, 255, 0.09);
+    color: #ffffff;
+}
+
+/* =========================================================
+   ESTADO VAZIO
+========================================================= */
 
 .personagens-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
-    min-height: 300px;
-
-    padding: 35px;
-
-    text-align: center;
-
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    min-height: 390px;
+    padding: 50px 30px;
+    border: 1px dashed rgba(255, 255, 255, 0.13);
     border-radius: 20px;
-
-    background: rgba(10, 10, 15, 0.48);
-
-    backdrop-filter: blur(14px);
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 255, 255, 0.045),
+            rgba(0, 0, 0, 0.12) 65%
+        );
+    text-align: center;
 }
 
-.personagens-empty svg {
-    opacity: 0.65;
+.personagens-empty-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.045);
+    color: rgba(255, 255, 255, 0.7);
+    box-shadow:
+        0 0 45px rgba(255, 255, 255, 0.05);
+}
 
-    margin-bottom: 15px;
+.personagens-empty-label {
+    margin-bottom: 9px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
 }
 
 .personagens-empty h2 {
-    margin: 0 0 10px;
+    margin: 0;
+    font-size: 27px;
 }
 
 .personagens-empty p {
-    max-width: 480px;
-
-    margin: 0 0 25px;
-
-    color: rgba(255, 255, 255, 0.58);
-
-    line-height: 1.6;
+    width: min(500px, 100%);
+    margin: 12px 0 24px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    line-height: 1.7;
 }
 
-.personagens-empty button {
-    padding: 12px 20px;
-
-    border: 1px solid rgba(255, 255, 255, 0.18);
+.personagens-empty-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 0 17px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 10px;
-
-    background: rgba(255, 255, 255, 0.07);
-
+    background: rgba(255, 255, 255, 0.075);
     color: #ffffff;
-
+    font-weight: 700;
     cursor: pointer;
-
-    transition: 0.25s ease;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
 }
 
-.personagens-empty button:hover {
-    background: rgba(255, 255, 255, 0.13);
-
+.personagens-empty-button:hover {
     transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* =========================================================
+   FOOTER INFO
+========================================================= */
+
+.personagens-footer-info {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-top: 22px;
+    padding: 15px 17px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 13px;
+    background: rgba(0, 0, 0, 0.16);
+}
+
+.personagens-footer-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 35px;
+    height: 35px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.personagens-footer-info div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.personagens-footer-info strong {
+    font-size: 12px;
+}
+
+.personagens-footer-info span {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 11px;
+}
+
+/* =========================================================
+   D&D
+========================================================= */
+
+.page-base-dnd .personagens-create-button:hover,
+.page-base-dnd .personagens-empty-button:hover {
+    box-shadow:
+        0 0 30px rgba(205, 137, 57, 0.12);
+}
+
+/* =========================================================
+   ORDEM
+========================================================= */
+
+.page-base-ordem .personagens-create-button:hover,
+.page-base-ordem .personagens-empty-button:hover {
+    box-shadow:
+        0 0 30px rgba(170, 25, 40, 0.16);
+}
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 950px) {
+    .personagens-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .personagens-controls {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .personagens-search {
+        width: 100%;
+    }
+
+    .personagens-filters {
+        width: 100%;
+    }
+
+    .personagens-filters button {
+        flex: 1;
+    }
+}
+
+@media (max-width: 700px) {
+    .personagens-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .personagens-create-button {
+        width: 100%;
+    }
+
+    .personagens-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .personagens-empty {
+        min-height: 350px;
+        padding: 35px 20px;
+    }
+
+    .personagens-empty h2 {
+        font-size: 23px;
+    }
+
+    .personagens-empty p {
+        font-size: 13px;
+    }
+
+    .personagens-filters {
+        overflow-x: auto;
+    }
+
+    .personagens-filters button {
+        flex: 0 0 auto;
+    }
+
+    .personagens-footer-info {
+        align-items: flex-start;
+    }
 }
