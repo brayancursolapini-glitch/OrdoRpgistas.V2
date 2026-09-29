@@ -12,6 +12,7 @@ import {
     ScrollText,
     Backpack,
     Heart,
+    Check,
 } from "lucide-react";
 
 import PageBase from "../PageBase";
@@ -28,70 +29,143 @@ export default function CriarPersonagem({ onNavigate }) {
         background: "",
         level: 1,
 
-        strength: 8,
-        dexterity: 8,
-        constitution: 8,
-        intelligence: 8,
-        wisdom: 8,
-        charisma: 8,
+        attributes: {
+            forca: 8,
+            destreza: 8,
+            constituicao: 8,
+            inteligencia: 8,
+            sabedoria: 8,
+            carisma: 8,
+        },
 
         alignment: "",
-        experience: 0,
-        hitPoints: 0,
-        armorClass: 10,
-        speed: 0,
+        experience: "",
+
+        hitPoints: "",
+        armorClass: "",
+        speed: "",
+
+        concept: "",
 
         personality: "",
         ideals: "",
         bonds: "",
         flaws: "",
 
-        equipment: [],
-        spells: [],
+        equipment: "",
+        spells: "",
     });
 
     const steps = [
         {
             id: 1,
             title: "Conceito",
-            description: "Comece dando vida ao seu personagem.",
-            icon: UserRound,
+            icon: Sparkles,
         },
         {
             id: 2,
             title: "Raça",
-            description: "Escolha a raça do aventureiro.",
-            icon: Shield,
+            icon: UserRound,
         },
         {
             id: 3,
             title: "Classe",
-            description: "Defina aquilo que seu personagem faz.",
             icon: Sword,
         },
         {
             id: 4,
             title: "Antecedente",
-            description: "Descubra de onde seu personagem veio.",
             icon: ScrollText,
         },
         {
             id: 5,
             title: "Atributos",
-            description: "Defina as capacidades do personagem.",
             icon: Dices,
         },
         {
             id: 6,
             title: "Detalhes",
-            description: "Complete a identidade da ficha.",
-            icon: Sparkles,
+            icon: Shield,
         },
         {
             id: 7,
             title: "Finalizar",
-            description: "Revise seu personagem.",
-            icon: Backpack,
+            icon: Check,
+        },
+    ];
+
+    const races = [
+        "Anão",
+        "Elfo",
+        "Halfling",
+        "Humano",
+        "Draconato",
+        "Gnomo",
+        "Meio-Elfo",
+        "Meio-Orc",
+        "Tiefling",
+    ];
+
+    const classes = [
+        "Bárbaro",
+        "Bardo",
+        "Bruxo",
+        "Clérigo",
+        "Druida",
+        "Feiticeiro",
+        "Guerreiro",
+        "Ladino",
+        "Mago",
+        "Monge",
+        "Paladino",
+        "Patrulheiro",
+    ];
+
+    const backgrounds = [
+        "Acólito",
+        "Artesão de Guilda",
+        "Artista",
+        "Charlatão",
+        "Criminoso",
+        "Eremita",
+        "Herói do Povo",
+        "Nobre",
+        "Sábio",
+        "Soldado",
+        "Órfão",
+        "Forasteiro",
+    ];
+
+    const attributes = [
+        {
+            id: "forca",
+            label: "Força",
+            short: "FOR",
+        },
+        {
+            id: "destreza",
+            label: "Destreza",
+            short: "DES",
+        },
+        {
+            id: "constituicao",
+            label: "Constituição",
+            short: "CON",
+        },
+        {
+            id: "inteligencia",
+            label: "Inteligência",
+            short: "INT",
+        },
+        {
+            id: "sabedoria",
+            label: "Sabedoria",
+            short: "SAB",
+        },
+        {
+            id: "carisma",
+            label: "Carisma",
+            short: "CAR",
         },
     ];
 
@@ -99,10 +173,22 @@ export default function CriarPersonagem({ onNavigate }) {
         (step) => step.id === currentStep
     );
 
+    const CurrentStepIcon = currentStepData?.icon;
+
     function updateCharacter(field, value) {
         setCharacter((current) => ({
             ...current,
             [field]: value,
+        }));
+    }
+
+    function updateAttribute(attribute, value) {
+        setCharacter((current) => ({
+            ...current,
+            attributes: {
+                ...current.attributes,
+                [attribute]: Number(value),
+            },
         }));
     }
 
@@ -122,23 +208,45 @@ export default function CriarPersonagem({ onNavigate }) {
         onNavigate?.("personagens");
     }
 
+    function handleFinish() {
+        console.log(
+            "Personagem criado:",
+            character
+        );
+
+        alert(
+            `Personagem "${character.name || "Sem nome"}" criado com sucesso!`
+        );
+
+        onNavigate?.("personagens");
+    }
+
     function renderStep() {
         switch (currentStep) {
             case 1:
                 return (
-                    <section className="criar-personagem-step">
-                        <div className="criar-step-heading">
+                    <div className="criar-step-content">
+
+                        <div className="criar-step-intro">
                             <span>PASSO 1</span>
-                            <h2>Comece pelo conceito</h2>
+
+                            <h2>
+                                Comece sua aventura
+                            </h2>
+
                             <p>
-                                Antes de definir todos os detalhes,
-                                imagine quem é o seu aventureiro.
+                                Defina o conceito básico do
+                                seu personagem antes de
+                                escolher os detalhes da ficha.
                             </p>
                         </div>
 
                         <div className="criar-form-grid">
-                            <label className="criar-field criar-field-full">
-                                <span>Nome do personagem</span>
+
+                            <div className="criar-form-group criar-form-full">
+                                <label>
+                                    Nome do personagem
+                                </label>
 
                                 <input
                                     type="text"
@@ -149,41 +257,49 @@ export default function CriarPersonagem({ onNavigate }) {
                                             event.target.value
                                         )
                                     }
-                                    placeholder="Ex.: Thorin Machado de Ferro"
+                                    placeholder="Ex.: Arthen, Lyra, Kael..."
                                 />
-                            </label>
+                            </div>
 
-                            <label className="criar-field">
-                                <span>Nível</span>
+                            <div className="criar-form-group">
+                                <label>
+                                    Nível
+                                </label>
 
                                 <select
                                     value={character.level}
                                     onChange={(event) =>
                                         updateCharacter(
                                             "level",
-                                            Number(event.target.value)
+                                            Number(
+                                                event.target.value
+                                            )
                                         )
                                     }
                                 >
                                     {Array.from(
                                         { length: 20 },
-                                        (_, index) => index + 1
-                                    ).map((level) => (
-                                        <option
-                                            key={level}
-                                            value={level}
-                                        >
-                                            Nível {level}
-                                        </option>
-                                    ))}
+                                        (_, index) => (
+                                            <option
+                                                key={index + 1}
+                                                value={index + 1}
+                                            >
+                                                Nível {index + 1}
+                                            </option>
+                                        )
+                                    )}
                                 </select>
-                            </label>
+                            </div>
 
-                            <label className="criar-field">
-                                <span>Alinhamento</span>
+                            <div className="criar-form-group">
+                                <label>
+                                    Tendência
+                                </label>
 
                                 <select
-                                    value={character.alignment}
+                                    value={
+                                        character.alignment
+                                    }
                                     onChange={(event) =>
                                         updateCharacter(
                                             "alignment",
@@ -192,82 +308,81 @@ export default function CriarPersonagem({ onNavigate }) {
                                     }
                                 >
                                     <option value="">
-                                        Selecionar
+                                        Selecione
                                     </option>
-                                    <option value="leal-bom">
+                                    <option>
                                         Leal e Bom
                                     </option>
-                                    <option value="neutro-bom">
+                                    <option>
                                         Neutro e Bom
                                     </option>
-                                    <option value="caotico-bom">
+                                    <option>
                                         Caótico e Bom
                                     </option>
-                                    <option value="leal-neutro">
+                                    <option>
                                         Leal e Neutro
                                     </option>
-                                    <option value="neutro">
+                                    <option>
                                         Neutro
                                     </option>
-                                    <option value="caotico-neutro">
+                                    <option>
                                         Caótico e Neutro
                                     </option>
-                                    <option value="leal-mau">
+                                    <option>
                                         Leal e Mau
                                     </option>
-                                    <option value="neutro-mau">
+                                    <option>
                                         Neutro e Mau
                                     </option>
-                                    <option value="caotico-mau">
+                                    <option>
                                         Caótico e Mau
                                     </option>
                                 </select>
-                            </label>
+                            </div>
 
-                            <label className="criar-field criar-field-full">
-                                <span>História / conceito</span>
+                            <div className="criar-form-group criar-form-full">
+                                <label>
+                                    Conceito / História
+                                </label>
 
                                 <textarea
-                                    value={character.personality}
+                                    rows="6"
+                                    value={character.concept}
                                     onChange={(event) =>
                                         updateCharacter(
-                                            "personality",
+                                            "concept",
                                             event.target.value
                                         )
                                     }
-                                    placeholder="Conte brevemente quem é seu personagem..."
-                                    rows={5}
+                                    placeholder="Quem é seu personagem? De onde veio? O que busca?"
                                 />
-                            </label>
+                            </div>
+
                         </div>
-                    </section>
+                    </div>
                 );
 
             case 2:
                 return (
-                    <section className="criar-personagem-step">
-                        <div className="criar-step-heading">
+                    <div className="criar-step-content">
+
+                        <div className="criar-step-intro">
                             <span>PASSO 2</span>
-                            <h2>Escolha sua raça</h2>
+
+                            <h2>
+                                Escolha sua raça
+                            </h2>
+
                             <p>
-                                A raça contribui para a identidade,
-                                características e capacidades naturais
-                                do personagem.
+                                A raça define parte da origem
+                                e das características do seu
+                                personagem.
                             </p>
                         </div>
 
                         <div className="criar-choice-grid">
-                            {[
-                                "Anão",
-                                "Elfo",
-                                "Halfling",
-                                "Humano",
-                                "Draconato",
-                                "Gnomo",
-                                "Meio-Elfo",
-                                "Meio-Orc",
-                                "Tiefling",
-                            ].map((race) => (
+
+                            {races.map((race) => (
                                 <button
                                     key={race}
                                     type="button"
@@ -283,47 +398,41 @@ export default function CriarPersonagem({ onNavigate }) {
                                         )
                                     }
                                 >
-                                    <Shield size={24} />
-
-                                    <strong>{race}</strong>
+                                    <div className="criar-choice-icon">
+                                        <UserRound size={21} />
+                                    </div>
 
                                     <span>
-                                        Escolher raça
+                                        {race}
                                     </span>
                                 </button>
                             ))}
+
                         </div>
-                    </section>
+                    </div>
                 );
 
             case 3:
                 return (
-                    <section className="criar-personagem-step">
-                        <div className="criar-step-heading">
+                    <div className="criar-step-content">
+
+                        <div className="criar-step-intro">
                             <span>PASSO 3</span>
-                            <h2>Escolha sua classe</h2>
+
+                            <h2>
+                                Escolha sua classe
+                            </h2>
+
                             <p>
-                                A classe representa a vocação principal
-                                do seu personagem e define diversas
-                                características especiais.
+                                Sua classe representa as
+                                principais capacidades e o
+                                estilo de aventura do personagem.
                             </p>
                         </div>
 
-                        <div className="criar-choice-grid">
-                            {[
-                                "Bárbaro",
-                                "Bardo",
-                                "Bruxo",
-                                "Clérigo",
-                                "Druida",
-                                "Feiticeiro",
-                                "Guerreiro",
-                                "Ladino",
-                                "Mago",
-                                "Monge",
-                                "Paladino",
-                                "Patrulheiro",
-                            ].map((className) => (
+                        <div className="criar-choice-grid criar-choice-grid-large">
+
+                            {classes.map((className) => (
                                 <button
                                     key={className}
                                     type="button"
@@ -339,232 +448,293 @@ export default function CriarPersonagem({ onNavigate }) {
                                         )
                                     }
                                 >
-                                    <Sword size={24} />
-
-                                    <strong>
-                                        {className}
-                                    </strong>
+                                    <div className="criar-choice-icon">
+                                        <Sword size={21} />
+                                    </div>
 
                                     <span>
-                                        Escolher classe
+                                        {className}
                                     </span>
                                 </button>
                             ))}
+
                         </div>
-                    </section>
+                    </div>
                 );
 
             case 4:
                 return (
-                    <section className="criar-personagem-step">
-                        <div className="criar-step-heading">
+                    <div className="criar-step-content">
+
+                        <div className="criar-step-intro">
                             <span>PASSO 4</span>
-                            <h2>Escolha seu antecedente</h2>
+
+                            <h2>
+                                Escolha seu antecedente
+                            </h2>
+
                             <p>
-                                O passado do personagem ajuda a definir
-                                suas proficiências, equipamentos e
-                                características pessoais.
+                                O antecedente ajuda a definir
+                                a história e a experiência do
+                                seu personagem.
                             </p>
                         </div>
 
                         <div className="criar-choice-grid">
-                            {[
-                                "Acólito",
-                                "Artesão de Guilda",
-                                "Artista",
-                                "Charlatão",
-                                "Criminoso",
-                                "Eremita",
-                                "Herói do Povo",
-                                "Nobre",
-                                "Sábio",
-                                "Soldado",
-                                "Órfão",
-                                "Forasteiro",
-                            ].map((background) => (
-                                <button
-                                    key={background}
-                                    type="button"
-                                    className={`criar-choice-card ${
-                                        character.background ===
-                                        background
-                                            ? "selected"
-                                            : ""
-                                    }`}
-                                    onClick={() =>
-                                        updateCharacter(
-                                            "background",
+
+                            {backgrounds.map(
+                                (background) => (
+                                    <button
+                                        key={background}
+                                        type="button"
+                                        className={`criar-choice-card ${
+                                            character.background ===
                                             background
-                                        )
-                                    }
-                                >
-                                    <ScrollText size={24} />
+                                                ? "selected"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            updateCharacter(
+                                                "background",
+                                                background
+                                            )
+                                        }
+                                    >
+                                        <div className="criar-choice-icon">
+                                            <ScrollText
+                                                size={21}
+                                            />
+                                        </div>
 
-                                    <strong>
-                                        {background}
-                                    </strong>
+                                        <span>
+                                            {background}
+                                        </span>
+                                    </button>
+                                )
+                            )}
 
-                                    <span>
-                                        Escolher antecedente
-                                    </span>
-                                </button>
-                            ))}
                         </div>
-                    </section>
+                    </div>
                 );
 
             case 5:
                 return (
-                    <section className="criar-personagem-step">
-                        <div className="criar-step-heading">
+                    <div className="criar-step-content">
+
+                        <div className="criar-step-intro">
                             <span>PASSO 5</span>
-                            <h2>Defina seus atributos</h2>
+
+                            <h2>
+                                Defina seus atributos
+                            </h2>
+
                             <p>
-                                Distribua os valores das seis habilidades
-                                principais do personagem.
+                                Ajuste os valores dos seis
+                                atributos principais da ficha.
                             </p>
                         </div>
 
                         <div className="criar-attributes-grid">
-                            {[
-                                ["strength", "Força"],
-                                ["dexterity", "Destreza"],
-                                ["constitution", "Constituição"],
-                                ["intelligence", "Inteligência"],
-                                ["wisdom", "Sabedoria"],
-                                ["charisma", "Carisma"],
-                            ].map(([key, label]) => (
-                                <div
-                                    className="criar-attribute-card"
-                                    key={key}
-                                >
-                                    <span>{label}</span>
 
-                                    <strong>
-                                        {character[key]}
-                                    </strong>
+                            {attributes.map(
+                                (attribute) => {
+                                    const value =
+                                        character.attributes[
+                                            attribute.id
+                                        ];
 
-                                    <input
-                                        type="range"
-                                        min="1"
-                                        max="20"
-                                        value={character[key]}
-                                        onChange={(event) =>
-                                            updateCharacter(
-                                                key,
-                                                Number(
-                                                    event.target.value
-                                                )
-                                            )
-                                        }
-                                    />
-                                </div>
-                            ))}
+                                    return (
+                                        <div
+                                            key={
+                                                attribute.id
+                                            }
+                                            className="criar-attribute-card"
+                                        >
+                                            <div className="criar-attribute-top">
+                                                <div>
+                                                    <span>
+                                                        {
+                                                            attribute.short
+                                                        }
+                                                    </span>
+
+                                                    <strong>
+                                                        {
+                                                            attribute.label
+                                                        }
+                                                    </strong>
+                                                </div>
+
+                                                <b>
+                                                    {value}
+                                                </b>
+                                            </div>
+
+                                            <input
+                                                type="range"
+                                                min="1"
+                                                max="20"
+                                                value={value}
+                                                onChange={(
+                                                    event
+                                                ) =>
+                                                    updateAttribute(
+                                                        attribute.id,
+                                                        event.target
+                                                            .value
+                                                    )
+                                                }
+                                            />
+
+                                            <div className="criar-attribute-range">
+                                                <span>
+                                                    1
+                                                </span>
+                                                <span>
+                                                    20
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                            )}
+
                         </div>
-                    </section>
+                    </div>
                 );
 
             case 6:
                 return (
-                    <section className="criar-personagem-step">
-                        <div className="criar-step-heading">
+                    <div className="criar-step-content">
+
+                        <div className="criar-step-intro">
                             <span>PASSO 6</span>
-                            <h2>Detalhes do personagem</h2>
+
+                            <h2>
+                                Dê vida ao personagem
+                            </h2>
+
                             <p>
-                                Agora podemos completar a personalidade
-                                e os elementos narrativos da ficha.
+                                Agora você pode definir os
+                                detalhes que tornam seu
+                                personagem único.
                             </p>
                         </div>
 
                         <div className="criar-form-grid">
-                            <label className="criar-field">
-                                <span>Traço de personalidade</span>
 
-                                <input
-                                    type="text"
-                                    value={character.personality}
+                            <div className="criar-form-group criar-form-full">
+                                <label>
+                                    Traços de personalidade
+                                </label>
+
+                                <textarea
+                                    rows="4"
+                                    value={
+                                        character.personality
+                                    }
                                     onChange={(event) =>
                                         updateCharacter(
                                             "personality",
                                             event.target.value
                                         )
                                     }
-                                    placeholder="Como ele se comporta?"
+                                    placeholder="Como seu personagem costuma agir?"
                                 />
-                            </label>
+                            </div>
 
-                            <label className="criar-field">
-                                <span>Ideal</span>
+                            <div className="criar-form-group">
+                                <label>
+                                    Ideais
+                                </label>
 
-                                <input
-                                    type="text"
-                                    value={character.ideals}
+                                <textarea
+                                    rows="4"
+                                    value={
+                                        character.ideals
+                                    }
                                     onChange={(event) =>
                                         updateCharacter(
                                             "ideals",
                                             event.target.value
                                         )
                                     }
-                                    placeholder="No que ele acredita?"
+                                    placeholder="O que é importante para ele?"
                                 />
-                            </label>
+                            </div>
 
-                            <label className="criar-field">
-                                <span>Vínculo</span>
+                            <div className="criar-form-group">
+                                <label>
+                                    Vínculos
+                                </label>
 
-                                <input
-                                    type="text"
-                                    value={character.bonds}
+                                <textarea
+                                    rows="4"
+                                    value={
+                                        character.bonds
+                                    }
                                     onChange={(event) =>
                                         updateCharacter(
                                             "bonds",
                                             event.target.value
                                         )
                                     }
-                                    placeholder="O que é importante para ele?"
+                                    placeholder="Com quem ou com o que ele possui ligação?"
                                 />
-                            </label>
+                            </div>
 
-                            <label className="criar-field">
-                                <span>Defeito</span>
+                            <div className="criar-form-group criar-form-full">
+                                <label>
+                                    Fraquezas
+                                </label>
 
-                                <input
-                                    type="text"
-                                    value={character.flaws}
+                                <textarea
+                                    rows="4"
+                                    value={
+                                        character.flaws
+                                    }
                                     onChange={(event) =>
                                         updateCharacter(
                                             "flaws",
                                             event.target.value
                                         )
                                     }
-                                    placeholder="Qual é sua fraqueza?"
+                                    placeholder="Quais são seus medos, defeitos ou limitações?"
                                 />
-                            </label>
+                            </div>
+
                         </div>
-                    </section>
+                    </div>
                 );
 
             case 7:
                 return (
-                    <section className="criar-personagem-step">
-                        <div className="criar-step-heading">
+                    <div className="criar-step-content">
+
+                        <div className="criar-step-intro">
                             <span>PASSO 7</span>
-                            <h2>Revise sua ficha</h2>
+
+                            <h2>
+                                Revise seu personagem
+                            </h2>
+
                             <p>
-                                Confira as principais informações antes
-                                de finalizar seu personagem.
+                                Confira as informações antes
+                                de finalizar a criação.
                             </p>
                         </div>
 
                         <div className="criar-review">
-                            <div className="criar-review-header">
+
+                            <div className="criar-review-hero">
+
                                 <div className="criar-review-avatar">
-                                    <UserRound size={38} />
+                                    <Sword size={30} />
                                 </div>
 
                                 <div>
                                     <span>
-                                        PERSONAGEM D&D 5E
+                                        PERSONAGEM D&D
                                     </span>
 
                                     <h3>
@@ -574,77 +744,106 @@ export default function CriarPersonagem({ onNavigate }) {
 
                                     <p>
                                         {character.race ||
-                                            "Raça não selecionada"}
-
-                                        {" • "}
-
+                                            "Raça não definida"}{" "}
+                                        •{" "}
                                         {character.class ||
-                                            "Classe não selecionada"}
+                                            "Classe não definida"}
                                     </p>
                                 </div>
+
                             </div>
 
                             <div className="criar-review-grid">
-                                <div>
-                                    <span>ANTECEDENTE</span>
-                                    <strong>
-                                        {character.background ||
-                                            "Não selecionado"}
-                                    </strong>
-                                </div>
 
-                                <div>
-                                    <span>NÍVEL</span>
+                                <div className="criar-review-item">
+                                    <span>
+                                        Nível
+                                    </span>
                                     <strong>
                                         {character.level}
                                     </strong>
                                 </div>
 
-                                <div>
-                                    <span>ALINHAMENTO</span>
+                                <div className="criar-review-item">
+                                    <span>
+                                        Antecedente
+                                    </span>
                                     <strong>
-                                        {character.alignment ||
-                                            "Não selecionado"}
+                                        {character.background ||
+                                            "Não definido"}
                                     </strong>
                                 </div>
 
-                                <div>
-                                    <span>VIDA</span>
+                                <div className="criar-review-item">
+                                    <span>
+                                        Tendência
+                                    </span>
                                     <strong>
-                                        {character.hitPoints ||
-                                            "A calcular"}
+                                        {character.alignment ||
+                                            "Não definida"}
                                     </strong>
                                 </div>
+
                             </div>
 
                             <div className="criar-review-attributes">
-                                {[
-                                    ["FOR", character.strength],
-                                    ["DES", character.dexterity],
-                                    ["CON", character.constitution],
-                                    ["INT", character.intelligence],
-                                    ["SAB", character.wisdom],
-                                    ["CAR", character.charisma],
-                                ].map(([label, value]) => (
-                                    <div key={label}>
-                                        <span>{label}</span>
-                                        <strong>{value}</strong>
-                                    </div>
-                                ))}
+
+                                <div className="criar-review-section-title">
+                                    <Dices size={18} />
+                                    <span>
+                                        ATRIBUTOS
+                                    </span>
+                                </div>
+
+                                <div className="criar-review-attribute-grid">
+
+                                    {attributes.map(
+                                        (attribute) => (
+                                            <div
+                                                key={
+                                                    attribute.id
+                                                }
+                                            >
+                                                <span>
+                                                    {
+                                                        attribute.short
+                                                    }
+                                                </span>
+
+                                                <strong>
+                                                    {
+                                                        character
+                                                            .attributes[
+                                                            attribute.id
+                                                        ]
+                                                    }
+                                                </strong>
+                                            </div>
+                                        )
+                                    )}
+
+                                </div>
+
                             </div>
 
                             <div className="criar-review-note">
-                                <Heart size={17} />
 
-                                <span>
-                                    A ficha ainda receberá cálculos,
+                                <Backpack size={19} />
+
+                                <p>
+                                    A ficha será expandida
+                                    posteriormente com
                                     proficiências, equipamentos,
                                     características de classe,
-                                    habilidades e demais regras.
-                                </span>
+                                    habilidades, magias e
+                                    demais elementos específicos
+                                    do sistema.
+                                </p>
+
                             </div>
+
                         </div>
-                    </section>
+                    </div>
                 );
 
             default:
@@ -655,38 +854,42 @@ export default function CriarPersonagem({ onNavigate }) {
     return (
         <PageBase
             title="Criar Personagem"
-            subtitle="Construa seu aventureiro para Dungeons & Dragons."
-            icon={Sword}
+            subtitle="Construa seu próximo aventureiro."
+            icon={CurrentStepIcon || Shield}
             onNavigate={onNavigate}
         >
             <div className="criar-personagem-page">
 
-                {/* =====================================================
-                    TOPO
-                ====================================================== */}
+                {/* VOLTAR */}
+                <button
+                    type="button"
+                    className="criar-back-button"
+                    onClick={handleCancel}
+                >
+                    <ArrowLeft size={17} />
+                    Voltar para personagens
+                </button>
 
-                <section className="criar-personagem-top">
-
-                    <button
-                        type="button"
-                        className="criar-cancel-button"
-                        onClick={handleCancel}
-                    >
-                        <ArrowLeft size={17} />
-                        Voltar para personagens
-                    </button>
+                {/* CABEÇALHO */}
+                <section className="criar-header">
 
                     <div className="criar-system-badge">
                         <Sword size={16} />
-                        <span>D&D 5E</span>
+                        DUNGEONS & DRAGONS
                     </div>
+
+                    <h2>
+                        Criação de personagem
+                    </h2>
+
+                    <p>
+                        Construa seu personagem passo a
+                        passo.
+                    </p>
 
                 </section>
 
-                {/* =====================================================
-                    PROGRESSO
-                ====================================================== */}
-
+                {/* PROGRESSO */}
                 <section className="criar-progress">
 
                     <div className="criar-progress-line">
@@ -702,140 +905,140 @@ export default function CriarPersonagem({ onNavigate }) {
                         />
                     </div>
 
-                    <div className="criar-steps">
+                    <div className="criar-progress-steps">
 
                         {steps.map((step) => {
-                            const StepIcon = step.icon;
+                            const StepIcon =
+                                step.icon;
 
-                            const active =
+                            const isActive =
                                 step.id === currentStep;
 
-                            const completed =
+                            const isCompleted =
                                 step.id < currentStep;
 
                             return (
-                                <button
-                                    type="button"
+                                <div
                                     key={step.id}
-                                    className={`criar-step-indicator ${
-                                        active
+                                    className={`criar-progress-step ${
+                                        isActive
                                             ? "active"
                                             : ""
                                     } ${
-                                        completed
+                                        isCompleted
                                             ? "completed"
                                             : ""
                                     }`}
-                                    onClick={() => {
-                                        if (
-                                            step.id <=
-                                            currentStep
-                                        ) {
-                                            setCurrentStep(
-                                                step.id
-                                            );
-                                        }
-                                    }}
                                 >
-                                    <div className="criar-step-icon">
+                                    <div className="criar-progress-icon">
                                         <StepIcon size={17} />
                                     </div>
 
                                     <span>
                                         {step.title}
                                     </span>
-                                </button>
+                                </div>
                             );
                         })}
 
                     </div>
-
                 </section>
 
-                {/* =====================================================
-                    ÁREA PRINCIPAL
-                ====================================================== */}
-
+                {/* CONTEÚDO */}
                 <motion.section
-                    className="criar-personagem-card"
+                    className="criar-main-card"
                     key={currentStep}
                     initial={{
                         opacity: 0,
-                        y: 15,
+                        x: 18,
                     }}
                     animate={{
                         opacity: 1,
-                        y: 0,
+                        x: 0,
                     }}
                     transition={{
                         duration: 0.3,
                     }}
                 >
+                    <div className="criar-main-card-header">
 
-                    <div className="criar-personagem-card-header">
-
-                        <div className="criar-personagem-card-icon">
-                            {currentStepData && (
-                                <currentStepData.icon size={24} />
+                        <div className="criar-main-card-icon">
+                            {CurrentStepIcon && (
+                                <CurrentStepIcon size={24} />
                             )}
                         </div>
 
                         <div>
                             <span>
-                                {currentStepData?.description}
+                                ETAPA {currentStep} DE{" "}
+                                {steps.length}
                             </span>
 
-                            <h2>
+                            <h3>
                                 {currentStepData?.title}
-                            </h2>
+                            </h3>
                         </div>
 
                     </div>
 
                     {renderStep()}
 
-                </motion.section>
+                    {/* NAVEGAÇÃO */}
+                    <div className="criar-navigation">
 
-                {/* =====================================================
-                    NAVEGAÇÃO
-                ====================================================== */}
+                        <button
+                            type="button"
+                            className="criar-navigation-secondary"
+                            onClick={
+                                currentStep === 1
+                                    ? handleCancel
+                                    : handlePrevious
+                            }
+                        >
+                            <ArrowLeft size={17} />
 
-                <section className="criar-personagem-navigation">
+                            <span>
+                                {currentStep === 1
+                                    ? "Cancelar"
+                                    : "Voltar"}
+                            </span>
+                        </button>
 
-                    <button
-                        type="button"
-                        className="criar-navigation-back"
-                        onClick={handlePrevious}
-                        disabled={currentStep === 1}
-                    >
-                        <ArrowLeft size={17} />
-                        Voltar
-                    </button>
+                        {currentStep <
+                        steps.length ? (
+                            <button
+                                type="button"
+                                className="criar-navigation-primary"
+                                onClick={
+                                    handleNext
+                                }
+                            >
+                                <span>
+                                    Continuar
+                                </span>
 
-                    <div className="criar-navigation-info">
-                        <span>
-                            ETAPA {currentStep} DE{" "}
-                            {steps.length}
-                        </span>
+                                <ArrowRight
+                                    size={17}
+                                />
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                className="criar-navigation-primary"
+                                onClick={
+                                    handleFinish
+                                }
+                            >
+                                <Heart size={17} />
 
-                        <strong>
-                            {currentStepData?.title}
-                        </strong>
+                                <span>
+                                    Criar personagem
+                                </span>
+                            </button>
+                        )}
+
                     </div>
-
-                    <button
-                        type="button"
-                        className="criar-navigation-next"
-                        onClick={handleNext}
-                        disabled={
-                            currentStep === steps.length
-                        }
-                    >
-                        Continuar
-                        <ArrowRight size={17} />
-                    </button>
-
-                </section>
+                </motion.section>
 
             </div>
         </PageBase>
