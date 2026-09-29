@@ -31,13 +31,11 @@ export default function Personagens({ onNavigate }) {
 
     const filteredCharacters = useMemo(() => {
         return characters.filter((character) => {
+            const searchValue = search.toLowerCase();
+
             const matchesSearch =
-                character.name
-                    .toLowerCase()
-                    .includes(search.toLowerCase()) ||
-                character.system
-                    .toLowerCase()
-                    .includes(search.toLowerCase());
+                character.name.toLowerCase().includes(searchValue) ||
+                character.system.toLowerCase().includes(searchValue);
 
             const matchesFilter =
                 filter === "todos" ||
@@ -59,8 +57,6 @@ export default function Personagens({ onNavigate }) {
         if (system === "dnd") {
             console.log("Abrir criador D&D 5e");
 
-            // Próximo passo:
-            // abrir o criador completo de D&D 5e.
             setShowSystemSelector(false);
 
             return;
@@ -69,8 +65,6 @@ export default function Personagens({ onNavigate }) {
         if (system === "ordem") {
             console.log("Abrir criador Ordem Paranormal");
 
-            // Futuramente:
-            // abrir o criador completo de Ordem Paranormal.
             setShowSystemSelector(false);
 
             return;
@@ -104,7 +98,9 @@ export default function Personagens({ onNavigate }) {
                     ====================================================== */}
 
                     <section className="personagens-toolbar">
+
                         <div className="personagens-toolbar-info">
+
                             <span className="personagens-section-label">
                                 SUA COLEÇÃO
                             </span>
@@ -117,6 +113,7 @@ export default function Personagens({ onNavigate }) {
                             <p>
                                 Seus aventureiros ficam reunidos aqui.
                             </p>
+
                         </div>
 
                         <motion.button
@@ -129,6 +126,7 @@ export default function Personagens({ onNavigate }) {
                             <Plus size={19} />
                             <span>Criar personagem</span>
                         </motion.button>
+
                     </section>
 
 
@@ -139,6 +137,7 @@ export default function Personagens({ onNavigate }) {
                     <section className="personagens-controls">
 
                         <div className="personagens-search">
+
                             <Search size={18} />
 
                             <input
@@ -159,6 +158,7 @@ export default function Personagens({ onNavigate }) {
                                     ×
                                 </button>
                             )}
+
                         </div>
 
 
@@ -250,7 +250,6 @@ export default function Personagens({ onNavigate }) {
 
                                         </div>
 
-
                                         <button
                                             type="button"
                                             className="personagem-menu-button"
@@ -294,7 +293,6 @@ export default function Personagens({ onNavigate }) {
                                             </strong>
                                         </div>
 
-
                                         <div>
                                             <span>STATUS</span>
 
@@ -331,6 +329,7 @@ export default function Personagens({ onNavigate }) {
                                                     character.id
                                                 )
                                             }
+                                            aria-label="Editar personagem"
                                         >
                                             <Edit3 size={16} />
                                         </button>
@@ -343,6 +342,7 @@ export default function Personagens({ onNavigate }) {
                                                     character.id
                                                 )
                                             }
+                                            aria-label="Excluir personagem"
                                         >
                                             <Trash2 size={16} />
                                         </button>
@@ -376,23 +376,19 @@ export default function Personagens({ onNavigate }) {
                                 <Sparkles size={32} />
                             </div>
 
-
                             <span className="personagens-empty-label">
                                 SUA AVENTURA COMEÇA AQUI
                             </span>
 
-
                             <h2>
                                 Nenhum personagem ainda
                             </h2>
-
 
                             <p>
                                 Crie seu primeiro personagem e comece
                                 a construir sua história dentro do
                                 Ordo RPGistas.
                             </p>
-
 
                             <button
                                 type="button"
@@ -440,7 +436,7 @@ export default function Personagens({ onNavigate }) {
 
 
             {/* =========================================================
-                MODAL — ESCOLHA DO SISTEMA
+                MODAL DE ESCOLHA DO SISTEMA
             ========================================================== */}
 
             <AnimatePresence>
@@ -449,19 +445,11 @@ export default function Personagens({ onNavigate }) {
 
                     <motion.div
                         className="personagens-system-modal-overlay"
-                        initial={{
-                            opacity: 0,
-                        }}
-                        animate={{
-                            opacity: 1,
-                        }}
-                        exit={{
-                            opacity: 0,
-                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         onMouseDown={(event) => {
-                            if (
-                                event.target === event.currentTarget
-                            ) {
+                            if (event.target === event.currentTarget) {
                                 handleCloseSystemSelector();
                             }
                         }}
@@ -489,7 +477,7 @@ export default function Personagens({ onNavigate }) {
                             }}
                         >
 
-                            {/* CABEÇALHO DO MODAL */}
+                            {/* CABEÇALHO */}
 
                             <div className="personagens-system-modal-header">
 
@@ -510,13 +498,10 @@ export default function Personagens({ onNavigate }) {
 
                                 </div>
 
-
                                 <button
                                     type="button"
                                     className="personagens-system-modal-close"
-                                    onClick={
-                                        handleCloseSystemSelector
-                                    }
+                                    onClick={handleCloseSystemSelector}
                                     aria-label="Fechar"
                                 >
                                     <X size={20} />
@@ -529,9 +514,7 @@ export default function Personagens({ onNavigate }) {
 
                             <div className="personagens-system-options">
 
-                                {/* =================================================
-                                    D&D
-                                ================================================== */}
+                                {/* D&D */}
 
                                 <motion.button
                                     type="button"
@@ -539,18 +522,13 @@ export default function Personagens({ onNavigate }) {
                                     onClick={() =>
                                         handleSelectSystem("dnd")
                                     }
-                                    whileHover={{
-                                        y: -4,
-                                    }}
-                                    whileTap={{
-                                        scale: 0.98,
-                                    }}
+                                    whileHover={{ y: -4 }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
 
                                     <div className="personagens-system-card-icon">
                                         <Sword size={30} />
                                     </div>
-
 
                                     <div className="personagens-system-card-content">
 
@@ -570,7 +548,6 @@ export default function Personagens({ onNavigate }) {
 
                                     </div>
 
-
                                     <ChevronRight
                                         className="personagens-system-card-arrow"
                                         size={22}
@@ -579,9 +556,7 @@ export default function Personagens({ onNavigate }) {
                                 </motion.button>
 
 
-                                {/* =================================================
-                                    ORDEM PARANORMAL
-                                ================================================== */}
+                                {/* ORDEM */}
 
                                 <motion.button
                                     type="button"
@@ -589,18 +564,13 @@ export default function Personagens({ onNavigate }) {
                                     onClick={() =>
                                         handleSelectSystem("ordem")
                                     }
-                                    whileHover={{
-                                        y: -4,
-                                    }}
-                                    whileTap={{
-                                        scale: 0.98,
-                                    }}
+                                    whileHover={{ y: -4 }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
 
                                     <div className="personagens-system-card-icon">
                                         <Shield size={30} />
                                     </div>
-
 
                                     <div className="personagens-system-card-content">
 
@@ -619,7 +589,6 @@ export default function Personagens({ onNavigate }) {
 
                                     </div>
 
-
                                     <ChevronRight
                                         className="personagens-system-card-arrow"
                                         size={22}
@@ -628,16 +597,13 @@ export default function Personagens({ onNavigate }) {
                                 </motion.button>
 
 
-                                {/* =================================================
-                                    OUTROS SISTEMAS
-                                ================================================== */}
+                                {/* OUTROS */}
 
                                 <div className="personagens-system-card personagens-system-card-disabled">
 
                                     <div className="personagens-system-card-icon">
                                         <Lock size={27} />
                                     </div>
-
 
                                     <div className="personagens-system-card-content">
 
@@ -662,7 +628,7 @@ export default function Personagens({ onNavigate }) {
                             </div>
 
 
-                            {/* RODAPÉ DO MODAL */}
+                            {/* RODAPÉ */}
 
                             <div className="personagens-system-modal-footer">
 
