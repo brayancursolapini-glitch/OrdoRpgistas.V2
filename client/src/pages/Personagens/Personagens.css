@@ -1,495 +1,680 @@
 /* =========================================================
    PERSONAGENS
-========================================================= */
+   ========================================================= */
 
 .personagens-page {
     width: 100%;
     padding-bottom: 40px;
 }
 
+
 /* =========================================================
    TOOLBAR
-========================================================= */
+   ========================================================= */
 
 .personagens-toolbar {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 30px;
-    margin-bottom: 28px;
+
+    padding: 24px 26px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.075),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    margin-bottom: 22px;
 }
 
-.personagens-toolbar-info {
+.personagens-toolbar-text {
     min-width: 0;
 }
 
-.personagens-section-label {
+.personagens-toolbar-text > span {
     display: block;
-    margin-bottom: 8px;
-    color: rgba(255, 255, 255, 0.46);
+
+    margin-bottom: 7px;
+
+    color: rgba(255, 255, 255, 0.45);
+
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.2em;
+
+    letter-spacing: 0.18em;
 }
 
-.personagens-toolbar-info h2 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.personagens-toolbar-text h2 {
     margin: 0;
+
     color: #ffffff;
-    font-size: 27px;
+
+    font-size: clamp(22px, 3vw, 30px);
     line-height: 1.1;
 }
 
-.personagens-toolbar-info h2 span {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 27px;
-    height: 27px;
-    padding: 0 7px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 12px;
+.personagens-toolbar-text p {
+    margin: 8px 0 0;
+
+    max-width: 550px;
+
+    color: rgba(255, 255, 255, 0.58);
+
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-.personagens-toolbar-info p {
-    margin: 8px 0 0;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 13px;
-}
 
 /* =========================================================
    BOTÃO CRIAR
-========================================================= */
+   ========================================================= */
 
 .personagens-create-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 9px;
-    min-height: 44px;
+
+    flex-shrink: 0;
+
+    min-height: 46px;
     padding: 0 18px;
+
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 11px;
-    background: rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 174, 76, 0.2),
+            rgba(150, 82, 28, 0.12)
+        );
+
     color: #ffffff;
+
     font-size: 13px;
     font-weight: 700;
+
     cursor: pointer;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.18),
+        0 0 25px rgba(225, 145, 55, 0.08);
+
     transition:
+        transform 0.25s ease,
         background 0.25s ease,
         border-color 0.25s ease,
-        box-shadow 0.25s ease,
-        transform 0.25s ease;
+        box-shadow 0.25s ease;
 }
 
 .personagens-create-button:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.28);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+
+    border-color: rgba(255, 190, 100, 0.38);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 174, 76, 0.28),
+            rgba(150, 82, 28, 0.18)
+        );
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.25),
+        0 0 35px rgba(225, 145, 55, 0.14);
 }
 
-/* =========================================================
-   BUSCA E FILTROS
-========================================================= */
+.personagens-create-button:active {
+    transform: translateY(0);
+}
 
-.personagens-controls {
+
+/* =========================================================
+   FILTROS
+   ========================================================= */
+
+.personagens-filters {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 18px;
-    margin-bottom: 28px;
+
+    margin-bottom: 24px;
 }
 
 .personagens-search {
     display: flex;
     align-items: center;
     gap: 10px;
+
     width: min(420px, 100%);
-    min-height: 42px;
-    padding: 0 13px;
+
+    min-height: 44px;
+    padding: 0 14px;
+
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 11px;
-    background: rgba(0, 0, 0, 0.24);
+
+    background: rgba(0, 0, 0, 0.22);
+
     color: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(10px);
+
+    transition:
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .personagens-search:focus-within {
-    border-color: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 184, 88, 0.35);
+
+    background: rgba(0, 0, 0, 0.3);
+
+    box-shadow:
+        0 0 0 3px rgba(255, 174, 76, 0.05);
 }
 
 .personagens-search input {
     width: 100%;
-    min-width: 0;
+
     border: 0;
-    outline: none;
+    outline: 0;
+
     background: transparent;
+
     color: #ffffff;
+
+    font-family: inherit;
     font-size: 13px;
 }
 
 .personagens-search input::placeholder {
-    color: rgba(255, 255, 255, 0.36);
+    color: rgba(255, 255, 255, 0.35);
 }
 
-.personagens-search-clear {
+.personagens-filter-buttons {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 16px;
-    line-height: 1;
-    cursor: pointer;
+    gap: 7px;
 }
 
-.personagens-search-clear:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-}
-
-.personagens-filters {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 11px;
-    background: rgba(0, 0, 0, 0.2);
-}
-
-.personagens-filters button {
+.personagens-filter-buttons button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    min-height: 32px;
-    padding: 0 11px;
-    border: 0;
-    border-radius: 8px;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.48);
-    font-size: 11px;
+    gap: 7px;
+
+    min-height: 38px;
+    padding: 0 13px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 9px;
+
+    background: rgba(0, 0, 0, 0.18);
+
+    color: rgba(255, 255, 255, 0.55);
+
+    font-family: inherit;
+    font-size: 12px;
     font-weight: 600;
+
     cursor: pointer;
+
     transition:
+        color 0.2s ease,
         background 0.2s ease,
-        color 0.2s ease;
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
-.personagens-filters button:hover {
-    color: rgba(255, 255, 255, 0.85);
-}
-
-.personagens-filters button.active {
-    background: rgba(255, 255, 255, 0.1);
+.personagens-filter-buttons button:hover {
     color: #ffffff;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border-color: rgba(255, 255, 255, 0.16);
+
+    transform: translateY(-1px);
 }
+
+.personagens-filter-buttons button.active {
+    color: #ffffff;
+
+    border-color: rgba(255, 181, 91, 0.28);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 176, 76, 0.16),
+            rgba(255, 255, 255, 0.045)
+        );
+
+    box-shadow:
+        0 0 18px rgba(255, 165, 70, 0.06);
+}
+
 
 /* =========================================================
    GRID DE PERSONAGENS
-========================================================= */
+   ========================================================= */
 
 .personagens-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(270px, 1fr)
+        );
+
     gap: 18px;
+
+    margin-bottom: 28px;
 }
 
+
 /* =========================================================
-   CARD
-========================================================= */
+   CARD DO PERSONAGEM
+   ========================================================= */
 
 .personagem-card {
     position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 270px;
+
     overflow: hidden;
-    min-height: 300px;
-    padding: 19px;
+
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 18px;
+
     background:
         linear-gradient(
             145deg,
-            rgba(255, 255, 255, 0.07),
-            rgba(0, 0, 0, 0.25)
+            rgba(255, 255, 255, 0.075),
+            rgba(255, 255, 255, 0.025)
         );
-    backdrop-filter: blur(13px);
+
     box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.16);
+        0 15px 40px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
     transition:
         transform 0.3s ease,
         border-color 0.3s ease,
         box-shadow 0.3s ease;
 }
 
-.personagem-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.18);
-    box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.24);
-}
-
 .personagem-card::before {
     content: "";
+
     position: absolute;
+
     top: -80px;
     right: -80px;
-    width: 180px;
-    height: 180px;
+
+    width: 170px;
+    height: 170px;
+
     border-radius: 50%;
+
+    background: rgba(255, 174, 76, 0.08);
+
+    filter: blur(20px);
+
     pointer-events: none;
-    opacity: 0.55;
-    filter: blur(30px);
 }
 
-.personagem-card-dnd::before {
-    background: rgba(211, 142, 59, 0.13);
+.personagem-card:hover {
+    transform: translateY(-4px);
+
+    border-color: rgba(255, 255, 255, 0.17);
+
+    box-shadow:
+        0 22px 50px rgba(0, 0, 0, 0.3),
+        0 0 35px rgba(255, 174, 76, 0.05);
 }
 
-.personagem-card-ordem::before {
-    background: rgba(185, 25, 45, 0.16);
-}
 
 /* =========================================================
    TOPO DO CARD
-========================================================= */
+   ========================================================= */
 
 .personagem-card-top {
     position: relative;
     z-index: 2;
+
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
+
+    padding: 18px 18px 0;
 }
 
-.personagem-avatar {
+.personagem-system-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 58px;
-    height: 58px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.13);
-    border-radius: 15px;
-    background: rgba(0, 0, 0, 0.25);
-    color: rgba(255, 255, 255, 0.65);
+
+    width: 44px;
+    height: 44px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+
+    background: rgba(0, 0, 0, 0.2);
+
+    color: rgba(255, 205, 145, 0.9);
+
+    box-shadow:
+        0 0 22px rgba(255, 172, 70, 0.07);
 }
 
-.personagem-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.personagem-menu-button {
+.personagem-more {
     display: flex;
     align-items: center;
     justify-content: center;
+
     width: 34px;
     height: 34px;
-    padding: 0;
-    border: 1px solid transparent;
+
+    border: 0;
     border-radius: 9px;
+
     background: transparent;
-    color: rgba(255, 255, 255, 0.45);
+
+    color: rgba(255, 255, 255, 0.4);
+
     cursor: pointer;
+
     transition:
-        background 0.2s ease,
         color 0.2s ease,
-        border-color 0.2s ease;
+        background 0.2s ease;
 }
 
-.personagem-menu-button:hover {
-    border-color: rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.07);
+.personagem-more:hover {
     color: #ffffff;
+
+    background: rgba(255, 255, 255, 0.07);
 }
+
 
 /* =========================================================
-   INFORMAÇÕES
-========================================================= */
+   CONTEÚDO DO CARD
+   ========================================================= */
 
-.personagem-card-info {
+.personagem-card-content {
     position: relative;
     z-index: 2;
-    margin-top: 24px;
+
+    flex: 1;
+
+    padding: 20px 18px 18px;
 }
 
 .personagem-system {
-    display: inline-flex;
-    align-items: center;
-    min-height: 22px;
-    padding: 0 8px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.07);
-    color: rgba(255, 255, 255, 0.58);
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: rgba(255, 255, 255, 0.4);
+
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+
+    letter-spacing: 0.15em;
     text-transform: uppercase;
 }
 
-.personagem-card-info h3 {
-    margin: 9px 0 0;
+.personagem-card-content h3 {
+    margin: 0;
+
     color: #ffffff;
-    font-size: 21px;
-    line-height: 1.15;
+
+    font-size: 23px;
+    line-height: 1.1;
+
+    letter-spacing: -0.02em;
 }
 
-.personagem-card-info p {
-    margin: 7px 0 0;
-    color: rgba(255, 255, 255, 0.5);
+.personagem-card-content p {
+    margin: 9px 0 0;
+
+    color: rgba(255, 255, 255, 0.55);
+
     font-size: 12px;
+    line-height: 1.5;
 }
 
-/* =========================================================
-   STATUS / ESTATÍSTICAS
-========================================================= */
-
-.personagem-card-stats {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 24px;
-}
-
-.personagem-card-stats > div {
+.personagem-level {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    min-height: 43px;
-    padding: 0 12px;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.16);
+
+    gap: 10px;
+
+    margin-top: 20px;
 }
 
-.personagem-card-stats span {
-    color: rgba(255, 255, 255, 0.38);
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
+.personagem-level span {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 28px;
+    padding: 0 9px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 7px;
+
+    background: rgba(0, 0, 0, 0.17);
+
+    color: rgba(255, 255, 255, 0.55);
+
+    font-size: 10px;
 }
 
-.personagem-card-stats strong {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 12px;
-}
 
 /* =========================================================
-   AÇÕES
-========================================================= */
+   AÇÕES DO CARD
+   ========================================================= */
 
 .personagem-card-actions {
     position: relative;
     z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    margin-top: 18px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .personagem-card-actions button {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 7px;
-    min-height: 36px;
-    padding: 0 10px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 9px;
-    background: rgba(255, 255, 255, 0.04);
-    color: rgba(255, 255, 255, 0.58);
-    font-size: 10px;
+
+    min-height: 43px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: rgba(255, 255, 255, 0.5);
+
+    font-family: inherit;
+    font-size: 11px;
     font-weight: 600;
+
     cursor: pointer;
+
     transition:
-        background 0.2s ease,
         color 0.2s ease,
-        border-color 0.2s ease;
+        background 0.2s ease;
 }
 
-.personagem-card-actions button:first-child {
-    flex: 1;
+.personagem-card-actions button + button {
+    border-left: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .personagem-card-actions button:hover {
-    border-color: rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.09);
     color: #ffffff;
+
+    background: rgba(255, 255, 255, 0.045);
 }
 
+.personagem-card-actions button:last-child:hover {
+    color: #ff8585;
+}
+
+
 /* =========================================================
-   EMPTY STATE
-========================================================= */
+   VARIAÇÃO D&D
+   ========================================================= */
+
+.personagem-card-dnd .personagem-system-icon {
+    color: #ffc276;
+
+    border-color: rgba(255, 183, 88, 0.16);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 180, 75, 0.13),
+            rgba(0, 0, 0, 0.2)
+        );
+}
+
+
+/* =========================================================
+   VARIAÇÃO ORDEM
+   ========================================================= */
+
+.personagem-card-ordem::before {
+    background: rgba(185, 20, 40, 0.1);
+}
+
+.personagem-card-ordem .personagem-system-icon {
+    color: #ef7a86;
+
+    border-color: rgba(200, 40, 55, 0.18);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(150, 20, 35, 0.14),
+            rgba(0, 0, 0, 0.2)
+        );
+}
+
+
+/* =========================================================
+   ESTADO VAZIO
+   ========================================================= */
 
 .personagens-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 340px;
+
+    min-height: 350px;
+
     padding: 45px 25px;
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 20px;
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255, 255, 255, 0.045),
-            rgba(0, 0, 0, 0.2)
-        );
+
     text-align: center;
-    backdrop-filter: blur(12px);
+
+    border: 1px dashed rgba(255, 255, 255, 0.14);
+    border-radius: 20px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 174, 76, 0.06),
+            transparent 55%
+        ),
+        rgba(0, 0, 0, 0.14);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
-.personagens-empty-symbol {
+.personagens-empty-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 72px;
-    height: 72px;
+
+    width: 70px;
+    height: 70px;
+
     margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.13);
+
+    border: 1px solid rgba(255, 186, 100, 0.16);
     border-radius: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.68);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 176, 76, 0.1),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    color: rgba(255, 195, 120, 0.9);
+
     box-shadow:
-        0 0 35px rgba(255, 255, 255, 0.04);
+        0 0 40px rgba(255, 174, 76, 0.08);
 }
 
-.personagens-empty-label {
+.personagens-empty-eyebrow {
+    display: block;
+
     margin-bottom: 8px;
+
     color: rgba(255, 255, 255, 0.4);
+
     font-size: 9px;
     font-weight: 700;
+
     letter-spacing: 0.2em;
 }
 
 .personagens-empty h2 {
     margin: 0;
+
     color: #ffffff;
-    font-size: 25px;
+
+    font-size: clamp(24px, 4vw, 34px);
 }
 
 .personagens-empty p {
-    width: min(500px, 100%);
-    margin: 12px auto 22px;
-    color: rgba(255, 255, 255, 0.52);
-    font-size: 13px;
-    line-height: 1.6;
+    width: min(560px, 100%);
+
+    margin: 12px auto 24px;
+
+    color: rgba(255, 255, 255, 0.55);
+
+    font-size: 14px;
+    line-height: 1.65;
 }
 
 .personagens-empty-button {
@@ -497,518 +682,597 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 42px;
-    padding: 0 17px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.07);
+
+    min-height: 44px;
+
+    padding: 0 18px;
+
+    border: 1px solid rgba(255, 181, 90, 0.25);
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 174, 76, 0.17),
+            rgba(150, 82, 28, 0.1)
+        );
+
     color: #ffffff;
+
+    font-family: inherit;
     font-size: 12px;
     font-weight: 700;
+
     cursor: pointer;
+
     transition:
+        transform 0.25s ease,
         background 0.25s ease,
-        border-color 0.25s ease,
-        transform 0.25s ease;
+        border-color 0.25s ease;
 }
 
 .personagens-empty-button:hover {
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.12);
+
+    border-color: rgba(255, 191, 105, 0.42);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 174, 76, 0.25),
+            rgba(150, 82, 28, 0.16)
+        );
 }
+
 
 /* =========================================================
-   INFORMAÇÃO DO RODAPÉ
-========================================================= */
+   CARDS INFORMATIVOS
+   ========================================================= */
 
-.personagens-footer-info {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-top: 22px;
-    padding: 15px 17px;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 13px;
-    background: rgba(0, 0, 0, 0.18);
+.personagens-info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+
+    margin-top: 24px;
 }
 
-.personagens-footer-icon {
+.personagens-info-card {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 14px;
+
+    padding: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+
+    background: rgba(0, 0, 0, 0.14);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.personagens-info-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto;
-    width: 36px;
-    height: 36px;
+
+    flex-shrink: 0;
+
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.58);
+
+    background: rgba(255, 255, 255, 0.035);
+
+    color: rgba(255, 190, 110, 0.85);
 }
 
-.personagens-footer-info div:last-child {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+.personagens-info-card span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: rgba(255, 255, 255, 0.38);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 0.16em;
 }
 
-.personagens-footer-info strong {
-    color: rgba(255, 255, 255, 0.78);
+.personagens-info-card strong {
+    display: block;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    font-size: 13px;
+}
+
+.personagens-info-card p {
+    margin: 5px 0 0;
+
+    color: rgba(255, 255, 255, 0.46);
+
     font-size: 11px;
-}
-
-.personagens-footer-info span {
-    color: rgba(255, 255, 255, 0.42);
-    font-size: 10px;
     line-height: 1.5;
 }
 
-/* =========================================================
-   MODAL — ESCOLHA DE SISTEMA
-========================================================= */
 
-.personagens-system-modal {
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.personagens-modal-overlay {
     position: fixed;
+
     inset: 0;
-    z-index: 1000;
+
+    z-index: 100;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     padding: 25px;
-    background: rgba(2, 4, 8, 0.78);
+
+    background:
+        rgba(3, 5, 9, 0.78);
+
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
-.personagens-system-modal-content {
+.personagens-system-modal {
     position: relative;
+
     width: min(680px, 100%);
+
     max-height: calc(100vh - 50px);
+
     overflow-y: auto;
+
+    padding: 32px;
+
     border: 1px solid rgba(255, 255, 255, 0.13);
-    border-radius: 22px;
+    border-radius: 24px;
+
     background:
+        radial-gradient(
+            circle at 20% 0%,
+            rgba(255, 176, 76, 0.08),
+            transparent 38%
+        ),
         linear-gradient(
             145deg,
-            rgba(22, 25, 33, 0.98),
-            rgba(7, 9, 14, 0.98)
+            rgba(28, 30, 38, 0.97),
+            rgba(10, 12, 17, 0.98)
         );
+
     box-shadow:
-        0 35px 100px rgba(0, 0, 0, 0.6),
-        0 0 70px rgba(0, 0, 0, 0.35);
+        0 35px 100px rgba(0, 0, 0, 0.55),
+        0 0 70px rgba(255, 170, 70, 0.06);
+
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
-.personagens-system-modal-content::-webkit-scrollbar {
-    width: 5px;
+.personagens-modal-close {
+    position: absolute;
+
+    top: 18px;
+    right: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    color: rgba(255, 255, 255, 0.55);
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
 }
 
-.personagens-system-modal-content::-webkit-scrollbar-track {
-    background: transparent;
+.personagens-modal-close:hover {
+    color: #ffffff;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    transform: rotate(4deg);
 }
 
-.personagens-system-modal-content::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.15);
-}
 
 /* =========================================================
    CABEÇALHO DO MODAL
-========================================================= */
+   ========================================================= */
 
-.personagens-system-modal-header {
+.personagens-modal-header {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 30px 30px 22px;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 5px 35px 28px;
 }
 
-.personagens-system-modal-header > div {
-    min-width: 0;
+.personagens-modal-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid rgba(255, 183, 88, 0.18);
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 174, 76, 0.12),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    color: #ffc47e;
+
+    box-shadow:
+        0 0 35px rgba(255, 174, 76, 0.08);
 }
 
-.personagens-system-modal-header > div > span {
-    display: block;
-    margin-bottom: 7px;
+.personagens-modal-header > span {
+    margin-bottom: 6px;
+
     color: rgba(255, 255, 255, 0.4);
+
     font-size: 9px;
     font-weight: 700;
+
     letter-spacing: 0.2em;
 }
 
-.personagens-system-modal-header h2 {
+.personagens-modal-header h2 {
     margin: 0;
+
     color: #ffffff;
-    font-size: 27px;
-    line-height: 1.1;
+
+    font-size: clamp(25px, 4vw, 32px);
+
+    letter-spacing: -0.02em;
 }
 
-.personagens-system-modal-header p {
+.personagens-modal-header p {
     max-width: 500px;
+
     margin: 10px 0 0;
-    color: rgba(255, 255, 255, 0.48);
-    font-size: 12px;
+
+    color: rgba(255, 255, 255, 0.53);
+
+    font-size: 13px;
     line-height: 1.6;
 }
 
-.personagens-system-modal-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.04);
-    color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease;
-}
-
-.personagens-system-modal-close:hover {
-    border-color: rgba(255, 255, 255, 0.18);
-    background: rgba(255, 255, 255, 0.09);
-    color: #ffffff;
-}
 
 /* =========================================================
    OPÇÕES DE SISTEMA
-========================================================= */
+   ========================================================= */
 
 .personagens-system-options {
-    display: flex;
-    flex-direction: column;
-    gap: 11px;
-    padding: 4px 30px 25px;
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 15px;
 }
 
-.personagens-system-option {
+.personagens-system-choice {
     position: relative;
+
     display: flex;
     align-items: center;
-    gap: 16px;
-    width: 100%;
-    min-height: 105px;
-    padding: 17px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.035);
-    color: #ffffff;
+
+    gap: 14px;
+
+    min-height: 145px;
+
+    padding: 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 17px;
+
     text-align: left;
+
+    color: #ffffff;
+
     cursor: pointer;
+
+    overflow: hidden;
+
     transition:
-        transform 0.25s ease,
-        background 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.28s ease,
+        border-color 0.28s ease,
+        box-shadow 0.28s ease,
+        background 0.28s ease;
 }
 
-.personagens-system-option::before {
+.personagens-system-choice::before {
     content: "";
+
     position: absolute;
-    top: -60px;
-    right: -50px;
-    width: 170px;
-    height: 170px;
+
+    width: 140px;
+    height: 140px;
+
+    top: -65px;
+    right: -55px;
+
     border-radius: 50%;
-    opacity: 0;
-    filter: blur(35px);
+
+    filter: blur(25px);
+
     pointer-events: none;
-    transition: opacity 0.3s ease;
 }
 
-.personagens-system-option:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.18);
-    background: rgba(255, 255, 255, 0.065);
+.personagens-system-choice:hover {
+    transform: translateY(-4px);
 }
 
-.personagens-system-option:hover::before,
-.personagens-system-option.selected::before {
-    opacity: 1;
+
+/* D&D */
+
+.personagens-system-choice-dnd {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 176, 76, 0.1),
+            rgba(255, 255, 255, 0.025)
+        );
 }
 
-.personagens-system-option-dnd::before {
-    background: rgba(205, 136, 52, 0.2);
+.personagens-system-choice-dnd::before {
+    background: rgba(255, 173, 70, 0.12);
 }
 
-.personagens-system-option-ordem::before {
-    background: rgba(185, 25, 45, 0.23);
+.personagens-system-choice-dnd:hover {
+    border-color: rgba(255, 188, 105, 0.35);
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.28),
+        0 0 35px rgba(255, 174, 76, 0.08);
 }
+
+
+/* ORDEM */
+
+.personagens-system-choice-ordem {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(150, 20, 35, 0.1),
+            rgba(255, 255, 255, 0.025)
+        );
+}
+
+.personagens-system-choice-ordem::before {
+    background: rgba(180, 25, 45, 0.12);
+}
+
+.personagens-system-choice-ordem:hover {
+    border-color: rgba(210, 60, 75, 0.35);
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.28),
+        0 0 35px rgba(180, 25, 45, 0.08);
+}
+
 
 /* =========================================================
-   ÍCONE DO SISTEMA
-========================================================= */
+   ÍCONE DAS OPÇÕES
+   ========================================================= */
 
-.personagens-system-option-icon {
+.personagens-system-choice-icon {
     position: relative;
     z-index: 2;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto;
-    width: 58px;
-    height: 58px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    background: rgba(0, 0, 0, 0.22);
-    color: rgba(255, 255, 255, 0.72);
-    transition:
-        border-color 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
+
+    flex-shrink: 0;
+
+    width: 52px;
+    height: 52px;
+
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 14px;
+
+    background: rgba(0, 0, 0, 0.2);
+
+    color: rgba(255, 255, 255, 0.8);
 }
 
-.personagens-system-option-dnd:hover .personagens-system-option-icon,
-.personagens-system-option-dnd.selected .personagens-system-option-icon {
-    border-color: rgba(218, 150, 70, 0.4);
-    background: rgba(218, 150, 70, 0.08);
-    box-shadow: 0 0 25px rgba(218, 150, 70, 0.1);
+.personagens-system-choice-dnd
+.personagens-system-choice-icon {
+    color: #ffc47e;
+
+    border-color: rgba(255, 185, 90, 0.18);
 }
 
-.personagens-system-option-ordem:hover .personagens-system-option-icon,
-.personagens-system-option-ordem.selected .personagens-system-option-icon {
-    border-color: rgba(190, 30, 48, 0.45);
-    background: rgba(190, 30, 48, 0.08);
-    box-shadow: 0 0 25px rgba(190, 30, 48, 0.12);
+.personagens-system-choice-ordem
+.personagens-system-choice-icon {
+    color: #ee7782;
+
+    border-color: rgba(200, 45, 60, 0.18);
 }
+
 
 /* =========================================================
-   INFORMAÇÕES DO SISTEMA
-========================================================= */
+   TEXTO DAS OPÇÕES
+   ========================================================= */
 
-.personagens-system-option-info {
+.personagens-system-choice-content {
     position: relative;
     z-index: 2;
+
     flex: 1;
+
     min-width: 0;
 }
 
-.personagens-system-option-info > span {
+.personagens-system-choice-content span {
     display: block;
+
     margin-bottom: 4px;
-    color: rgba(255, 255, 255, 0.35);
+
+    color: rgba(255, 255, 255, 0.38);
+
     font-size: 8px;
     font-weight: 700;
+
     letter-spacing: 0.17em;
 }
 
-.personagens-system-option-info h3 {
-    margin: 0;
+.personagens-system-choice-content strong {
+    display: block;
+
     color: #ffffff;
-    font-size: 17px;
+
+    font-size: 15px;
+
     line-height: 1.2;
 }
 
-.personagens-system-option-info p {
-    max-width: 440px;
+.personagens-system-choice-content p {
     margin: 6px 0 0;
-    color: rgba(255, 255, 255, 0.45);
+
+    color: rgba(255, 255, 255, 0.48);
+
     font-size: 10px;
-    line-height: 1.5;
+
+    line-height: 1.45;
 }
 
-.personagens-system-option-arrow {
+.personagens-system-choice > svg:last-child {
     position: relative;
     z-index: 2;
-    flex: 0 0 auto;
-    color: rgba(255, 255, 255, 0.3);
+
+    flex-shrink: 0;
+
+    color: rgba(255, 255, 255, 0.35);
+
     transition:
         transform 0.25s ease,
         color 0.25s ease;
 }
 
-.personagens-system-option:hover .personagens-system-option-arrow,
-.personagens-system-option.selected .personagens-system-option-arrow {
-    transform: translateX(3px);
-    color: rgba(255, 255, 255, 0.75);
-}
-
-/* =========================================================
-   SELEÇÃO
-========================================================= */
-
-.personagens-system-option.selected {
-    border-color: rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.personagens-system-option-dnd.selected {
-    border-color: rgba(218, 150, 70, 0.35);
-    box-shadow:
-        0 0 0 1px rgba(218, 150, 70, 0.06),
-        0 12px 35px rgba(218, 150, 70, 0.07);
-}
-
-.personagens-system-option-ordem.selected {
-    border-color: rgba(190, 30, 48, 0.4);
-    box-shadow:
-        0 0 0 1px rgba(190, 30, 48, 0.07),
-        0 12px 35px rgba(190, 30, 48, 0.08);
-}
-
-/* =========================================================
-   OUTROS SISTEMAS
-========================================================= */
-
-.personagens-system-coming {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 2px;
-    padding: 13px 15px;
-    border: 1px dashed rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.13);
-}
-
-.personagens-system-coming-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    width: 35px;
-    height: 35px;
-    border-radius: 9px;
-    background: rgba(255, 255, 255, 0.04);
-    color: rgba(255, 255, 255, 0.4);
-}
-
-.personagens-system-coming > div:last-child {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.personagens-system-coming strong {
-    color: rgba(255, 255, 255, 0.62);
-    font-size: 10px;
-}
-
-.personagens-system-coming span {
-    color: rgba(255, 255, 255, 0.34);
-    font-size: 9px;
-    line-height: 1.4;
-}
-
-/* =========================================================
-   RODAPÉ DO MODAL
-========================================================= */
-
-.personagens-system-modal-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 17px 30px 22px;
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.personagens-system-selected {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 10px;
-}
-
-.personagens-system-selected svg {
-    flex: 0 0 auto;
-}
-
-.personagens-system-selected strong {
-    color: rgba(255, 255, 255, 0.78);
-}
-
-.personagens-system-continue {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    flex: 0 0 auto;
-    min-height: 40px;
-    padding: 0 16px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.08);
+.personagens-system-choice:hover > svg:last-child {
     color: #ffffff;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease,
-        opacity 0.2s ease;
+
+    transform: translateX(3px);
 }
 
-.personagens-system-continue:hover:not(:disabled) {
-    transform: translateY(-1px);
-    border-color: rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.13);
-}
-
-.personagens-system-continue:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-}
 
 /* =========================================================
-   TEMA D&D
-========================================================= */
+   D&D THEME
+   ========================================================= */
 
-.personagens-page .personagens-create-button:hover {
+.page-base-dnd .personagens-empty-icon,
+.page-base-dnd .personagens-modal-symbol {
     box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.2),
-        0 0 25px rgba(210, 145, 65, 0.05);
+        0 0 40px rgba(255, 174, 76, 0.08);
 }
 
-.page-base-dnd .personagens-empty-symbol {
+
+/* =========================================================
+   ORDEM THEME
+   ========================================================= */
+
+.page-base-ordem .personagens-create-button {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(155, 22, 38, 0.2),
+            rgba(80, 10, 18, 0.12)
+        );
+
     box-shadow:
-        0 0 35px rgba(210, 145, 65, 0.07);
+        0 8px 25px rgba(0, 0, 0, 0.18),
+        0 0 25px rgba(180, 20, 40, 0.07);
 }
 
-.page-base-dnd .personagens-system-continue:not(:disabled) {
-    border-color: rgba(215, 145, 62, 0.28);
-    background: rgba(215, 145, 62, 0.08);
+.page-base-ordem .personagens-create-button:hover {
+    border-color: rgba(220, 60, 75, 0.35);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(175, 25, 42, 0.28),
+            rgba(80, 10, 18, 0.18)
+        );
 }
 
-/* =========================================================
-   TEMA ORDEM
-========================================================= */
+.page-base-ordem .personagens-empty-icon {
+    border-color: rgba(210, 50, 65, 0.16);
 
-.page-base-ordem .personagens-empty-symbol {
+    color: rgba(235, 100, 110, 0.9);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(175, 25, 42, 0.1),
+            rgba(255, 255, 255, 0.025)
+        );
+
     box-shadow:
-        0 0 35px rgba(185, 25, 45, 0.09);
+        0 0 40px rgba(180, 20, 40, 0.08);
 }
 
-.page-base-ordem .personagens-system-continue:not(:disabled) {
-    border-color: rgba(190, 30, 48, 0.3);
-    background: rgba(190, 30, 48, 0.08);
+.page-base-ordem
+.personagens-empty-button {
+    border-color: rgba(205, 45, 60, 0.25);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(165, 22, 40, 0.18),
+            rgba(80, 10, 18, 0.1)
+        );
 }
+
 
 /* =========================================================
-   RESPONSIVIDADE — TABLET
-========================================================= */
+   RESPONSIVIDADE
+   ========================================================= */
 
-@media (max-width: 1000px) {
-    .personagens-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
+@media (max-width: 900px) {
 
-/* =========================================================
-   RESPONSIVIDADE — 800PX
-========================================================= */
-
-@media (max-width: 800px) {
     .personagens-toolbar {
         align-items: flex-start;
         flex-direction: column;
@@ -1018,7 +1282,7 @@
         width: 100%;
     }
 
-    .personagens-controls {
+    .personagens-filters {
         align-items: stretch;
         flex-direction: column;
     }
@@ -1027,143 +1291,148 @@
         width: 100%;
     }
 
-    .personagens-filters {
+    .personagens-filter-buttons {
         width: 100%;
     }
 
-    .personagens-filters button {
+    .personagens-filter-buttons button {
         flex: 1;
     }
 
-    .personagens-system-modal-content {
-        width: 100%;
+    .personagens-system-options {
+        grid-template-columns: 1fr;
     }
 }
 
-/* =========================================================
-   RESPONSIVIDADE — MOBILE
-========================================================= */
 
-@media (max-width: 620px) {
+@media (max-width: 700px) {
+
+    .personagens-toolbar {
+        padding: 20px;
+    }
+
     .personagens-grid {
         grid-template-columns: 1fr;
     }
 
-    .personagens-empty {
-        min-height: 300px;
-        padding: 35px 18px;
-    }
-
-    .personagens-empty h2 {
-        font-size: 22px;
-    }
-
-    .personagens-footer-info {
-        align-items: flex-start;
+    .personagens-info-grid {
+        grid-template-columns: 1fr;
     }
 
     .personagens-system-modal {
-        align-items: flex-end;
-        padding: 10px;
+        padding: 25px 20px;
     }
 
-    .personagens-system-modal-content {
-        max-height: calc(100vh - 20px);
-        border-radius: 19px;
+    .personagens-modal-header {
+        padding-left: 20px;
+        padding-right: 20px;
     }
 
-    .personagens-system-modal-header {
-        padding: 23px 20px 18px;
-    }
-
-    .personagens-system-modal-header h2 {
-        font-size: 23px;
-    }
-
-    .personagens-system-modal-header p {
-        font-size: 11px;
-    }
-
-    .personagens-system-options {
-        padding: 3px 20px 20px;
-    }
-
-    .personagens-system-option {
-        min-height: 94px;
-        padding: 13px;
-        gap: 12px;
-    }
-
-    .personagens-system-option-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 13px;
-    }
-
-    .personagens-system-option-info h3 {
-        font-size: 15px;
-    }
-
-    .personagens-system-option-info p {
-        font-size: 9px;
-    }
-
-    .personagens-system-option-arrow {
-        display: none;
-    }
-
-    .personagens-system-modal-footer {
-        align-items: stretch;
-        flex-direction: column;
-        padding: 15px 20px 20px;
-    }
-
-    .personagens-system-selected {
-        justify-content: center;
-        text-align: center;
-    }
-
-    .personagens-system-continue {
-        width: 100%;
+    .personagens-system-choice {
+        min-height: 125px;
     }
 }
 
-/* =========================================================
-   MOBILE PEQUENO
-========================================================= */
 
-@media (max-width: 420px) {
-    .personagem-card {
-        padding: 16px;
+@media (max-width: 520px) {
+
+    .personagens-toolbar-text h2 {
+        font-size: 23px;
     }
 
-    .personagem-card-info h3 {
-        font-size: 19px;
+    .personagens-filter-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 
-    .personagens-filters button {
-        padding: 0 7px;
-        font-size: 10px;
+    .personagens-filter-buttons button:first-child {
+        grid-column: 1 / -1;
     }
 
-    .personagens-system-modal-header {
-        gap: 10px;
+    .personagens-empty {
+        min-height: 320px;
+
+        padding:
+            35px
+            18px;
     }
 
-    .personagens-system-modal-close {
-        width: 32px;
-        height: 32px;
+    .personagens-empty h2 {
+        font-size: 25px;
     }
 
-    .personagens-system-option {
+    .personagens-modal-overlay {
+        padding: 12px;
+    }
+
+    .personagens-system-modal {
+        max-height: calc(100vh - 24px);
+
+        padding:
+            24px
+            15px
+            20px;
+
+        border-radius: 20px;
+    }
+
+    .personagens-modal-header {
+        padding:
+            5px
+            28px
+            22px;
+    }
+
+    .personagens-modal-header h2 {
+        font-size: 25px;
+    }
+
+    .personagens-system-choice {
+        gap: 11px;
+
+        padding: 15px;
+
+        min-height: 118px;
+    }
+
+    .personagens-system-choice-icon {
+        width: 45px;
+        height: 45px;
+    }
+
+    .personagens-system-choice-content strong {
+        font-size: 13px;
+    }
+
+    .personagens-system-choice-content p {
+        font-size: 9px;
+    }
+}
+
+
+@media (max-width: 380px) {
+
+    .personagens-toolbar {
+        padding: 17px;
+    }
+
+    .personagens-create-button {
+        font-size: 12px;
+    }
+
+    .personagens-system-choice {
         align-items: flex-start;
     }
 
-    .personagens-system-option-info p {
+    .personagens-system-choice > svg:last-child {
         display: none;
     }
 
-    .personagens-system-coming {
-        align-items: flex-start;
+    .personagens-system-choice-content strong {
+        font-size: 12px;
+    }
+
+    .personagens-info-card {
+        padding: 15px;
     }
 }
