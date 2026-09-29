@@ -10,156 +10,60 @@ import ProcurarJogadores from "../pages/ProcurarJogadores/ProcurarJogadores";
 import Configuracoes from "../pages/Configuracoes/Configuracoes";
 import Doacao from "../pages/Doacao/Doacao";
 
+import CriarPersonagem from "../pages/CriarPersonagem/CriarPersonagem";
+
 export default function AppNavigation({
     currentPage,
     setCurrentPage,
 }) {
-
     function navigate(page) {
         setCurrentPage(page);
     }
 
-
     switch (currentPage) {
-
-        /* =========================================
-           HOME
-        ========================================= */
-
         case "home":
-            return (
-                <Home
-                    onNavigate={navigate}
-                />
-            );
-
-
-        /* =========================================
-           PERFIL
-        ========================================= */
+            return <Home onNavigate={navigate} />;
 
         case "perfil":
         case "profile":
-            return (
-                <Perfil
-                    onNavigate={navigate}
-                />
-            );
-
-
-        /* =========================================
-           PERSONAGENS
-        ========================================= */
+            return <Perfil onNavigate={navigate} />;
 
         case "personagens":
         case "characters":
-            return (
-                <Personagens
-                    onNavigate={navigate}
-                />
-            );
+            return <Personagens onNavigate={navigate} />;
 
-
-        /* =========================================
-           CAMPANHAS
-        ========================================= */
+        case "criar-personagem":
+            return <CriarPersonagem onNavigate={navigate} />;
 
         case "campanhas":
         case "campaigns":
-            return (
-                <Campanhas
-                    onNavigate={navigate}
-                />
-            );
-
-
-        /* =========================================
-           MAPAS
-        ========================================= */
+            return <Campanhas onNavigate={navigate} />;
 
         case "mapas":
         case "maps":
-            return (
-                <Mapas
-                    onNavigate={navigate}
-                />
-            );
-
-
-        /* =========================================
-           LIVROS
-        ========================================= */
+            return <Mapas onNavigate={navigate} />;
 
         case "livros":
         case "books":
-            return (
-                <Livros
-                    onNavigate={navigate}
-                />
-            );
-
-
-        /* =========================================
-           GRUPOS
-        ========================================= */
+            return <Livros onNavigate={navigate} />;
 
         case "grupos":
         case "groups":
-            return (
-                <Grupos
-                    onNavigate={navigate}
-                />
-            );
-
-
-        /* =========================================
-           PROCURAR JOGADORES
-        ========================================= */
+            return <Grupos onNavigate={navigate} />;
 
         case "procurar-jogadores":
         case "players":
-            return (
-                <ProcurarJogadores
-                    onNavigate={navigate}
-                />
-            );
-
-
-        /* =========================================
-           CONFIGURAÇÕES
-        ========================================= */
+            return <ProcurarJogadores onNavigate={navigate} />;
 
         case "configuracoes":
         case "settings":
-            return (
-                <Configuracoes
-                    onNavigate={navigate}
-                />
-            );
-
-
-        /* =========================================
-           DOAÇÃO
-        ========================================= */
+            return <Configuracoes onNavigate={navigate} />;
 
         case "doacao":
         case "donation":
-            return (
-                <Doacao
-                    onNavigate={navigate}
-                />
-            );
-
-
-        /* =========================================
-           PADRÃO
-        ========================================= */
+            return <Doacao onNavigate={navigate} />;
 
         default:
-            return (
-                <Home
-                    onNavigate={navigate}
-                />
-            );
+            return <Home onNavigate={navigate} />;
     }
 }
