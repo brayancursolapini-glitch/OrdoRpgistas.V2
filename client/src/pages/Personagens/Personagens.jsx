@@ -14,7 +14,8 @@ import {
     UserRound,
     X,
     ChevronRight,
-    Lock,
+    Crown,
+    Dice5,
 } from "lucide-react";
 
 import PageBase from "../PageBase";
@@ -27,15 +28,21 @@ export default function Personagens({ onNavigate }) {
 
     const [characters, setCharacters] = useState([]);
 
+    // Controle da janela de escolha do sistema
     const [showSystemSelector, setShowSystemSelector] = useState(false);
+
+    // Sistema escolhido para criação
+    const [selectedSystem, setSelectedSystem] = useState(null);
 
     const filteredCharacters = useMemo(() => {
         return characters.filter((character) => {
-            const searchValue = search.toLowerCase();
-
             const matchesSearch =
-                character.name.toLowerCase().includes(searchValue) ||
-                character.system.toLowerCase().includes(searchValue);
+                character.name
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                character.system
+                    .toLowerCase()
+                    .includes(search.toLowerCase());
 
             const matchesFilter =
                 filter === "todos" ||
@@ -45,32 +52,52 @@ export default function Personagens({ onNavigate }) {
         });
     }, [characters, search, filter]);
 
+    /*
+     * Abre a escolha de sistema.
+     */
     function handleCreateCharacter() {
+        setSelectedSystem(null);
         setShowSystemSelector(true);
     }
 
+    /*
+     * Fecha a escolha de sistema.
+     */
     function handleCloseSystemSelector() {
         setShowSystemSelector(false);
+        setSelectedSystem(null);
     }
 
+    /*
+     * Seleciona o sistema para criação.
+     */
     function handleSelectSystem(system) {
-        if (system === "dnd") {
-            console.log("Abrir criador D&D 5e");
+        setSelectedSystem(system);
+    }
 
-            setShowSystemSelector(false);
+    /*
+     * Continua para o criador do personagem.
+     *
+     * Nesta etapa estamos preparando a estrutura.
+     * O próximo passo será colocar aqui o criador
+     * completo de D&D 5e e, depois, Ordem Paranormal.
+     */
+    function handleContinueToCreator() {
+        if (!selectedSystem) return;
 
+        if (selectedSystem === "dnd") {
+            console.log("Abrir criador de personagem D&D 5e");
             return;
         }
 
-        if (system === "ordem") {
-            console.log("Abrir criador Ordem Paranormal");
-
-            setShowSystemSelector(false);
-
-            return;
+        if (selectedSystem === "ordem") {
+            console.log("Abrir criador de personagem Ordem Paranormal");
         }
     }
 
+    /*
+     * Exclui um personagem.
+     */
     function handleDeleteCharacter(id) {
         const confirmed = window.confirm(
             "Deseja realmente excluir este personagem?"
@@ -98,9 +125,7 @@ export default function Personagens({ onNavigate }) {
                     ====================================================== */}
 
                     <section className="personagens-toolbar">
-
                         <div className="personagens-toolbar-info">
-
                             <span className="personagens-section-label">
                                 SUA COLEÇÃO
                             </span>
@@ -113,7 +138,6 @@ export default function Personagens({ onNavigate }) {
                             <p>
                                 Seus aventureiros ficam reunidos aqui.
                             </p>
-
                         </div>
 
                         <motion.button
@@ -126,9 +150,7 @@ export default function Personagens({ onNavigate }) {
                             <Plus size={19} />
                             <span>Criar personagem</span>
                         </motion.button>
-
                     </section>
-
 
                     {/* =====================================================
                         BUSCA E FILTROS
@@ -137,7 +159,6 @@ export default function Personagens({ onNavigate }) {
                     <section className="personagens-controls">
 
                         <div className="personagens-search">
-
                             <Search size={18} />
 
                             <input
@@ -158,9 +179,7 @@ export default function Personagens({ onNavigate }) {
                                     ×
                                 </button>
                             )}
-
                         </div>
-
 
                         <div className="personagens-filters">
 
@@ -176,7 +195,6 @@ export default function Personagens({ onNavigate }) {
                                 Todos
                             </button>
 
-
                             <button
                                 type="button"
                                 className={
@@ -189,7 +207,6 @@ export default function Personagens({ onNavigate }) {
                                 <Sword size={15} />
                                 D&D
                             </button>
-
 
                             <button
                                 type="button"
@@ -205,20 +222,16 @@ export default function Personagens({ onNavigate }) {
                             </button>
 
                         </div>
-
                     </section>
-
 
                     {/* =====================================================
                         PERSONAGENS
                     ====================================================== */}
 
                     {filteredCharacters.length > 0 ? (
-
                         <section className="personagens-grid">
 
                             {filteredCharacters.map((character) => (
-
                                 <motion.article
                                     key={character.id}
                                     className={`personagem-card personagem-card-${character.systemId}`}
@@ -260,7 +273,6 @@ export default function Personagens({ onNavigate }) {
 
                                     </div>
 
-
                                     <div className="personagem-card-info">
 
                                         <span className="personagem-system">
@@ -281,7 +293,6 @@ export default function Personagens({ onNavigate }) {
                                         </p>
 
                                     </div>
-
 
                                     <div className="personagem-card-stats">
 
@@ -304,7 +315,6 @@ export default function Personagens({ onNavigate }) {
 
                                     </div>
 
-
                                     <div className="personagem-card-actions">
 
                                         <button
@@ -320,7 +330,6 @@ export default function Personagens({ onNavigate }) {
                                             Abrir ficha
                                         </button>
 
-
                                         <button
                                             type="button"
                                             onClick={() =>
@@ -333,7 +342,6 @@ export default function Personagens({ onNavigate }) {
                                         >
                                             <Edit3 size={16} />
                                         </button>
-
 
                                         <button
                                             type="button"
@@ -350,13 +358,10 @@ export default function Personagens({ onNavigate }) {
                                     </div>
 
                                 </motion.article>
-
                             ))}
 
                         </section>
-
                     ) : (
-
                         <motion.section
                             className="personagens-empty"
                             initial={{
@@ -400,12 +405,10 @@ export default function Personagens({ onNavigate }) {
                             </button>
 
                         </motion.section>
-
                     )}
 
-
                     {/* =====================================================
-                        RODAPÉ
+                        RODAPÉ INFORMATIVO
                     ====================================================== */}
 
                     <section className="personagens-footer-info">
@@ -415,7 +418,6 @@ export default function Personagens({ onNavigate }) {
                         </div>
 
                         <div>
-
                             <strong>
                                 Seus personagens, suas histórias.
                             </strong>
@@ -425,66 +427,67 @@ export default function Personagens({ onNavigate }) {
                                 completas para D&D, Ordem Paranormal
                                 e outros sistemas.
                             </span>
-
                         </div>
 
                     </section>
 
                 </div>
-
             </PageBase>
 
-
             {/* =========================================================
-                MODAL DE ESCOLHA DO SISTEMA
+                SELETOR DE SISTEMA
             ========================================================== */}
 
             <AnimatePresence>
-
                 {showSystemSelector && (
-
                     <motion.div
-                        className="personagens-system-modal-overlay"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onMouseDown={(event) => {
-                            if (event.target === event.currentTarget) {
-                                handleCloseSystemSelector();
-                            }
+                        className="personagens-system-modal"
+                        initial={{
+                            opacity: 0,
                         }}
+                        animate={{
+                            opacity: 1,
+                        }}
+                        exit={{
+                            opacity: 0,
+                        }}
+                        onClick={handleCloseSystemSelector}
                     >
 
                         <motion.div
-                            className="personagens-system-modal"
+                            className="personagens-system-modal-content"
                             initial={{
                                 opacity: 0,
-                                y: 25,
-                                scale: 0.96,
+                                scale: 0.94,
+                                y: 20,
                             }}
                             animate={{
                                 opacity: 1,
-                                y: 0,
                                 scale: 1,
+                                y: 0,
                             }}
                             exit={{
                                 opacity: 0,
+                                scale: 0.94,
                                 y: 20,
-                                scale: 0.96,
                             }}
                             transition={{
-                                duration: 0.25,
+                                duration: 0.3,
                             }}
+                            onClick={(event) =>
+                                event.stopPropagation()
+                            }
                         >
 
-                            {/* CABEÇALHO */}
+                            {/* =================================================
+                                CABEÇALHO DO MODAL
+                            ================================================== */}
 
                             <div className="personagens-system-modal-header">
 
                                 <div>
-
                                     <span>
-                                        NOVO PERSONAGEM
+                                        NOVA AVENTURA
                                     </span>
 
                                     <h2>
@@ -492,16 +495,18 @@ export default function Personagens({ onNavigate }) {
                                     </h2>
 
                                     <p>
-                                        Cada sistema possui suas próprias
-                                        regras, mecânicas e ficha.
+                                        Cada sistema terá sua própria
+                                        ficha, regras, atributos,
+                                        habilidades e mecânicas.
                                     </p>
-
                                 </div>
 
                                 <button
                                     type="button"
                                     className="personagens-system-modal-close"
-                                    onClick={handleCloseSystemSelector}
+                                    onClick={
+                                        handleCloseSystemSelector
+                                    }
                                     aria-label="Fechar"
                                 >
                                     <X size={20} />
@@ -509,31 +514,36 @@ export default function Personagens({ onNavigate }) {
 
                             </div>
 
-
-                            {/* SISTEMAS */}
+                            {/* =================================================
+                                SISTEMAS
+                            ================================================== */}
 
                             <div className="personagens-system-options">
 
-                                {/* D&D */}
+                                {/* =================================================
+                                    D&D
+                                ================================================== */}
 
-                                <motion.button
+                                <button
                                     type="button"
-                                    className="personagens-system-card personagens-system-card-dnd"
+                                    className={`personagens-system-option personagens-system-option-dnd ${
+                                        selectedSystem === "dnd"
+                                            ? "selected"
+                                            : ""
+                                    }`}
                                     onClick={() =>
                                         handleSelectSystem("dnd")
                                     }
-                                    whileHover={{ y: -4 }}
-                                    whileTap={{ scale: 0.98 }}
                                 >
 
-                                    <div className="personagens-system-card-icon">
-                                        <Sword size={30} />
+                                    <div className="personagens-system-option-icon">
+                                        <Sword size={28} />
                                     </div>
 
-                                    <div className="personagens-system-card-content">
+                                    <div className="personagens-system-option-info">
 
                                         <span>
-                                            D&D 5e
+                                            SISTEMA
                                         </span>
 
                                         <h3>
@@ -541,112 +551,145 @@ export default function Personagens({ onNavigate }) {
                                         </h3>
 
                                         <p>
-                                            Crie um aventureiro,
+                                            Crie seu aventureiro,
                                             escolha sua raça,
-                                            classe e construa sua ficha.
+                                            classe, antecedente
+                                            e construa sua ficha.
                                         </p>
 
                                     </div>
 
                                     <ChevronRight
-                                        className="personagens-system-card-arrow"
+                                        className="personagens-system-option-arrow"
                                         size={22}
                                     />
 
-                                </motion.button>
+                                </button>
 
+                                {/* =================================================
+                                    ORDEM PARANORMAL
+                                ================================================== */}
 
-                                {/* ORDEM */}
-
-                                <motion.button
+                                <button
                                     type="button"
-                                    className="personagens-system-card personagens-system-card-ordem"
+                                    className={`personagens-system-option personagens-system-option-ordem ${
+                                        selectedSystem === "ordem"
+                                            ? "selected"
+                                            : ""
+                                    }`}
                                     onClick={() =>
                                         handleSelectSystem("ordem")
                                     }
-                                    whileHover={{ y: -4 }}
-                                    whileTap={{ scale: 0.98 }}
                                 >
 
-                                    <div className="personagens-system-card-icon">
-                                        <Shield size={30} />
+                                    <div className="personagens-system-option-icon">
+                                        <Shield size={28} />
                                     </div>
 
-                                    <div className="personagens-system-card-content">
+                                    <div className="personagens-system-option-info">
 
                                         <span>
-                                            ORDEM PARANORMAL
+                                            SISTEMA
                                         </span>
 
                                         <h3>
-                                            Investigação e horror
+                                            Ordem Paranormal
                                         </h3>
 
                                         <p>
-                                            Crie seu agente e prepare-se
-                                            para enfrentar o paranormal.
+                                            Crie um agente e prepare
+                                            sua ficha para enfrentar
+                                            o paranormal.
                                         </p>
 
                                     </div>
 
                                     <ChevronRight
-                                        className="personagens-system-card-arrow"
+                                        className="personagens-system-option-arrow"
                                         size={22}
                                     />
 
-                                </motion.button>
+                                </button>
 
+                                {/* =================================================
+                                    FUTUROS SISTEMAS
+                                ================================================== */}
 
-                                {/* OUTROS */}
+                                <div className="personagens-system-coming">
 
-                                <div className="personagens-system-card personagens-system-card-disabled">
-
-                                    <div className="personagens-system-card-icon">
-                                        <Lock size={27} />
+                                    <div className="personagens-system-coming-icon">
+                                        <Dice5 size={21} />
                                     </div>
 
-                                    <div className="personagens-system-card-content">
+                                    <div>
+                                        <strong>
+                                            Outros sistemas
+                                        </strong>
 
                                         <span>
-                                            EM DESENVOLVIMENTO
-                                        </span>
-
-                                        <h3>
-                                            Outros sistemas
-                                        </h3>
-
-                                        <p>
                                             One Piece, Jujutsu Kaisen
-                                            e outros sistemas chegarão
-                                            futuramente.
-                                        </p>
-
+                                            e outros sistemas poderão
+                                            ser adicionados futuramente.
+                                        </span>
                                     </div>
 
                                 </div>
 
                             </div>
 
-
-                            {/* RODAPÉ */}
+                            {/* =================================================
+                                RODAPÉ DO MODAL
+                            ================================================== */}
 
                             <div className="personagens-system-modal-footer">
 
-                                <Sparkles size={16} />
+                                <div className="personagens-system-selected">
 
-                                <span>
-                                    Cada sistema terá seu próprio
-                                    criador de personagem.
-                                </span>
+                                    {selectedSystem ? (
+                                        <>
+                                            <Sparkles size={16} />
+
+                                            <span>
+                                                Sistema selecionado:{" "}
+                                                <strong>
+                                                    {selectedSystem ===
+                                                    "dnd"
+                                                        ? "D&D 5e"
+                                                        : "Ordem Paranormal"}
+                                                </strong>
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Crown size={16} />
+
+                                            <span>
+                                                Selecione um sistema
+                                                para continuar.
+                                            </span>
+                                        </>
+                                    )}
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    className="personagens-system-continue"
+                                    disabled={!selectedSystem}
+                                    onClick={
+                                        handleContinueToCreator
+                                    }
+                                >
+                                    Continuar
+                                    <ChevronRight size={18} />
+                                </button>
 
                             </div>
 
                         </motion.div>
 
                     </motion.div>
-
                 )}
-
             </AnimatePresence>
         </>
     );
