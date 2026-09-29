@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 import {
     Shield,
@@ -13,9 +13,6 @@ import {
     BookOpen,
     UserRound,
     X,
-    ChevronRight,
-    Crown,
-    Dice5,
 } from "lucide-react";
 
 import PageBase from "../PageBase";
@@ -23,218 +20,202 @@ import PageBase from "../PageBase";
 import "./Personagens.css";
 
 export default function Personagens({ onNavigate }) {
+    const [characters, setCharacters] = useState([]);
+
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("todos");
 
-    const [characters, setCharacters] = useState([]);
-
-    // Controle da janela de escolha do sistema
     const [showSystemSelector, setShowSystemSelector] = useState(false);
 
-    // Sistema escolhido para criação
-    const [selectedSystem, setSelectedSystem] = useState(null);
-
     const filteredCharacters = useMemo(() => {
+        const normalizedSearch = search.trim().toLowerCase();
+
         return characters.filter((character) => {
             const matchesSearch =
-                character.name
-                    .toLowerCase()
-                    .includes(search.toLowerCase()) ||
-                character.system
-                    .toLowerCase()
-                    .includes(search.toLowerCase());
+                !normalizedSearch ||
+                character.name.toLowerCase().includes(normalizedSearch) ||
+                character.systemName.toLowerCase().includes(normalizedSearch);
 
             const matchesFilter =
                 filter === "todos" ||
-                character.systemId === filter;
+                character.system === filter;
 
             return matchesSearch && matchesFilter;
         });
     }, [characters, search, filter]);
 
-    /*
-     * Abre a escolha de sistema.
-     */
-    function handleCreateCharacter() {
-        setSelectedSystem(null);
+    function openCharacterCreator() {
         setShowSystemSelector(true);
     }
 
-    /*
-     * Fecha a escolha de sistema.
-     */
-    function handleCloseSystemSelector() {
+    function closeSystemSelector() {
         setShowSystemSelector(false);
-        setSelectedSystem(null);
     }
 
-    /*
-     * Seleciona o sistema para criação.
-     */
     function handleSelectSystem(system) {
-        setSelectedSystem(system);
-    }
-
-    /*
-     * Continua para o criador do personagem.
-     *
-     * Nesta etapa estamos preparando a estrutura.
-     * O próximo passo será colocar aqui o criador
-     * completo de D&D 5e e, depois, Ordem Paranormal.
-     */
-    function handleContinueToCreator() {
-        if (!selectedSystem) return;
-
-        if (selectedSystem === "dnd") {
-            console.log("Abrir criador de personagem D&D 5e");
+        if (system === "dnd") {
+            setShowSystemSelector(false);
+            onNavigate?.("criar-personagem");
             return;
         }
 
-        if (selectedSystem === "ordem") {
-            console.log("Abrir criador de personagem Ordem Paranormal");
+        if (system === "ordem") {
+            setShowSystemSelector(false);
+
+            alert(
+                "O criador de personagem de Ordem Paranormal será desenvolvido em seguida."
+            );
+
+            return;
         }
     }
 
-    /*
-     * Exclui um personagem.
-     */
     function handleDeleteCharacter(id) {
+        const character = characters.find(
+            (item) => item.id === id
+        );
+
+        if (!character) return;
+
         const confirmed = window.confirm(
-            "Deseja realmente excluir este personagem?"
+            `Deseja realmente excluir o personagem "${character.name}"?`
         );
 
         if (!confirmed) return;
 
-        setCharacters((current) =>
-            current.filter((character) => character.id !== id)
+        setCharacters((currentCharacters) =>
+            currentCharacters.filter(
+                (item) => item.id !== id
+            )
+        );
+    }
+
+    function handleEditCharacter(character) {
+        console.log(
+            "Editar personagem:",
+            character
+        );
+
+        alert(
+            "A edição completa da ficha será conectada ao criador de personagem."
         );
     }
 
     return (
-        <>
-            <PageBase
-                title="Meus Personagens"
-                subtitle="Crie, organize e acompanhe seus personagens em todos os seus sistemas de RPG."
-                icon={Shield}
-                onNavigate={onNavigate}
-            >
-                <div className="personagens-page">
+        <PageBase
+            title="Personagens"
+            subtitle="Crie, organize e acompanhe todos os seus personagens."
+            icon={Shield}
+            onNavigate={onNavigate}
+        >
+            <div className="personagens-page">
 
-                    {/* =====================================================
-                        CABEÇALHO
-                    ====================================================== */}
+                {/* TOPO */}
+                <motion.section
+                    className="personagens-toolbar"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <div className="personagens-toolbar-text">
+                        <span>SEU ARQUIVO DE AVENTUREIROS</span>
 
-                    <section className="personagens-toolbar">
-                        <div className="personagens-toolbar-info">
-                            <span className="personagens-section-label">
-                                SUA COLEÇÃO
-                            </span>
+                        <h2>
+                            {characters.length === 0
+                                ? "Nenhum personagem ainda"
+                                : `${characters.length} personagem${characters.length > 1 ? "s" : ""}`}
+                        </h2>
 
-                            <h2>
-                                Personagens
-                                <span>{characters.length}</span>
-                            </h2>
+                        <p>
+                            Crie fichas para suas aventuras de
+                            D&D e outros sistemas.
+                        </p>
+                    </div>
 
-                            <p>
-                                Seus aventureiros ficam reunidos aqui.
-                            </p>
-                        </div>
+                    <button
+                        type="button"
+                        className="personagens-create-button"
+                        onClick={openCharacterCreator}
+                    >
+                        <Plus size={18} />
+                        <span>Criar personagem</span>
+                    </button>
+                </motion.section>
 
-                        <motion.button
+                {/* FILTROS */}
+                <section className="personagens-filters">
+
+                    <div className="personagens-search">
+                        <Search size={18} />
+
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(event) =>
+                                setSearch(event.target.value)
+                            }
+                            placeholder="Pesquisar personagem..."
+                        />
+                    </div>
+
+                    <div className="personagens-filter-buttons">
+
+                        <button
                             type="button"
-                            className="personagens-create-button"
-                            onClick={handleCreateCharacter}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.97 }}
+                            className={
+                                filter === "todos"
+                                    ? "active"
+                                    : ""
+                            }
+                            onClick={() =>
+                                setFilter("todos")
+                            }
                         >
-                            <Plus size={19} />
-                            <span>Criar personagem</span>
-                        </motion.button>
-                    </section>
+                            Todos
+                        </button>
 
-                    {/* =====================================================
-                        BUSCA E FILTROS
-                    ====================================================== */}
+                        <button
+                            type="button"
+                            className={
+                                filter === "dnd"
+                                    ? "active"
+                                    : ""
+                            }
+                            onClick={() =>
+                                setFilter("dnd")
+                            }
+                        >
+                            <Sword size={15} />
+                            D&D
+                        </button>
 
-                    <section className="personagens-controls">
+                        <button
+                            type="button"
+                            className={
+                                filter === "ordem"
+                                    ? "active"
+                                    : ""
+                            }
+                            onClick={() =>
+                                setFilter("ordem")
+                            }
+                        >
+                            <Shield size={15} />
+                            Ordem
+                        </button>
 
-                        <div className="personagens-search">
-                            <Search size={18} />
+                    </div>
+                </section>
 
-                            <input
-                                type="text"
-                                value={search}
-                                onChange={(event) =>
-                                    setSearch(event.target.value)
-                                }
-                                placeholder="Buscar personagem..."
-                            />
+                {/* LISTA */}
+                {filteredCharacters.length > 0 ? (
+                    <section className="personagens-grid">
 
-                            {search && (
-                                <button
-                                    type="button"
-                                    className="personagens-search-clear"
-                                    onClick={() => setSearch("")}
-                                >
-                                    ×
-                                </button>
-                            )}
-                        </div>
-
-                        <div className="personagens-filters">
-
-                            <button
-                                type="button"
-                                className={
-                                    filter === "todos"
-                                        ? "active"
-                                        : ""
-                                }
-                                onClick={() => setFilter("todos")}
-                            >
-                                Todos
-                            </button>
-
-                            <button
-                                type="button"
-                                className={
-                                    filter === "dnd"
-                                        ? "active"
-                                        : ""
-                                }
-                                onClick={() => setFilter("dnd")}
-                            >
-                                <Sword size={15} />
-                                D&D
-                            </button>
-
-                            <button
-                                type="button"
-                                className={
-                                    filter === "ordem"
-                                        ? "active"
-                                        : ""
-                                }
-                                onClick={() => setFilter("ordem")}
-                            >
-                                <Shield size={15} />
-                                Ordem
-                            </button>
-
-                        </div>
-                    </section>
-
-                    {/* =====================================================
-                        PERSONAGENS
-                    ====================================================== */}
-
-                    {filteredCharacters.length > 0 ? (
-                        <section className="personagens-grid">
-
-                            {filteredCharacters.map((character) => (
+                        {filteredCharacters.map(
+                            (character) => (
                                 <motion.article
                                     key={character.id}
-                                    className={`personagem-card personagem-card-${character.systemId}`}
+                                    className={`personagem-card personagem-card-${character.system}`}
                                     initial={{
                                         opacity: 0,
                                         y: 20,
@@ -244,39 +225,32 @@ export default function Personagens({ onNavigate }) {
                                         y: 0,
                                     }}
                                     transition={{
-                                        duration: 0.35,
+                                        duration: 0.4,
                                     }}
                                 >
-
                                     <div className="personagem-card-top">
 
-                                        <div className="personagem-avatar">
-
-                                            {character.avatar ? (
-                                                <img
-                                                    src={character.avatar}
-                                                    alt={character.name}
-                                                />
+                                        <div className="personagem-system-icon">
+                                            {character.system === "dnd" ? (
+                                                <Sword size={22} />
                                             ) : (
-                                                <UserRound size={30} />
+                                                <Shield size={22} />
                                             )}
-
                                         </div>
 
                                         <button
                                             type="button"
-                                            className="personagem-menu-button"
-                                            aria-label="Opções do personagem"
+                                            className="personagem-more"
                                         >
-                                            <MoreVertical size={19} />
+                                            <MoreVertical size={18} />
                                         </button>
 
                                     </div>
 
-                                    <div className="personagem-card-info">
+                                    <div className="personagem-card-content">
 
                                         <span className="personagem-system">
-                                            {character.system}
+                                            {character.systemName}
                                         </span>
 
                                         <h3>
@@ -285,32 +259,23 @@ export default function Personagens({ onNavigate }) {
 
                                         <p>
                                             {character.race ||
-                                                "Personagem"}
-
-                                            {character.class
-                                                ? ` • ${character.class}`
-                                                : ""}
+                                                "Raça não definida"}{" "}
+                                            •{" "}
+                                            {character.class ||
+                                                "Classe não definida"}
                                         </p>
 
-                                    </div>
+                                        <div className="personagem-level">
+                                            <span>
+                                                Nível{" "}
+                                                {character.level ||
+                                                    1}
+                                            </span>
 
-                                    <div className="personagem-card-stats">
-
-                                        <div>
-                                            <span>NÍVEL</span>
-
-                                            <strong>
-                                                {character.level || 1}
-                                            </strong>
-                                        </div>
-
-                                        <div>
-                                            <span>STATUS</span>
-
-                                            <strong>
+                                            <span>
                                                 {character.status ||
-                                                    "Ativo"}
-                                            </strong>
+                                                    "Em aventura"}
+                                            </span>
                                         </div>
 
                                     </div>
@@ -320,27 +285,13 @@ export default function Personagens({ onNavigate }) {
                                         <button
                                             type="button"
                                             onClick={() =>
-                                                console.log(
-                                                    "Abrir personagem",
-                                                    character.id
+                                                handleEditCharacter(
+                                                    character
                                                 )
                                             }
                                         >
-                                            <BookOpen size={16} />
-                                            Abrir ficha
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                console.log(
-                                                    "Editar personagem",
-                                                    character.id
-                                                )
-                                            }
-                                            aria-label="Editar personagem"
-                                        >
-                                            <Edit3 size={16} />
+                                            <Edit3 size={15} />
+                                            Editar
                                         </button>
 
                                         <button
@@ -350,112 +301,110 @@ export default function Personagens({ onNavigate }) {
                                                     character.id
                                                 )
                                             }
-                                            aria-label="Excluir personagem"
                                         >
-                                            <Trash2 size={16} />
+                                            <Trash2 size={15} />
+                                            Excluir
                                         </button>
 
                                     </div>
-
                                 </motion.article>
-                            ))}
-
-                        </section>
-                    ) : (
-                        <motion.section
-                            className="personagens-empty"
-                            initial={{
-                                opacity: 0,
-                                scale: 0.98,
-                            }}
-                            animate={{
-                                opacity: 1,
-                                scale: 1,
-                            }}
-                            transition={{
-                                duration: 0.4,
-                            }}
-                        >
-
-                            <div className="personagens-empty-symbol">
-                                <Sparkles size={32} />
-                            </div>
-
-                            <span className="personagens-empty-label">
-                                SUA AVENTURA COMEÇA AQUI
-                            </span>
-
-                            <h2>
-                                Nenhum personagem ainda
-                            </h2>
-
-                            <p>
-                                Crie seu primeiro personagem e comece
-                                a construir sua história dentro do
-                                Ordo RPGistas.
-                            </p>
-
-                            <button
-                                type="button"
-                                className="personagens-empty-button"
-                                onClick={handleCreateCharacter}
-                            >
-                                <Plus size={18} />
-                                Criar meu primeiro personagem
-                            </button>
-
-                        </motion.section>
-                    )}
-
-                    {/* =====================================================
-                        RODAPÉ INFORMATIVO
-                    ====================================================== */}
-
-                    <section className="personagens-footer-info">
-
-                        <div className="personagens-footer-icon">
-                            <Sparkles size={18} />
-                        </div>
-
-                        <div>
-                            <strong>
-                                Seus personagens, suas histórias.
-                            </strong>
-
-                            <span>
-                                Em breve você poderá criar fichas
-                                completas para D&D, Ordem Paranormal
-                                e outros sistemas.
-                            </span>
-                        </div>
+                            )
+                        )}
 
                     </section>
-
-                </div>
-            </PageBase>
-
-            {/* =========================================================
-                SELETOR DE SISTEMA
-            ========================================================== */}
-
-            <AnimatePresence>
-                {showSystemSelector && (
-                    <motion.div
-                        className="personagens-system-modal"
+                ) : (
+                    /* ESTADO VAZIO */
+                    <motion.section
+                        className="personagens-empty"
                         initial={{
                             opacity: 0,
+                            scale: 0.97,
                         }}
                         animate={{
                             opacity: 1,
+                            scale: 1,
                         }}
-                        exit={{
-                            opacity: 0,
+                        transition={{
+                            duration: 0.5,
                         }}
-                        onClick={handleCloseSystemSelector}
                     >
+                        <div className="personagens-empty-icon">
+                            <Sparkles size={32} />
+                        </div>
 
+                        <span className="personagens-empty-eyebrow">
+                            SUA JORNADA COMEÇA AQUI
+                        </span>
+
+                        <h2>
+                            Crie seu primeiro personagem
+                        </h2>
+
+                        <p>
+                            Escolha um sistema, construa seu
+                            aventureiro e prepare-se para
+                            entrar em uma nova história.
+                        </p>
+
+                        <button
+                            type="button"
+                            className="personagens-empty-button"
+                            onClick={openCharacterCreator}
+                        >
+                            <Plus size={18} />
+                            Criar meu primeiro personagem
+                        </button>
+                    </motion.section>
+                )}
+
+                {/* RODAPÉ INFORMATIVO */}
+                <section className="personagens-info-grid">
+
+                    <article className="personagens-info-card">
+                        <div className="personagens-info-icon">
+                            <BookOpen size={20} />
+                        </div>
+
+                        <div>
+                            <span>SISTEMAS</span>
+                            <strong>
+                                D&D e Ordem Paranormal
+                            </strong>
+                            <p>
+                                Outros sistemas poderão ser
+                                adicionados futuramente.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article className="personagens-info-card">
+                        <div className="personagens-info-icon">
+                            <UserRound size={20} />
+                        </div>
+
+                        <div>
+                            <span>SUAS FICHAS</span>
+                            <strong>
+                                Tudo organizado em um só lugar
+                            </strong>
+                            <p>
+                                Personagens, atributos,
+                                equipamentos e informações
+                                da aventura.
+                            </p>
+                        </div>
+                    </article>
+
+                </section>
+
+                {/* MODAL DE ESCOLHA DO SISTEMA */}
+                {showSystemSelector && (
+                    <div
+                        className="personagens-modal-overlay"
+                        onClick={closeSystemSelector}
+                    >
                         <motion.div
-                            className="personagens-system-modal-content"
+                            className="personagens-system-modal"
                             initial={{
                                 opacity: 0,
                                 scale: 0.94,
@@ -466,231 +415,116 @@ export default function Personagens({ onNavigate }) {
                                 scale: 1,
                                 y: 0,
                             }}
-                            exit={{
-                                opacity: 0,
-                                scale: 0.94,
-                                y: 20,
-                            }}
                             transition={{
-                                duration: 0.3,
+                                duration: 0.25,
                             }}
                             onClick={(event) =>
                                 event.stopPropagation()
                             }
                         >
+                            <button
+                                type="button"
+                                className="personagens-modal-close"
+                                onClick={closeSystemSelector}
+                            >
+                                <X size={19} />
+                            </button>
 
-                            {/* =================================================
-                                CABEÇALHO DO MODAL
-                            ================================================== */}
-
-                            <div className="personagens-system-modal-header">
-
-                                <div>
-                                    <span>
-                                        NOVA AVENTURA
-                                    </span>
-
-                                    <h2>
-                                        Escolha seu sistema
-                                    </h2>
-
-                                    <p>
-                                        Cada sistema terá sua própria
-                                        ficha, regras, atributos,
-                                        habilidades e mecânicas.
-                                    </p>
+                            <div className="personagens-modal-header">
+                                <div className="personagens-modal-symbol">
+                                    <Sparkles size={22} />
                                 </div>
 
-                                <button
-                                    type="button"
-                                    className="personagens-system-modal-close"
-                                    onClick={
-                                        handleCloseSystemSelector
-                                    }
-                                    aria-label="Fechar"
-                                >
-                                    <X size={20} />
-                                </button>
+                                <span>
+                                    NOVO PERSONAGEM
+                                </span>
 
+                                <h2>
+                                    Escolha o sistema
+                                </h2>
+
+                                <p>
+                                    Cada sistema possui suas
+                                    próprias regras, atributos
+                                    e formas de criação.
+                                </p>
                             </div>
-
-                            {/* =================================================
-                                SISTEMAS
-                            ================================================== */}
 
                             <div className="personagens-system-options">
 
-                                {/* =================================================
-                                    D&D
-                                ================================================== */}
-
+                                {/* D&D */}
                                 <button
                                     type="button"
-                                    className={`personagens-system-option personagens-system-option-dnd ${
-                                        selectedSystem === "dnd"
-                                            ? "selected"
-                                            : ""
-                                    }`}
+                                    className="personagens-system-choice personagens-system-choice-dnd"
                                     onClick={() =>
-                                        handleSelectSystem("dnd")
+                                        handleSelectSystem(
+                                            "dnd"
+                                        )
                                     }
                                 >
-
-                                    <div className="personagens-system-option-icon">
+                                    <div className="personagens-system-choice-icon">
                                         <Sword size={28} />
                                     </div>
 
-                                    <div className="personagens-system-option-info">
-
+                                    <div className="personagens-system-choice-content">
                                         <span>
                                             SISTEMA
                                         </span>
 
-                                        <h3>
+                                        <strong>
                                             Dungeons & Dragons
-                                        </h3>
+                                        </strong>
 
                                         <p>
-                                            Crie seu aventureiro,
-                                            escolha sua raça,
-                                            classe, antecedente
-                                            e construa sua ficha.
+                                            Crie um personagem
+                                            para aventuras de
+                                            fantasia.
                                         </p>
-
                                     </div>
 
-                                    <ChevronRight
-                                        className="personagens-system-option-arrow"
-                                        size={22}
-                                    />
-
+                                    <Plus size={20} />
                                 </button>
 
-                                {/* =================================================
-                                    ORDEM PARANORMAL
-                                ================================================== */}
-
+                                {/* ORDEM */}
                                 <button
                                     type="button"
-                                    className={`personagens-system-option personagens-system-option-ordem ${
-                                        selectedSystem === "ordem"
-                                            ? "selected"
-                                            : ""
-                                    }`}
+                                    className="personagens-system-choice personagens-system-choice-ordem"
                                     onClick={() =>
-                                        handleSelectSystem("ordem")
+                                        handleSelectSystem(
+                                            "ordem"
+                                        )
                                     }
                                 >
-
-                                    <div className="personagens-system-option-icon">
+                                    <div className="personagens-system-choice-icon">
                                         <Shield size={28} />
                                     </div>
 
-                                    <div className="personagens-system-option-info">
-
+                                    <div className="personagens-system-choice-content">
                                         <span>
                                             SISTEMA
                                         </span>
 
-                                        <h3>
-                                            Ordem Paranormal
-                                        </h3>
-
-                                        <p>
-                                            Crie um agente e prepare
-                                            sua ficha para enfrentar
-                                            o paranormal.
-                                        </p>
-
-                                    </div>
-
-                                    <ChevronRight
-                                        className="personagens-system-option-arrow"
-                                        size={22}
-                                    />
-
-                                </button>
-
-                                {/* =================================================
-                                    FUTUROS SISTEMAS
-                                ================================================== */}
-
-                                <div className="personagens-system-coming">
-
-                                    <div className="personagens-system-coming-icon">
-                                        <Dice5 size={21} />
-                                    </div>
-
-                                    <div>
                                         <strong>
-                                            Outros sistemas
+                                            Ordem Paranormal
                                         </strong>
 
-                                        <span>
-                                            One Piece, Jujutsu Kaisen
-                                            e outros sistemas poderão
-                                            ser adicionados futuramente.
-                                        </span>
+                                        <p>
+                                            Entre em uma
+                                            realidade onde o
+                                            paranormal está
+                                            presente.
+                                        </p>
                                     </div>
 
-                                </div>
-
-                            </div>
-
-                            {/* =================================================
-                                RODAPÉ DO MODAL
-                            ================================================== */}
-
-                            <div className="personagens-system-modal-footer">
-
-                                <div className="personagens-system-selected">
-
-                                    {selectedSystem ? (
-                                        <>
-                                            <Sparkles size={16} />
-
-                                            <span>
-                                                Sistema selecionado:{" "}
-                                                <strong>
-                                                    {selectedSystem ===
-                                                    "dnd"
-                                                        ? "D&D 5e"
-                                                        : "Ordem Paranormal"}
-                                                </strong>
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Crown size={16} />
-
-                                            <span>
-                                                Selecione um sistema
-                                                para continuar.
-                                            </span>
-                                        </>
-                                    )}
-
-                                </div>
-
-                                <button
-                                    type="button"
-                                    className="personagens-system-continue"
-                                    disabled={!selectedSystem}
-                                    onClick={
-                                        handleContinueToCreator
-                                    }
-                                >
-                                    Continuar
-                                    <ChevronRight size={18} />
+                                    <Plus size={20} />
                                 </button>
 
                             </div>
-
                         </motion.div>
-
-                    </motion.div>
+                    </div>
                 )}
-            </AnimatePresence>
-        </>
+
+            </div>
+        </PageBase>
     );
 }
