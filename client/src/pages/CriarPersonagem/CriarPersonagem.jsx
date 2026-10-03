@@ -19,7 +19,9 @@ import PageBase from "../PageBase";
 
 import "./CriarPersonagem.css";
 
-export default function CriarPersonagem({ onNavigate }) {
+export default function CriarPersonagem({
+    onNavigate,
+}) {
     const [currentStep, setCurrentStep] = useState(1);
 
     const [character, setCharacter] = useState({
@@ -39,11 +41,6 @@ export default function CriarPersonagem({ onNavigate }) {
         },
 
         alignment: "",
-        experience: "",
-
-        hitPoints: "",
-        armorClass: "",
-        speed: "",
 
         concept: "",
 
@@ -170,42 +167,64 @@ export default function CriarPersonagem({ onNavigate }) {
     ];
 
     const currentStepData = steps.find(
-        (step) => step.id === currentStep
+        (step) =>
+            step.id === currentStep
     );
 
-    const CurrentStepIcon = currentStepData?.icon;
+    const CurrentStepIcon =
+        currentStepData?.icon;
 
-    function updateCharacter(field, value) {
+    function updateCharacter(
+        field,
+        value
+    ) {
         setCharacter((current) => ({
             ...current,
             [field]: value,
         }));
     }
 
-    function updateAttribute(attribute, value) {
+    function updateAttribute(
+        attribute,
+        value
+    ) {
         setCharacter((current) => ({
             ...current,
+
             attributes: {
                 ...current.attributes,
-                [attribute]: Number(value),
+
+                [attribute]:
+                    Number(value),
             },
         }));
     }
 
     function handleNext() {
-        if (currentStep < steps.length) {
-            setCurrentStep((current) => current + 1);
+        if (
+            currentStep <
+            steps.length
+        ) {
+            setCurrentStep(
+                (current) =>
+                    current + 1
+            );
         }
     }
 
     function handlePrevious() {
         if (currentStep > 1) {
-            setCurrentStep((current) => current - 1);
+            setCurrentStep(
+                (current) =>
+                    current - 1
+            );
         }
     }
 
     function handleCancel() {
-        onNavigate?.("personagens");
+        onNavigate?.(
+            "personagens"
+        );
     }
 
     function handleFinish() {
@@ -218,7 +237,9 @@ export default function CriarPersonagem({ onNavigate }) {
             `Personagem "${character.name || "Sem nome"}" criado com sucesso!`
         );
 
-        onNavigate?.("personagens");
+        onNavigate?.(
+            "personagens"
+        );
     }
 
     function renderStep() {
@@ -228,16 +249,20 @@ export default function CriarPersonagem({ onNavigate }) {
                     <div className="criar-step-content">
 
                         <div className="criar-step-intro">
-                            <span>PASSO 1</span>
+                            <span>
+                                PASSO 1
+                            </span>
 
                             <h2>
                                 Comece sua aventura
                             </h2>
 
                             <p>
-                                Defina o conceito básico do
-                                seu personagem antes de
-                                escolher os detalhes da ficha.
+                                Defina o conceito
+                                básico do seu
+                                personagem antes
+                                de escolher os
+                                detalhes da ficha.
                             </p>
                         </div>
 
@@ -250,11 +275,17 @@ export default function CriarPersonagem({ onNavigate }) {
 
                                 <input
                                     type="text"
-                                    value={character.name}
-                                    onChange={(event) =>
+                                    value={
+                                        character.name
+                                    }
+                                    onChange={(
+                                        event
+                                    ) =>
                                         updateCharacter(
                                             "name",
-                                            event.target.value
+                                            event
+                                                .target
+                                                .value
                                         )
                                     }
                                     placeholder="Ex.: Arthen, Lyra, Kael..."
@@ -267,24 +298,43 @@ export default function CriarPersonagem({ onNavigate }) {
                                 </label>
 
                                 <select
-                                    value={character.level}
-                                    onChange={(event) =>
+                                    value={
+                                        character.level
+                                    }
+                                    onChange={(
+                                        event
+                                    ) =>
                                         updateCharacter(
                                             "level",
                                             Number(
-                                                event.target.value
+                                                event
+                                                    .target
+                                                    .value
                                             )
                                         )
                                     }
                                 >
                                     {Array.from(
-                                        { length: 20 },
-                                        (_, index) => (
+                                        {
+                                            length: 20,
+                                        },
+                                        (
+                                            _,
+                                            index
+                                        ) => (
                                             <option
-                                                key={index + 1}
-                                                value={index + 1}
+                                                key={
+                                                    index +
+                                                    1
+                                                }
+                                                value={
+                                                    index +
+                                                    1
+                                                }
                                             >
-                                                Nível {index + 1}
+                                                Nível{" "}
+                                                {index +
+                                                    1}
                                             </option>
                                         )
                                     )}
@@ -300,40 +350,53 @@ export default function CriarPersonagem({ onNavigate }) {
                                     value={
                                         character.alignment
                                     }
-                                    onChange={(event) =>
+                                    onChange={(
+                                        event
+                                    ) =>
                                         updateCharacter(
                                             "alignment",
-                                            event.target.value
+                                            event
+                                                .target
+                                                .value
                                         )
                                     }
                                 >
                                     <option value="">
                                         Selecione
                                     </option>
+
                                     <option>
                                         Leal e Bom
                                     </option>
+
                                     <option>
                                         Neutro e Bom
                                     </option>
+
                                     <option>
                                         Caótico e Bom
                                     </option>
+
                                     <option>
                                         Leal e Neutro
                                     </option>
+
                                     <option>
                                         Neutro
                                     </option>
+
                                     <option>
                                         Caótico e Neutro
                                     </option>
+
                                     <option>
                                         Leal e Mau
                                     </option>
+
                                     <option>
                                         Neutro e Mau
                                     </option>
+
                                     <option>
                                         Caótico e Mau
                                     </option>
@@ -347,11 +410,17 @@ export default function CriarPersonagem({ onNavigate }) {
 
                                 <textarea
                                     rows="6"
-                                    value={character.concept}
-                                    onChange={(event) =>
+                                    value={
+                                        character.concept
+                                    }
+                                    onChange={(
+                                        event
+                                    ) =>
                                         updateCharacter(
                                             "concept",
-                                            event.target.value
+                                            event
+                                                .target
+                                                .value
                                         )
                                     }
                                     placeholder="Quem é seu personagem? De onde veio? O que busca?"
@@ -367,46 +436,60 @@ export default function CriarPersonagem({ onNavigate }) {
                     <div className="criar-step-content">
 
                         <div className="criar-step-intro">
-                            <span>PASSO 2</span>
+                            <span>
+                                PASSO 2
+                            </span>
 
                             <h2>
                                 Escolha sua raça
                             </h2>
 
                             <p>
-                                A raça define parte da origem
-                                e das características do seu
-                                personagem.
+                                A raça define parte
+                                da origem e das
+                                características do
+                                seu personagem.
                             </p>
                         </div>
 
                         <div className="criar-choice-grid">
 
-                            {races.map((race) => (
-                                <button
-                                    key={race}
-                                    type="button"
-                                    className={`criar-choice-card ${
-                                        character.race === race
-                                            ? "selected"
-                                            : ""
-                                    }`}
-                                    onClick={() =>
-                                        updateCharacter(
-                                            "race",
+                            {races.map(
+                                (race) => (
+                                    <button
+                                        key={
                                             race
-                                        )
-                                    }
-                                >
-                                    <div className="criar-choice-icon">
-                                        <UserRound size={21} />
-                                    </div>
+                                        }
+                                        type="button"
+                                        className={`criar-choice-card ${
+                                            character.race ===
+                                            race
+                                                ? "selected"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            updateCharacter(
+                                                "race",
+                                                race
+                                            )
+                                        }
+                                    >
+                                        <div className="criar-choice-icon">
+                                            <UserRound
+                                                size={
+                                                    21
+                                                }
+                                            />
+                                        </div>
 
-                                    <span>
-                                        {race}
-                                    </span>
-                                </button>
-                            ))}
+                                        <span>
+                                            {
+                                                race
+                                            }
+                                        </span>
+                                    </button>
+                                )
+                            )}
 
                         </div>
                     </div>
@@ -417,46 +500,64 @@ export default function CriarPersonagem({ onNavigate }) {
                     <div className="criar-step-content">
 
                         <div className="criar-step-intro">
-                            <span>PASSO 3</span>
+                            <span>
+                                PASSO 3
+                            </span>
 
                             <h2>
                                 Escolha sua classe
                             </h2>
 
                             <p>
-                                Sua classe representa as
-                                principais capacidades e o
-                                estilo de aventura do personagem.
+                                Sua classe
+                                representa as
+                                principais
+                                capacidades e o
+                                estilo de aventura
+                                do personagem.
                             </p>
                         </div>
 
                         <div className="criar-choice-grid criar-choice-grid-large">
 
-                            {classes.map((className) => (
-                                <button
-                                    key={className}
-                                    type="button"
-                                    className={`criar-choice-card ${
-                                        character.class === className
-                                            ? "selected"
-                                            : ""
-                                    }`}
-                                    onClick={() =>
-                                        updateCharacter(
-                                            "class",
+                            {classes.map(
+                                (
+                                    className
+                                ) => (
+                                    <button
+                                        key={
                                             className
-                                        )
-                                    }
-                                >
-                                    <div className="criar-choice-icon">
-                                        <Sword size={21} />
-                                    </div>
+                                        }
+                                        type="button"
+                                        className={`criar-choice-card ${
+                                            character.class ===
+                                            className
+                                                ? "selected"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            updateCharacter(
+                                                "class",
+                                                className
+                                            )
+                                        }
+                                    >
+                                        <div className="criar-choice-icon">
+                                            <Sword
+                                                size={
+                                                    21
+                                                }
+                                            />
+                                        </div>
 
-                                    <span>
-                                        {className}
-                                    </span>
-                                </button>
-                            ))}
+                                        <span>
+                                            {
+                                                className
+                                            }
+                                        </span>
+                                    </button>
+                                )
+                            )}
 
                         </div>
                     </div>
@@ -467,15 +568,19 @@ export default function CriarPersonagem({ onNavigate }) {
                     <div className="criar-step-content">
 
                         <div className="criar-step-intro">
-                            <span>PASSO 4</span>
+                            <span>
+                                PASSO 4
+                            </span>
 
                             <h2>
-                                Escolha seu antecedente
+                                Escolha seu
+                                antecedente
                             </h2>
 
                             <p>
-                                O antecedente ajuda a definir
-                                a história e a experiência do
+                                O antecedente ajuda
+                                a definir a história
+                                e a experiência do
                                 seu personagem.
                             </p>
                         </div>
@@ -483,9 +588,13 @@ export default function CriarPersonagem({ onNavigate }) {
                         <div className="criar-choice-grid">
 
                             {backgrounds.map(
-                                (background) => (
+                                (
+                                    background
+                                ) => (
                                     <button
-                                        key={background}
+                                        key={
+                                            background
+                                        }
                                         type="button"
                                         className={`criar-choice-card ${
                                             character.background ===
@@ -502,12 +611,16 @@ export default function CriarPersonagem({ onNavigate }) {
                                     >
                                         <div className="criar-choice-icon">
                                             <ScrollText
-                                                size={21}
+                                                size={
+                                                    21
+                                                }
                                             />
                                         </div>
 
                                         <span>
-                                            {background}
+                                            {
+                                                background
+                                            }
                                         </span>
                                     </button>
                                 )
@@ -522,25 +635,33 @@ export default function CriarPersonagem({ onNavigate }) {
                     <div className="criar-step-content">
 
                         <div className="criar-step-intro">
-                            <span>PASSO 5</span>
+                            <span>
+                                PASSO 5
+                            </span>
 
                             <h2>
-                                Defina seus atributos
+                                Defina seus
+                                atributos
                             </h2>
 
                             <p>
-                                Ajuste os valores dos seis
-                                atributos principais da ficha.
+                                Ajuste os valores
+                                dos seis atributos
+                                principais da ficha.
                             </p>
                         </div>
 
                         <div className="criar-attributes-grid">
 
                             {attributes.map(
-                                (attribute) => {
+                                (
+                                    attribute
+                                ) => {
                                     const value =
-                                        character.attributes[
-                                            attribute.id
+                                        character
+                                            .attributes[
+                                            attribute
+                                                .id
                                         ];
 
                                     return (
@@ -551,6 +672,7 @@ export default function CriarPersonagem({ onNavigate }) {
                                             className="criar-attribute-card"
                                         >
                                             <div className="criar-attribute-top">
+
                                                 <div>
                                                     <span>
                                                         {
@@ -566,21 +688,27 @@ export default function CriarPersonagem({ onNavigate }) {
                                                 </div>
 
                                                 <b>
-                                                    {value}
+                                                    {
+                                                        value
+                                                    }
                                                 </b>
+
                                             </div>
 
                                             <input
                                                 type="range"
                                                 min="1"
                                                 max="20"
-                                                value={value}
+                                                value={
+                                                    value
+                                                }
                                                 onChange={(
                                                     event
                                                 ) =>
                                                     updateAttribute(
                                                         attribute.id,
-                                                        event.target
+                                                        event
+                                                            .target
                                                             .value
                                                     )
                                                 }
@@ -590,10 +718,12 @@ export default function CriarPersonagem({ onNavigate }) {
                                                 <span>
                                                     1
                                                 </span>
+
                                                 <span>
                                                     20
                                                 </span>
                                             </div>
+
                                         </div>
                                     );
                                 }
@@ -608,15 +738,18 @@ export default function CriarPersonagem({ onNavigate }) {
                     <div className="criar-step-content">
 
                         <div className="criar-step-intro">
-                            <span>PASSO 6</span>
+                            <span>
+                                PASSO 6
+                            </span>
 
                             <h2>
                                 Dê vida ao personagem
                             </h2>
 
                             <p>
-                                Agora você pode definir os
-                                detalhes que tornam seu
+                                Agora você pode
+                                definir os detalhes
+                                que tornam seu
                                 personagem único.
                             </p>
                         </div>
@@ -625,7 +758,8 @@ export default function CriarPersonagem({ onNavigate }) {
 
                             <div className="criar-form-group criar-form-full">
                                 <label>
-                                    Traços de personalidade
+                                    Traços de
+                                    personalidade
                                 </label>
 
                                 <textarea
@@ -633,10 +767,14 @@ export default function CriarPersonagem({ onNavigate }) {
                                     value={
                                         character.personality
                                     }
-                                    onChange={(event) =>
+                                    onChange={(
+                                        event
+                                    ) =>
                                         updateCharacter(
                                             "personality",
-                                            event.target.value
+                                            event
+                                                .target
+                                                .value
                                         )
                                     }
                                     placeholder="Como seu personagem costuma agir?"
@@ -653,10 +791,14 @@ export default function CriarPersonagem({ onNavigate }) {
                                     value={
                                         character.ideals
                                     }
-                                    onChange={(event) =>
+                                    onChange={(
+                                        event
+                                    ) =>
                                         updateCharacter(
                                             "ideals",
-                                            event.target.value
+                                            event
+                                                .target
+                                                .value
                                         )
                                     }
                                     placeholder="O que é importante para ele?"
@@ -673,10 +815,14 @@ export default function CriarPersonagem({ onNavigate }) {
                                     value={
                                         character.bonds
                                     }
-                                    onChange={(event) =>
+                                    onChange={(
+                                        event
+                                    ) =>
                                         updateCharacter(
                                             "bonds",
-                                            event.target.value
+                                            event
+                                                .target
+                                                .value
                                         )
                                     }
                                     placeholder="Com quem ou com o que ele possui ligação?"
@@ -693,10 +839,14 @@ export default function CriarPersonagem({ onNavigate }) {
                                     value={
                                         character.flaws
                                     }
-                                    onChange={(event) =>
+                                    onChange={(
+                                        event
+                                    ) =>
                                         updateCharacter(
                                             "flaws",
-                                            event.target.value
+                                            event
+                                                .target
+                                                .value
                                         )
                                     }
                                     placeholder="Quais são seus medos, defeitos ou limitações?"
@@ -712,15 +862,20 @@ export default function CriarPersonagem({ onNavigate }) {
                     <div className="criar-step-content">
 
                         <div className="criar-step-intro">
-                            <span>PASSO 7</span>
+                            <span>
+                                PASSO 7
+                            </span>
 
                             <h2>
-                                Revise seu personagem
+                                Revise seu
+                                personagem
                             </h2>
 
                             <p>
-                                Confira as informações antes
-                                de finalizar a criação.
+                                Confira as
+                                informações antes
+                                de finalizar a
+                                criação.
                             </p>
                         </div>
 
@@ -729,12 +884,15 @@ export default function CriarPersonagem({ onNavigate }) {
                             <div className="criar-review-hero">
 
                                 <div className="criar-review-avatar">
-                                    <Sword size={30} />
+                                    <Sword
+                                        size={30}
+                                    />
                                 </div>
 
                                 <div>
                                     <span>
-                                        PERSONAGEM D&D
+                                        PERSONAGEM
+                                        D&D
                                     </span>
 
                                     <h3>
@@ -759,8 +917,11 @@ export default function CriarPersonagem({ onNavigate }) {
                                     <span>
                                         Nível
                                     </span>
+
                                     <strong>
-                                        {character.level}
+                                        {
+                                            character.level
+                                        }
                                     </strong>
                                 </div>
 
@@ -768,9 +929,12 @@ export default function CriarPersonagem({ onNavigate }) {
                                     <span>
                                         Antecedente
                                     </span>
+
                                     <strong>
-                                        {character.background ||
-                                            "Não definido"}
+                                        {
+                                            character.background ||
+                                            "Não definido"
+                                        }
                                     </strong>
                                 </div>
 
@@ -778,9 +942,12 @@ export default function CriarPersonagem({ onNavigate }) {
                                     <span>
                                         Tendência
                                     </span>
+
                                     <strong>
-                                        {character.alignment ||
-                                            "Não definida"}
+                                        {
+                                            character.alignment ||
+                                            "Não definida"
+                                        }
                                     </strong>
                                 </div>
 
@@ -789,7 +956,12 @@ export default function CriarPersonagem({ onNavigate }) {
                             <div className="criar-review-attributes">
 
                                 <div className="criar-review-section-title">
-                                    <Dices size={18} />
+                                    <Dices
+                                        size={
+                                            18
+                                        }
+                                    />
+
                                     <span>
                                         ATRIBUTOS
                                     </span>
@@ -798,7 +970,9 @@ export default function CriarPersonagem({ onNavigate }) {
                                 <div className="criar-review-attribute-grid">
 
                                     {attributes.map(
-                                        (attribute) => (
+                                        (
+                                            attribute
+                                        ) => (
                                             <div
                                                 key={
                                                     attribute.id
@@ -814,7 +988,8 @@ export default function CriarPersonagem({ onNavigate }) {
                                                     {
                                                         character
                                                             .attributes[
-                                                            attribute.id
+                                                            attribute
+                                                                .id
                                                         ]
                                                     }
                                                 </strong>
@@ -828,16 +1003,25 @@ export default function CriarPersonagem({ onNavigate }) {
 
                             <div className="criar-review-note">
 
-                                <Backpack size={19} />
+                                <Backpack
+                                    size={
+                                        19
+                                    }
+                                />
 
                                 <p>
-                                    A ficha será expandida
-                                    posteriormente com
-                                    proficiências, equipamentos,
-                                    características de classe,
-                                    habilidades, magias e
-                                    demais elementos específicos
-                                    do sistema.
+                                    A ficha será
+                                    expandida
+                                    posteriormente
+                                    com proficiências,
+                                    equipamentos,
+                                    características
+                                    de classe,
+                                    habilidades,
+                                    magias e demais
+                                    elementos
+                                    específicos do
+                                    sistema.
                                 </p>
 
                             </div>
@@ -855,26 +1039,37 @@ export default function CriarPersonagem({ onNavigate }) {
         <PageBase
             title="Criar Personagem"
             subtitle="Construa seu próximo aventureiro."
-            icon={CurrentStepIcon || Shield}
+            icon={
+                CurrentStepIcon ||
+                Shield
+            }
             onNavigate={onNavigate}
         >
             <div className="criar-personagem-page">
 
-                {/* VOLTAR */}
                 <button
                     type="button"
                     className="criar-back-button"
-                    onClick={handleCancel}
+                    onClick={
+                        handleCancel
+                    }
                 >
-                    <ArrowLeft size={17} />
-                    Voltar para personagens
+                    <ArrowLeft
+                        size={17}
+                    />
+
+                    <span>
+                        Voltar para personagens
+                    </span>
                 </button>
 
-                {/* CABEÇALHO */}
                 <section className="criar-header">
 
                     <div className="criar-system-badge">
-                        <Sword size={16} />
+                        <Sword
+                            size={16}
+                        />
+
                         DUNGEONS & DRAGONS
                     </div>
 
@@ -883,13 +1078,12 @@ export default function CriarPersonagem({ onNavigate }) {
                     </h2>
 
                     <p>
-                        Construa seu personagem passo a
-                        passo.
+                        Construa seu personagem
+                        passo a passo.
                     </p>
 
                 </section>
 
-                {/* PROGRESSO */}
                 <section className="criar-progress">
 
                     <div className="criar-progress-line">
@@ -897,8 +1091,10 @@ export default function CriarPersonagem({ onNavigate }) {
                             className="criar-progress-fill"
                             style={{
                                 width: `${
-                                    ((currentStep - 1) /
-                                        (steps.length - 1)) *
+                                    ((currentStep -
+                                        1) /
+                                        (steps.length -
+                                            1)) *
                                     100
                                 }%`,
                             }}
@@ -907,47 +1103,61 @@ export default function CriarPersonagem({ onNavigate }) {
 
                     <div className="criar-progress-steps">
 
-                        {steps.map((step) => {
-                            const StepIcon =
-                                step.icon;
+                        {steps.map(
+                            (step) => {
+                                const StepIcon =
+                                    step.icon;
 
-                            const isActive =
-                                step.id === currentStep;
+                                const isActive =
+                                    step.id ===
+                                    currentStep;
 
-                            const isCompleted =
-                                step.id < currentStep;
+                                const isCompleted =
+                                    step.id <
+                                    currentStep;
 
-                            return (
-                                <div
-                                    key={step.id}
-                                    className={`criar-progress-step ${
-                                        isActive
-                                            ? "active"
-                                            : ""
-                                    } ${
-                                        isCompleted
-                                            ? "completed"
-                                            : ""
-                                    }`}
-                                >
-                                    <div className="criar-progress-icon">
-                                        <StepIcon size={17} />
+                                return (
+                                    <div
+                                        key={
+                                            step.id
+                                        }
+                                        className={`criar-progress-step ${
+                                            isActive
+                                                ? "active"
+                                                : ""
+                                        } ${
+                                            isCompleted
+                                                ? "completed"
+                                                : ""
+                                        }`}
+                                    >
+                                        <div className="criar-progress-icon">
+                                            <StepIcon
+                                                size={
+                                                    17
+                                                }
+                                            />
+                                        </div>
+
+                                        <span>
+                                            {
+                                                step.title
+                                            }
+                                        </span>
                                     </div>
-
-                                    <span>
-                                        {step.title}
-                                    </span>
-                                </div>
-                            );
-                        })}
+                                );
+                            }
+                        )}
 
                     </div>
+
                 </section>
 
-                {/* CONTEÚDO */}
                 <motion.section
                     className="criar-main-card"
-                    key={currentStep}
+                    key={
+                        currentStep
+                    }
                     initial={{
                         opacity: 0,
                         x: 18,
@@ -960,22 +1170,35 @@ export default function CriarPersonagem({ onNavigate }) {
                         duration: 0.3,
                     }}
                 >
+
                     <div className="criar-main-card-header">
 
                         <div className="criar-main-card-icon">
                             {CurrentStepIcon && (
-                                <CurrentStepIcon size={24} />
+                                <CurrentStepIcon
+                                    size={
+                                        24
+                                    }
+                                />
                             )}
                         </div>
 
                         <div>
                             <span>
-                                ETAPA {currentStep} DE{" "}
-                                {steps.length}
+                                ETAPA{" "}
+                                {
+                                    currentStep
+                                }{" "}
+                                DE{" "}
+                                {
+                                    steps.length
+                                }
                             </span>
 
                             <h3>
-                                {currentStepData?.title}
+                                {
+                                    currentStepData?.title
+                                }
                             </h3>
                         </div>
 
@@ -983,22 +1206,27 @@ export default function CriarPersonagem({ onNavigate }) {
 
                     {renderStep()}
 
-                    {/* NAVEGAÇÃO */}
                     <div className="criar-navigation">
 
                         <button
                             type="button"
                             className="criar-navigation-secondary"
                             onClick={
-                                currentStep === 1
+                                currentStep ===
+                                1
                                     ? handleCancel
                                     : handlePrevious
                             }
                         >
-                            <ArrowLeft size={17} />
+                            <ArrowLeft
+                                size={
+                                    17
+                                }
+                            />
 
                             <span>
-                                {currentStep === 1
+                                {currentStep ===
+                                1
                                     ? "Cancelar"
                                     : "Voltar"}
                             </span>
@@ -1018,7 +1246,9 @@ export default function CriarPersonagem({ onNavigate }) {
                                 </span>
 
                                 <ArrowRight
-                                    size={17}
+                                    size={
+                                        17
+                                    }
                                 />
                             </button>
                         ) : (
@@ -1029,7 +1259,11 @@ export default function CriarPersonagem({ onNavigate }) {
                                     handleFinish
                                 }
                             >
-                                <Heart size={17} />
+                                <Heart
+                                    size={
+                                        17
+                                    }
+                                />
 
                                 <span>
                                     Criar personagem
@@ -1038,6 +1272,7 @@ export default function CriarPersonagem({ onNavigate }) {
                         )}
 
                     </div>
+
                 </motion.section>
 
             </div>
