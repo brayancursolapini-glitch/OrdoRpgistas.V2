@@ -23,78 +23,36 @@ export default function PageBase({
         ? `${import.meta.env.BASE_URL}images/Home-dnd.jpg`
         : `${import.meta.env.BASE_URL}images/Home-ordem.jpg`;
 
-    function handleBack() {
-        if (typeof onNavigate === "function") {
-            onNavigate("home");
-        }
-    }
-
     return (
         <main
             className={`page-base page-base-${theme}`}
             style={{
-                backgroundImage: `url("${backgroundImage}")`,
+                backgroundImage: `url(${backgroundImage})`,
             }}
         >
-            {/* =========================================
-                PARTÍCULAS
-            ========================================= */}
-
             <ThemeParticles />
-
-
-            {/* =========================================
-                OVERLAY
-            ========================================= */}
 
             <div className="page-base-overlay" />
 
-
-            {/* =========================================
-                MENU LATERAL
-            ========================================= */}
-
-            <SideMenu
-                onNavigate={onNavigate}
-            />
-
-
-            {/* =========================================
-                TOPO
-            ========================================= */}
+            <SideMenu onNavigate={onNavigate} />
 
             <header className="page-base-header">
-
                 <div className="page-base-logo">
-
-                    <span>
-                        ORDO
-                    </span>
-
-                    <strong>
-                        RPGISTAS
-                    </strong>
-
+                    <span>ORDO</span>
+                    <strong>RPGISTAS</strong>
                 </div>
 
-
                 <ThemeSwitcher />
-
             </header>
 
-
-            {/* =========================================
-                CONTEÚDO
-            ========================================= */}
-
             <section className="page-base-content">
-
-                {/* VOLTAR */}
 
                 <button
                     type="button"
                     className="page-base-back"
-                    onClick={handleBack}
+                    onClick={() =>
+                        onNavigate?.("home")
+                    }
                 >
                     <ArrowLeft size={18} />
 
@@ -102,9 +60,6 @@ export default function PageBase({
                         Voltar para Home
                     </span>
                 </button>
-
-
-                {/* TÍTULO */}
 
                 <div className="page-base-title">
 
@@ -114,9 +69,7 @@ export default function PageBase({
                         </div>
                     )}
 
-
-                    <div className="page-base-title-text">
-
+                    <div>
                         <span>
                             ORDO RPGISTAS
                         </span>
@@ -130,20 +83,15 @@ export default function PageBase({
                                 {subtitle}
                             </p>
                         )}
-
                     </div>
 
                 </div>
-
-
-                {/* CONTEÚDO DA PÁGINA */}
 
                 <div className="page-base-body">
                     {children}
                 </div>
 
             </section>
-
         </main>
     );
 }
