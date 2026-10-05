@@ -22,48 +22,96 @@ export default function AppNavigation({
 
     switch (currentPage) {
         case "home":
-            return <Home onNavigate={navigate} />;
+            return (
+                <Home
+                    onNavigate={navigate}
+                />
+            );
 
         case "perfil":
         case "profile":
-            return <Perfil onNavigate={navigate} />;
+            return (
+                <Perfil
+                    onNavigate={navigate}
+                />
+            );
 
         case "personagens":
         case "characters":
-            return <Personagens onNavigate={navigate} />;
+            return (
+                <Personagens
+                    onNavigate={navigate}
+                />
+            );
 
         case "criar-personagem":
-            return <CriarPersonagem onNavigate={navigate} />;
+            return (
+                <CriarPersonagem
+                    onNavigate={navigate}
+                />
+            );
 
         case "campanhas":
         case "campaigns":
-            return <Campanhas onNavigate={navigate} />;
+            return (
+                <Campanhas
+                    onNavigate={navigate}
+                />
+            );
 
         case "mapas":
         case "maps":
-            return <Mapas onNavigate={navigate} />;
+            return (
+                <Mapas
+                    onNavigate={navigate}
+                />
+            );
 
         case "livros":
         case "books":
-            return <Livros onNavigate={navigate} />;
+            return (
+                <Livros
+                    onNavigate={navigate}
+                />
+            );
 
         case "grupos":
         case "groups":
-            return <Grupos onNavigate={navigate} />;
+            return (
+                <Grupos
+                    onNavigate={navigate}
+                />
+            );
 
         case "procurar-jogadores":
         case "players":
-            return <ProcurarJogadores onNavigate={navigate} />;
+            return (
+                <ProcurarJogadores
+                    onNavigate={navigate}
+                />
+            );
 
         case "configuracoes":
         case "settings":
-            return <Configuracoes onNavigate={navigate} />;
+            return (
+                <Configuracoes
+                    onNavigate={navigate}
+                />
+            );
 
         case "doacao":
         case "donation":
-            return <Doacao onNavigate={navigate} />;
+            return (
+                <Doacao
+                    onNavigate={navigate}
+                />
+            );
 
         default:
-            return <Home onNavigate={navigate} />;
+            return (
+                <Home
+                    onNavigate={navigate}
+                />
+            );
     }
 }
