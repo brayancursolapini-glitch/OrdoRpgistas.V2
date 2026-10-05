@@ -862,33 +862,61 @@ export default function CriarPersonagem({ onNavigate }) {
         });
     }
 
-    function canContinue() {
-        if (currentStep === 1) {
-            return character.name.trim().length > 0;
-        }
+   function canContinue() {
+    // PASSO 1 — Conceito
+    if (currentStep === 1) {
+        return character.name.trim().length > 0;
+    }
 
-        if (currentStep === 2) {
-            if (character.race === "Meio-Elfo") {
-                return (
-                    character.extraAbilities[0] &&
-                    character.extraAbilities[1] &&
-                    character.extraAbilities[0] !== character.extraAbilities[1] &&
-                    character.raceSkills.length === 2
-                );
-            }
-
-            return true;
-        }
-
-        if (currentStep === 3) {
+    // PASSO 2 — Raça
+    if (currentStep === 2) {
+        if (character.race === "Meio-Elfo") {
             return (
-                character.class &&
-                character.classSkills.length === selectedClass.choose
+                character.extraAbilities[0] &&
+                character.extraAbilities[1] &&
+                character.extraAbilities[0] !==
+                    character.extraAbilities[1] &&
+                character.raceSkills.length === 2
             );
         }
 
         return true;
     }
+
+    // PASSO 3 — Classe
+    // Aqui precisamos apenas ter uma classe escolhida.
+    // As perícias serão escolhidas no PASSO 5.
+    if (currentStep === 3) {
+        return Boolean(character.class);
+    }
+
+    // PASSO 4 — Antecedente
+    if (currentStep === 4) {
+        return Boolean(character.background);
+    }
+
+    // PASSO 5 — Proficiências
+    // Aqui sim verificamos as perícias escolhidas pela classe.
+    if (currentStep === 5) {
+        return (
+            character.classSkills.length ===
+            selectedClass.choose
+        );
+    }
+
+    // PASSO 6 — Atributos
+    if (currentStep === 6) {
+        return true;
+    }
+
+    // PASSO 7 — Detalhes
+    if (currentStep === 7) {
+        return true;
+    }
+
+    // PASSO 8 — Ficha
+    return true;
+}
 
     function nextStep() {
         if (!canContinue()) return;
