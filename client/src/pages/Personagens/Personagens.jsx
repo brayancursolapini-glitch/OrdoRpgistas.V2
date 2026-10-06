@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -19,32 +19,110 @@ import PageBase from "../PageBase";
 
 import "./Personagens.css";
 
+function loadCharacters() {
+    try {
+        const stored = JSON.parse(
+            localStorage.getItem("ordo-rpgistas-personagens") || "[]"
+        );
+
+        const normalizedCharacters = stored.map((character, index) => ({
+            ...character,
+
+            id:
+                character.id ||
+                `legacy-${index}-${character.createdAt || Date.now()}`,
+
+            system: character.system || "dnd",
+
+            systemName:
+                character.systemName ||
+                "Dungeons & Dragons",
+
+            name:
+                character.name ||
+                "Personagem sem nome",
+
+            level:
+                Number(character.level) || 1,
+        }));
+
+        persistCharacters(normalizedCharacters);
+
+        return normalizedCharacters;
+    } catch (error) {
+        console.error(
+            "Não foi possível carregar os personagens:",
+            error
+        );
+
+        return [];
+    }
+}
+
+function persistCharacters(nextCharacters) {
+    try {
+        localStorage.setItem(
+            "ordo-rpgistas-personagens",
+            JSON.stringify(nextCharacters)
+        );
+    } catch (error) {
+        console.error(
+            "Não foi possível salvar os personagens:",
+            error
+        );
+    }
+}
+
 export default function Personagens({ onNavigate }) {
-    const [characters, setCharacters] = useState([]);
+    const [characters, setCharacters] = useState(
+        () => loadCharacters()
+    );
 
     const [search, setSearch] = useState("");
+
     const [filter, setFilter] = useState("todos");
 
-    const [showSystemSelector, setShowSystemSelector] = useState(false);
+    const [showSystemSelector, setShowSystemSelector] =
+        useState(false);
+
+    useEffect(() => {
+        setCharacters(loadCharacters());
+    }, []);
 
     const filteredCharacters = useMemo(() => {
-        const normalizedSearch = search.trim().toLowerCase();
+        const normalizedSearch =
+            search.trim().toLowerCase();
 
         return characters.filter((character) => {
             const matchesSearch =
                 !normalizedSearch ||
-                character.name.toLowerCase().includes(normalizedSearch) ||
-                character.systemName.toLowerCase().includes(normalizedSearch);
+                character.name
+                    .toLowerCase()
+                    .includes(normalizedSearch) ||
+                character.systemName
+                    .toLowerCase()
+                    .includes(normalizedSearch);
 
             const matchesFilter =
                 filter === "todos" ||
                 character.system === filter;
 
-            return matchesSearch && matchesFilter;
+            return (
+                matchesSearch &&
+                matchesFilter
+            );
         });
-    }, [characters, search, filter]);
+    }, [
+        characters,
+        search,
+        filter,
+    ]);
 
     function openCharacterCreator() {
+        localStorage.removeItem(
+            "ordo-rpgistas-personagem-editando"
+        );
+
         setShowSystemSelector(true);
     }
 
@@ -55,7 +133,11 @@ export default function Personagens({ onNavigate }) {
     function handleSelectSystem(system) {
         if (system === "dnd") {
             setShowSystemSelector(false);
-            onNavigate?.("criar-personagem");
+
+            onNavigate?.(
+                "criar-personagem"
+            );
+
             return;
         }
 
@@ -71,33 +153,52 @@ export default function Personagens({ onNavigate }) {
     }
 
     function handleDeleteCharacter(id) {
-        const character = characters.find(
-            (item) => item.id === id
-        );
+        const character =
+            characters.find(
+                (item) =>
+                    item.id === id
+            );
 
-        if (!character) return;
+        if (!character) {
+            return;
+        }
 
-        const confirmed = window.confirm(
-            `Deseja realmente excluir o personagem "${character.name}"?`
-        );
+        const confirmed =
+            window.confirm(
+                `Deseja realmente excluir o personagem "${character.name}"?`
+            );
 
-        if (!confirmed) return;
+        if (!confirmed) {
+            return;
+        }
 
-        setCharacters((currentCharacters) =>
-            currentCharacters.filter(
-                (item) => item.id !== id
-            )
+        setCharacters(
+            (currentCharacters) => {
+                const nextCharacters =
+                    currentCharacters.filter(
+                        (item) =>
+                            item.id !== id
+                    );
+
+                persistCharacters(
+                    nextCharacters
+                );
+
+                return nextCharacters;
+            }
         );
     }
 
-    function handleEditCharacter(character) {
-        console.log(
-            "Editar personagem:",
-            character
+    function handleEditCharacter(
+        character
+    ) {
+        localStorage.setItem(
+            "ordo-rpgistas-personagem-editando",
+            String(character.id)
         );
 
-        alert(
-            "A edição completa da ficha será conectada ao criador de personagem."
+        onNavigate?.(
+            "criar-personagem"
         );
     }
 
@@ -110,52 +211,75 @@ export default function Personagens({ onNavigate }) {
         >
             <div className="personagens-page">
 
-                {/* TOPO */}
                 <motion.section
                     className="personagens-toolbar"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+                    initial={{
+                        opacity: 0,
+                        y: 20,
+                    }}
+                    animate={{
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    transition={{
+                        duration: 0.5,
+                    }}
                 >
                     <div className="personagens-toolbar-text">
-                        <span>SEU ARQUIVO DE AVENTUREIROS</span>
+
+                        <span>
+                            SEU ARQUIVO DE AVENTUREIROS
+                        </span>
 
                         <h2>
                             {characters.length === 0
                                 ? "Nenhum personagem ainda"
-                                : `${characters.length} personagem${characters.length > 1 ? "s" : ""}`}
+                                : `${characters.length} personagem${
+                                      characters.length > 1
+                                          ? "s"
+                                          : ""
+                                  }`}
                         </h2>
 
                         <p>
                             Crie fichas para suas aventuras de
                             D&D e outros sistemas.
                         </p>
+
                     </div>
 
                     <button
                         type="button"
                         className="personagens-create-button"
-                        onClick={openCharacterCreator}
+                        onClick={
+                            openCharacterCreator
+                        }
                     >
                         <Plus size={18} />
-                        <span>Criar personagem</span>
+
+                        <span>
+                            Criar personagem
+                        </span>
                     </button>
                 </motion.section>
 
-                {/* FILTROS */}
                 <section className="personagens-filters">
 
                     <div className="personagens-search">
+
                         <Search size={18} />
 
                         <input
                             type="text"
                             value={search}
                             onChange={(event) =>
-                                setSearch(event.target.value)
+                                setSearch(
+                                    event.target.value
+                                )
                             }
                             placeholder="Pesquisar personagem..."
                         />
+
                     </div>
 
                     <div className="personagens-filter-buttons">
@@ -186,6 +310,7 @@ export default function Personagens({ onNavigate }) {
                             }
                         >
                             <Sword size={15} />
+
                             D&D
                         </button>
 
@@ -201,13 +326,14 @@ export default function Personagens({ onNavigate }) {
                             }
                         >
                             <Shield size={15} />
+
                             Ordem
                         </button>
 
                     </div>
+
                 </section>
 
-                {/* LISTA */}
                 {filteredCharacters.length > 0 ? (
                     <section className="personagens-grid">
 
@@ -228,10 +354,12 @@ export default function Personagens({ onNavigate }) {
                                         duration: 0.4,
                                     }}
                                 >
+
                                     <div className="personagem-card-top">
 
                                         <div className="personagem-system-icon">
-                                            {character.system === "dnd" ? (
+                                            {character.system ===
+                                            "dnd" ? (
                                                 <Sword size={22} />
                                             ) : (
                                                 <Shield size={22} />
@@ -242,7 +370,9 @@ export default function Personagens({ onNavigate }) {
                                             type="button"
                                             className="personagem-more"
                                         >
-                                            <MoreVertical size={18} />
+                                            <MoreVertical
+                                                size={18}
+                                            />
                                         </button>
 
                                     </div>
@@ -250,33 +380,63 @@ export default function Personagens({ onNavigate }) {
                                     <div className="personagem-card-content">
 
                                         <span className="personagem-system">
-                                            {character.systemName}
+                                            {
+                                                character.systemName
+                                            }
                                         </span>
 
                                         <h3>
-                                            {character.name}
+                                            {
+                                                character.name
+                                            }
                                         </h3>
 
-                                        <p>
-                                            {character.race ||
-                                                "Raça não definida"}{" "}
-                                            •{" "}
-                                            {character.class ||
-                                                "Classe não definida"}
-                                        </p>
+                                        <div className="personagem-card-details">
 
-                                        <div className="personagem-level">
                                             <span>
                                                 Nível{" "}
-                                                {character.level ||
-                                                    1}
+                                                {
+                                                    character.level
+                                                }
                                             </span>
 
-                                            <span>
-                                                {character.status ||
-                                                    "Em aventura"}
-                                            </span>
+                                            {character.class && (
+                                                <>
+                                                    <span>
+                                                        •
+                                                    </span>
+
+                                                    <span>
+                                                        {
+                                                            character.class
+                                                        }
+                                                    </span>
+                                                </>
+                                            )}
+
+                                            {character.race && (
+                                                <>
+                                                    <span>
+                                                        •
+                                                    </span>
+
+                                                    <span>
+                                                        {
+                                                            character.race
+                                                        }
+                                                    </span>
+                                                </>
+                                            )}
+
                                         </div>
+
+                                        {character.concept && (
+                                            <p className="personagem-card-concept">
+                                                {
+                                                    character.concept
+                                                }
+                                            </p>
+                                        )}
 
                                     </div>
 
@@ -291,6 +451,7 @@ export default function Personagens({ onNavigate }) {
                                             }
                                         >
                                             <Edit3 size={15} />
+
                                             Editar
                                         </button>
 
@@ -303,17 +464,18 @@ export default function Personagens({ onNavigate }) {
                                             }
                                         >
                                             <Trash2 size={15} />
+
                                             Excluir
                                         </button>
 
                                     </div>
+
                                 </motion.article>
                             )
                         )}
 
                     </section>
                 ) : (
-                    /* ESTADO VAZIO */
                     <motion.section
                         className="personagens-empty"
                         initial={{
@@ -328,6 +490,7 @@ export default function Personagens({ onNavigate }) {
                             duration: 0.5,
                         }}
                     >
+
                         <div className="personagens-empty-icon">
                             <Sparkles size={32} />
                         </div>
@@ -341,68 +504,90 @@ export default function Personagens({ onNavigate }) {
                         </h2>
 
                         <p>
-                            Escolha um sistema, construa seu
-                            aventureiro e prepare-se para
-                            entrar em uma nova história.
+                            Escolha um sistema,
+                            construa seu aventureiro
+                            e prepare-se para entrar
+                            em uma nova história.
                         </p>
 
                         <button
                             type="button"
                             className="personagens-empty-button"
-                            onClick={openCharacterCreator}
+                            onClick={
+                                openCharacterCreator
+                            }
                         >
                             <Plus size={18} />
+
                             Criar meu primeiro personagem
                         </button>
+
                     </motion.section>
                 )}
 
-                {/* RODAPÉ INFORMATIVO */}
                 <section className="personagens-info-grid">
 
                     <article className="personagens-info-card">
+
                         <div className="personagens-info-icon">
                             <BookOpen size={20} />
                         </div>
 
                         <div>
-                            <span>SISTEMAS</span>
+
+                            <span>
+                                SISTEMAS
+                            </span>
+
                             <strong>
                                 D&D e Ordem Paranormal
                             </strong>
+
                             <p>
-                                Outros sistemas poderão ser
-                                adicionados futuramente.
+                                Outros sistemas poderão
+                                ser adicionados futuramente.
                             </p>
+
                         </div>
+
                     </article>
 
                     <article className="personagens-info-card">
+
                         <div className="personagens-info-icon">
                             <UserRound size={20} />
                         </div>
 
                         <div>
-                            <span>SUAS FICHAS</span>
+
+                            <span>
+                                SUAS FICHAS
+                            </span>
+
                             <strong>
                                 Tudo organizado em um só lugar
                             </strong>
+
                             <p>
                                 Personagens, atributos,
                                 equipamentos e informações
                                 da aventura.
                             </p>
+
                         </div>
+
                     </article>
 
                 </section>
 
-                {/* MODAL DE ESCOLHA DO SISTEMA */}
                 {showSystemSelector && (
                     <div
                         className="personagens-modal-overlay"
-                        onClick={closeSystemSelector}
+                        onClick={
+                            closeSystemSelector
+                        }
                     >
+
                         <motion.div
                             className="personagens-system-modal"
                             initial={{
@@ -422,15 +607,19 @@ export default function Personagens({ onNavigate }) {
                                 event.stopPropagation()
                             }
                         >
+
                             <button
                                 type="button"
                                 className="personagens-modal-close"
-                                onClick={closeSystemSelector}
+                                onClick={
+                                    closeSystemSelector
+                                }
                             >
                                 <X size={19} />
                             </button>
 
                             <div className="personagens-modal-header">
+
                                 <div className="personagens-modal-symbol">
                                     <Sparkles size={22} />
                                 </div>
@@ -444,15 +633,16 @@ export default function Personagens({ onNavigate }) {
                                 </h2>
 
                                 <p>
-                                    Cada sistema possui suas
-                                    próprias regras, atributos
-                                    e formas de criação.
+                                    Cada sistema possui
+                                    suas próprias regras,
+                                    atributos e formas
+                                    de criação.
                                 </p>
+
                             </div>
 
                             <div className="personagens-system-options">
 
-                                {/* D&D */}
                                 <button
                                     type="button"
                                     className="personagens-system-choice personagens-system-choice-dnd"
@@ -462,11 +652,13 @@ export default function Personagens({ onNavigate }) {
                                         )
                                     }
                                 >
+
                                     <div className="personagens-system-choice-icon">
                                         <Sword size={28} />
                                     </div>
 
                                     <div className="personagens-system-choice-content">
+
                                         <span>
                                             SISTEMA
                                         </span>
@@ -477,15 +669,16 @@ export default function Personagens({ onNavigate }) {
 
                                         <p>
                                             Crie um personagem
-                                            para aventuras de
-                                            fantasia.
+                                            para aventuras
+                                            de fantasia.
                                         </p>
+
                                     </div>
 
                                     <Plus size={20} />
+
                                 </button>
 
-                                {/* ORDEM */}
                                 <button
                                     type="button"
                                     className="personagens-system-choice personagens-system-choice-ordem"
@@ -495,11 +688,13 @@ export default function Personagens({ onNavigate }) {
                                         )
                                     }
                                 >
+
                                     <div className="personagens-system-choice-icon">
                                         <Shield size={28} />
                                     </div>
 
                                     <div className="personagens-system-choice-content">
+
                                         <span>
                                             SISTEMA
                                         </span>
@@ -510,17 +705,21 @@ export default function Personagens({ onNavigate }) {
 
                                         <p>
                                             Entre em uma
-                                            realidade onde o
-                                            paranormal está
-                                            presente.
+                                            realidade onde
+                                            o paranormal
+                                            está presente.
                                         </p>
+
                                     </div>
 
                                     <Plus size={20} />
+
                                 </button>
 
                             </div>
+
                         </motion.div>
+
                     </div>
                 )}
 
