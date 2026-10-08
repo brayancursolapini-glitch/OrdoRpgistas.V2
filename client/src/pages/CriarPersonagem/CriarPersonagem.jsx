@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-
-import { searchSpells } from "../../data/dnd5e/spells";
 import { motion } from "framer-motion";
 
 import {
@@ -63,91 +61,27 @@ const ABILITIES = [
 ];
 
 const SKILLS = [
-    {
-        id: "acrobacia",
-        name: "Acrobacia",
-        ability: "destreza",
-    },
-    {
-        id: "adestrar",
-        name: "Adestrar Animais",
-        ability: "sabedoria",
-    },
-    {
-        id: "arcanismo",
-        name: "Arcanismo",
-        ability: "inteligencia",
-    },
-    {
-        id: "atletismo",
-        name: "Atletismo",
-        ability: "forca",
-    },
-    {
-        id: "atuacao",
-        name: "Atuação",
-        ability: "carisma",
-    },
-    {
-        id: "enganacao",
-        name: "Enganação",
-        ability: "carisma",
-    },
-    {
-        id: "furtividade",
-        name: "Furtividade",
-        ability: "destreza",
-    },
-    {
-        id: "historia",
-        name: "História",
-        ability: "inteligencia",
-    },
-    {
-        id: "intimidacao",
-        name: "Intimidação",
-        ability: "carisma",
-    },
-    {
-        id: "intuicao",
-        name: "Intuição",
-        ability: "sabedoria",
-    },
-    {
-        id: "investigacao",
-        name: "Investigação",
-        ability: "inteligencia",
-    },
-    {
-        id: "medicina",
-        name: "Medicina",
-        ability: "sabedoria",
-    },
-    {
-        id: "natureza",
-        name: "Natureza",
-        ability: "inteligencia",
-    },
-    {
-        id: "percepcao",
-        name: "Percepção",
-        ability: "sabedoria",
-    },
-    {
-        id: "persuasao",
-        name: "Persuasão",
-        ability: "carisma",
-    },
+    { id: "acrobacia", name: "Acrobacia", ability: "destreza" },
+    { id: "adestrar", name: "Adestrar Animais", ability: "sabedoria" },
+    { id: "arcanismo", name: "Arcanismo", ability: "inteligencia" },
+    { id: "atletismo", name: "Atletismo", ability: "forca" },
+    { id: "atuacao", name: "Atuação", ability: "carisma" },
+    { id: "enganacao", name: "Enganação", ability: "carisma" },
+    { id: "furtividade", name: "Furtividade", ability: "destreza" },
+    { id: "historia", name: "História", ability: "inteligencia" },
+    { id: "intimidacao", name: "Intimidação", ability: "carisma" },
+    { id: "intuicao", name: "Intuição", ability: "sabedoria" },
+    { id: "investigacao", name: "Investigação", ability: "inteligencia" },
+    { id: "medicina", name: "Medicina", ability: "sabedoria" },
+    { id: "natureza", name: "Natureza", ability: "inteligencia" },
+    { id: "percepcao", name: "Percepção", ability: "sabedoria" },
+    { id: "persuasao", name: "Persuasão", ability: "carisma" },
     {
         id: "prestidigitacao",
         name: "Prestidigitação",
         ability: "destreza",
     },
-    {
-        id: "religiao",
-        name: "Religião",
-        ability: "inteligencia",
-    },
+    { id: "religiao", name: "Religião", ability: "inteligencia" },
     {
         id: "sobrevivencia",
         name: "Sobrevivência",
@@ -175,15 +109,12 @@ const LANGUAGES = [
 ];
 
 const RACES = {
-    "Anão": {
+    Anão: {
         bonus: {
             constituicao: 2,
         },
         speed: 25,
-        languages: [
-            "Comum",
-            "Anão",
-        ],
+        languages: ["Comum", "Anão"],
         traits: [
             "Visão no escuro",
             "Resiliência Anã",
@@ -198,30 +129,23 @@ const RACES = {
                 bonus: {
                     sabedoria: 1,
                 },
-                traits: [
-                    "Tenacidade Anã",
-                ],
+                traits: ["Tenacidade Anã"],
             },
             "Anão da Montanha": {
                 bonus: {
                     forca: 2,
                 },
-                traits: [
-                    "Treinamento com Armaduras Anãs",
-                ],
+                traits: ["Treinamento com Armaduras Anãs"],
             },
         },
     },
 
-    "Elfo": {
+    Elfo: {
         bonus: {
             destreza: 2,
         },
         speed: 30,
-        languages: [
-            "Comum",
-            "Élfico",
-        ],
+        languages: ["Comum", "Élfico"],
         traits: [
             "Visão no escuro",
             "Sentidos Aguçados",
@@ -249,34 +173,22 @@ const RACES = {
                     "Máscara da Natureza",
                 ],
             },
-            "Drow": {
-                bonus: {
-                    carisma: 1,
-                },
-                traits: [
-                    "Magia Drow",
-                    "Sensibilidade à Luz Solar",
-                ],
-            },
         },
     },
 
-    "Halfling": {
+    Halfling: {
         bonus: {
             destreza: 2,
         },
         speed: 25,
-        languages: [
-            "Comum",
-            "Halfling",
-        ],
+        languages: ["Comum", "Halfling"],
         traits: [
             "Sortudo",
             "Bravura",
             "Agilidade Halfling",
         ],
         info:
-            "Halflings são pequenos, ágeis e sortudos, recebendo +2 em Destreza.",
+            "Halflings recebem +2 em Destreza. Sua principal característica é a sorte excepcional, além de resistência contra medo.",
         subraces: {
             "Pés-Leves": {
                 bonus: {
@@ -286,7 +198,7 @@ const RACES = {
                     "Furtividade Natural",
                 ],
             },
-            "Robusto": {
+            Robusto: {
                 bonus: {
                     constituicao: 1,
                 },
@@ -297,7 +209,7 @@ const RACES = {
         },
     },
 
-    "Humano": {
+    Humano: {
         bonus: {
             forca: 1,
             destreza: 1,
@@ -307,62 +219,43 @@ const RACES = {
             carisma: 1,
         },
         speed: 30,
-        languages: [
-            "Comum",
-        ],
+        languages: ["Comum"],
         traits: [
-            "Versatilidade Humana",
+            "Aumento de +1 em todos os valores de habilidade",
+            "Idioma adicional à escolha",
         ],
         info:
-            "Humanos são versáteis e recebem +1 em todos os seis atributos.",
-        subraces: {
-            "Humano": {
-                bonus: {},
-                traits: [],
-            },
-        },
+            "Humano recebe +1 em TODOS os seis valores de habilidade: Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma. Também possui tamanho Médio e deslocamento de 30 pés.",
     },
 
-    "Draconato": {
+    Draconato: {
         bonus: {
             forca: 2,
             carisma: 1,
         },
         speed: 30,
-        languages: [
-            "Comum",
-            "Dracônico",
-        ],
+        languages: ["Comum", "Dracônico"],
         traits: [
-            "Ancestral Dracônico",
+            "Ancestralidade Dracônica",
             "Arma de Sopro",
-            "Resistência a Dano",
+            "Resistência a dano",
         ],
         info:
-            "Draconatos possuem herança dracônica, força física e uma arma de sopro ligada à sua ancestralidade.",
-        subraces: {
-            "Draconato": {
-                bonus: {},
-                traits: [],
-            },
-        },
+            "Draconatos recebem +2 em Força e +1 em Carisma. Sua ancestralidade determina o tipo de dano da arma de sopro e sua resistência.",
     },
 
-    "Gnomo": {
+    Gnomo: {
         bonus: {
             inteligencia: 2,
         },
         speed: 25,
-        languages: [
-            "Comum",
-            "Gnômico",
-        ],
+        languages: ["Comum", "Gnômico"],
         traits: [
-            "Visão no Escuro",
-            "Astúcia Gnômica",
+            "Visão no escuro",
+            "Esperteza Gnômica",
         ],
         info:
-            "Gnomos são pequenos e extremamente inteligentes, conhecidos por sua curiosidade e engenhosidade.",
+            "Gnomos recebem +2 em Inteligência. Possuem visão no escuro e vantagem em testes de resistência de Inteligência, Sabedoria e Carisma contra magia.",
         subraces: {
             "Gnomo da Floresta": {
                 bonus: {
@@ -370,7 +263,7 @@ const RACES = {
                 },
                 traits: [
                     "Ilusionista Natural",
-                    "Falar com Pequenas Feras",
+                    "Falar com Pequenas Bestas",
                 ],
             },
             "Gnomo das Rochas": {
@@ -379,6 +272,7 @@ const RACES = {
                 },
                 traits: [
                     "Conhecimento de Artífice",
+                    "Inventor de Brinquedos",
                 ],
             },
         },
@@ -388,24 +282,18 @@ const RACES = {
         bonus: {
             carisma: 2,
         },
+        extraAbilityChoices: 2,
+        skillChoices: 2,
         speed: 30,
-        languages: [
-            "Comum",
-            "Élfico",
-        ],
+        languages: ["Comum", "Élfico"],
         traits: [
-            "Visão no Escuro",
+            "Visão no escuro",
             "Ancestralidade Feérica",
             "Versatilidade em Perícias",
+            "Idioma adicional",
         ],
         info:
-            "Meio-elfos combinam características humanas e élficas e possuem grande versatilidade social.",
-        subraces: {
-            "Meio-Elfo": {
-                bonus: {},
-                traits: [],
-            },
-        },
+            "Meio-Elfos recebem +2 em Carisma e +1 em dois outros valores de habilidade à escolha. Também recebem proficiência em duas perícias à escolha.",
     },
 
     "Meio-Orc": {
@@ -414,329 +302,76 @@ const RACES = {
             constituicao: 1,
         },
         speed: 30,
-        languages: [
-            "Comum",
-            "Orc",
-        ],
+        languages: ["Comum", "Orc"],
         traits: [
-            "Visão no Escuro",
-            "Ameaçador",
+            "Visão no escuro",
+            "Intimidador",
             "Resistência Incansável",
             "Ataques Selvagens",
         ],
         info:
-            "Meio-orcs combinam força e resistência, sendo especialmente eficientes em combate.",
-        subraces: {
-            "Meio-Orc": {
-                bonus: {},
-                traits: [],
-            },
-        },
+            "Meio-Orcs recebem +2 em Força e +1 em Constituição. Possuem Intimidação, resistência extraordinária e aumentam o dano de acertos críticos corpo a corpo.",
     },
 
-    "Tiefling": {
+    Tiefling: {
         bonus: {
-            inteligencia: 1,
             carisma: 2,
+            inteligencia: 1,
         },
         speed: 30,
-        languages: [
-            "Comum",
-            "Infernal",
-        ],
+        languages: ["Comum", "Infernal"],
         traits: [
-            "Visão no Escuro",
+            "Visão no escuro",
             "Resistência Infernal",
             "Legado Infernal",
         ],
         info:
-            "Tieflings possuem herança infernal e uma forte ligação com magia.",
-        subraces: {
-            "Tiefling": {
-                bonus: {},
-                traits: [],
-            },
-        },
+            "Tieflings recebem +2 em Carisma e +1 em Inteligência. Possuem resistência a fogo e habilidades mágicas ligadas ao seu legado infernal.",
     },
 };
 
 const CLASSES = {
     Bárbaro: {
         hitDie: 12,
-        primary: "forca",
-        saves: [
-            "forca",
-            "constituicao",
-        ],
+        saves: ["forca", "constituicao"],
+        primary: "Força",
+        armor: "Armaduras leves, médias e escudos",
+        weapons: "Armas simples e marciais",
+        tools: "Nenhuma",
         skills: [
-            "atletismo",
             "adestrar",
+            "atletismo",
             "intimidacao",
             "natureza",
             "percepcao",
             "sobrevivencia",
         ],
-        traits: [
-            "Fúria",
-            "Defesa sem Armadura",
-        ],
+        choose: 2,
         info:
-            "Guerreiro feroz que utiliza sua força e fúria para dominar o campo de batalha.",
+            "O Bárbaro é um combatente resistente. Usa principalmente Força e Constituição, possui d12 como Dado de Vida e pode escolher duas perícias entre sua lista de classe.",
     },
 
     Bardo: {
         hitDie: 8,
-        primary: "carisma",
-        saves: [
-            "destreza",
-            "carisma",
-        ],
-        skills: [
-            "acrobacia",
-            "adestrar",
-            "atuacao",
-            "enganacao",
-            "historia",
-            "intimidacao",
-            "intuicao",
-            "investigacao",
-            "medicina",
-            "natureza",
-            "percepcao",
-            "persuasao",
-            "prestidigitacao",
-            "religiao",
-            "sobrevivencia",
-        ],
-        traits: [
-            "Inspiração de Bardo",
-            "Conjuração",
-        ],
+        saves: ["destreza", "carisma"],
+        primary: "Carisma",
+        armor: "Armaduras leves",
+        weapons:
+            "Armas simples, bestas de mão, espadas longas, rapieiras e espadas curtas",
+        tools: "Três instrumentos musicais à escolha",
+        skills: SKILLS.map((skill) => skill.id),
+        choose: 3,
         info:
-            "Especialista em magia, música e habilidades sociais.",
-    },
-
-    Clérigo: {
-        hitDie: 8,
-        primary: "sabedoria",
-        saves: [
-            "sabedoria",
-            "carisma",
-        ],
-        skills: [
-            "historia",
-            "intuicao",
-            "medicina",
-            "persuasao",
-            "religiao",
-        ],
-        traits: [
-            "Conjuração",
-            "Domínio Divino",
-        ],
-        info:
-            "Conjurador divino capaz de apoiar aliados e enfrentar inimigos.",
-    },
-
-    Druida: {
-        hitDie: 8,
-        primary: "sabedoria",
-        saves: [
-            "inteligencia",
-            "sabedoria",
-        ],
-        skills: [
-            "arcanismo",
-            "adestrar",
-            "intuicao",
-            "medicina",
-            "natureza",
-            "percepcao",
-            "religiao",
-            "sobrevivencia",
-        ],
-        traits: [
-            "Druídico",
-            "Conjuração",
-        ],
-        info:
-            "Conjurador ligado à natureza e às forças naturais.",
-    },
-
-    Feiticeiro: {
-        hitDie: 6,
-        primary: "carisma",
-        saves: [
-            "constituicao",
-            "carisma",
-        ],
-        skills: [
-            "arcanismo",
-            "enganacao",
-            "intuicao",
-            "intimidacao",
-            "persuasao",
-            "religiao",
-        ],
-        traits: [
-            "Conjuração",
-            "Origem Feiticeira",
-        ],
-        info:
-            "Conjurador cuja magia surge de uma fonte inata de poder.",
-    },
-
-    Guerreiro: {
-        hitDie: 10,
-        primary: "forca",
-        saves: [
-            "forca",
-            "constituicao",
-        ],
-        skills: [
-            "acrobacia",
-            "adestrar",
-            "atletismo",
-            "historia",
-            "intimidacao",
-            "intuicao",
-            "percepcao",
-            "sobrevivencia",
-        ],
-        traits: [
-            "Estilo de Luta",
-            "Retomar o Fôlego",
-        ],
-        info:
-            "Especialista em combate, armas e armaduras.",
-    },
-
-    Ladino: {
-        hitDie: 8,
-        primary: "destreza",
-        saves: [
-            "destreza",
-            "inteligencia",
-        ],
-        skills: [
-            "acrobacia",
-            "atletismo",
-            "atuacao",
-            "enganacao",
-            "furtividade",
-            "intimidacao",
-            "investigacao",
-            "percepcao",
-            "prestidigitacao",
-        ],
-        traits: [
-            "Ataque Furtivo",
-            "Especialização",
-        ],
-        info:
-            "Especialista em furtividade, precisão e exploração.",
-    },
-
-    Mago: {
-        hitDie: 6,
-        primary: "inteligencia",
-        saves: [
-            "inteligencia",
-            "sabedoria",
-        ],
-        skills: [
-            "arcanismo",
-            "historia",
-            "intuicao",
-            "investigacao",
-            "medicina",
-            "religiao",
-        ],
-        traits: [
-            "Conjuração",
-            "Recuperação Arcana",
-        ],
-        info:
-            "Conjurador dedicado ao estudo e domínio da magia.",
-    },
-
-    Monge: {
-        hitDie: 8,
-        primary: "destreza",
-        saves: [
-            "forca",
-            "destreza",
-        ],
-        skills: [
-            "acrobacia",
-            "atletismo",
-            "historia",
-            "intuicao",
-            "religiao",
-            "furtividade",
-        ],
-        traits: [
-            "Defesa sem Armadura",
-            "Artes Marciais",
-        ],
-        info:
-            "Combatente disciplinado que domina corpo e mente.",
-    },
-
-    Paladino: {
-        hitDie: 10,
-        primary: "forca",
-        saves: [
-            "sabedoria",
-            "carisma",
-        ],
-        skills: [
-            "atletismo",
-            "intuicao",
-            "intimidacao",
-            "medicina",
-            "persuasao",
-            "religiao",
-        ],
-        traits: [
-            "Sentido Divino",
-            "Cura pelas Mãos",
-        ],
-        info:
-            "Guerreiro sagrado que combina combate e poder divino.",
-    },
-
-    Patrulheiro: {
-        hitDie: 10,
-        primary: "destreza",
-        saves: [
-            "forca",
-            "destreza",
-        ],
-        skills: [
-            "adestrar",
-            "atletismo",
-            "furtividade",
-            "investigacao",
-            "natureza",
-            "percepcao",
-            "sobrevivencia",
-        ],
-        traits: [
-            "Inimigo Favorito",
-            "Explorador Nato",
-        ],
-        info:
-            "Combatente e explorador especializado em sobrevivência.",
+            "O Bardo é um especialista versátil que utiliza Carisma para sua magia e pode escolher quaisquer três perícias.",
     },
 
     Bruxo: {
         hitDie: 8,
-        primary: "carisma",
-        saves: [
-            "sabedoria",
-            "carisma",
-        ],
+        saves: ["sabedoria", "carisma"],
+        primary: "Carisma",
+        armor: "Armaduras leves",
+        weapons: "Armas simples",
+        tools: "Nenhuma",
         skills: [
             "arcanismo",
             "enganacao",
@@ -746,199 +381,361 @@ const CLASSES = {
             "natureza",
             "religiao",
         ],
-        traits: [
-            "Patrono Sobrenatural",
-            "Magia de Pacto",
-        ],
+        choose: 2,
         info:
-            "Conjurador que recebe poder através de um pacto sobrenatural.",
+            "O Bruxo recebe poder através de um pacto com uma entidade sobrenatural. Sua habilidade de conjuração é Carisma.",
+    },
+
+    Clérigo: {
+        hitDie: 8,
+        saves: ["sabedoria", "carisma"],
+        primary: "Sabedoria",
+        armor: "Armaduras leves, médias e escudos",
+        weapons: "Armas simples",
+        tools: "Nenhuma",
+        skills: [
+            "historia",
+            "intuicao",
+            "medicina",
+            "persuasao",
+            "religiao",
+        ],
+        choose: 2,
+        info:
+            "O Clérigo é um conjurador divino. Utiliza Sabedoria como habilidade de conjuração e possui proficiência com armaduras leves, médias e escudos.",
+    },
+
+    Druida: {
+        hitDie: 8,
+        saves: ["inteligencia", "sabedoria"],
+        primary: "Sabedoria",
+        armor: "Armaduras leves e médias; escudos não metálicos",
+        weapons:
+            "Clavas, adagas, dardos, azagaias, maças, bordões, cimitarras, foices, fundas e lanças",
+        tools: "Kit de herbalismo",
+        skills: [
+            "arcanismo",
+            "adestrar",
+            "intuicao",
+            "medicina",
+            "natureza",
+            "percepcao",
+            "religiao",
+            "sobrevivencia",
+        ],
+        choose: 2,
+        info:
+            "O Druida manipula a magia da natureza e utiliza Sabedoria. Suas armaduras e escudos possuem a restrição de não serem feitos de metal.",
+    },
+
+    Guerreiro: {
+        hitDie: 10,
+        saves: ["forca", "constituicao"],
+        primary: "Força ou Destreza",
+        armor: "Todas as armaduras e escudos",
+        weapons: "Armas simples e marciais",
+        tools: "Nenhuma",
+        skills: [
+            "acrobacia",
+            "adestrar",
+            "atletismo",
+            "historia",
+            "intuicao",
+            "intimidacao",
+            "percepcao",
+            "sobrevivencia",
+        ],
+        choose: 2,
+        info:
+            "O Guerreiro é um especialista em combate. Possui proficiência com todas as armaduras, escudos, armas simples e marciais.",
+    },
+
+    Ladino: {
+        hitDie: 8,
+        saves: ["destreza", "inteligencia"],
+        primary: "Destreza",
+        armor: "Armaduras leves",
+        weapons:
+            "Armas simples, bestas de mão, espadas longas, rapieiras e espadas curtas",
+        tools: "Ferramentas de ladrão",
+        skills: [
+            "acrobacia",
+            "atletismo",
+            "enganacao",
+            "intuicao",
+            "intimidacao",
+            "investigacao",
+            "percepcao",
+            "atuacao",
+            "persuasao",
+            "prestidigitacao",
+            "furtividade",
+        ],
+        choose: 4,
+        info:
+            "O Ladino é um especialista em perícias, furtividade e ataques precisos. Possui quatro escolhas de perícias e proficiência com ferramentas de ladrão.",
+    },
+
+    Mago: {
+        hitDie: 6,
+        saves: ["inteligencia", "sabedoria"],
+        primary: "Inteligência",
+        armor: "Nenhuma",
+        weapons:
+            "Adagas, dardos, fundas, bordões e bestas leves",
+        tools: "Nenhuma",
+        skills: [
+            "arcanismo",
+            "historia",
+            "intuicao",
+            "investigacao",
+            "medicina",
+            "religiao",
+        ],
+        choose: 2,
+        info:
+            "O Mago é um estudioso da magia. Utiliza Inteligência como habilidade de conjuração e começa com um grimório.",
+    },
+
+    Monge: {
+        hitDie: 8,
+        saves: ["forca", "destreza"],
+        primary: "Destreza e Sabedoria",
+        armor: "Nenhuma",
+        weapons: "Armas simples e espadas curtas",
+        tools: "Uma ferramenta de artesão ou instrumento musical",
+        skills: [
+            "acrobacia",
+            "atletismo",
+            "historia",
+            "intuicao",
+            "religiao",
+            "furtividade",
+        ],
+        choose: 2,
+        info:
+            "O Monge luta sem depender de armaduras. Destreza e Sabedoria são suas principais habilidades.",
+    },
+
+    Paladino: {
+        hitDie: 10,
+        saves: ["sabedoria", "carisma"],
+        primary: "Força e Carisma",
+        armor: "Todas as armaduras e escudos",
+        weapons: "Armas simples e marciais",
+        tools: "Nenhuma",
+        skills: [
+            "atletismo",
+            "intuicao",
+            "intimidacao",
+            "medicina",
+            "persuasao",
+            "religiao",
+        ],
+        choose: 2,
+        info:
+            "O Paladino é um guerreiro sagrado. Utiliza Força e Carisma e possui proficiência com todas as armaduras, escudos e armas simples e marciais.",
+    },
+
+    Patrulheiro: {
+        hitDie: 10,
+        saves: ["forca", "destreza"],
+        primary: "Destreza e Sabedoria",
+        armor: "Armaduras leves, médias e escudos",
+        weapons: "Armas simples e marciais",
+        tools: "Nenhuma",
+        skills: [
+            "adestrar",
+            "atletismo",
+            "intuicao",
+            "investigacao",
+            "natureza",
+            "percepcao",
+            "furtividade",
+            "sobrevivencia",
+        ],
+        choose: 3,
+        info:
+            "O Patrulheiro combina combate, exploração e magia da natureza. Escolhe três perícias entre sua lista de classe.",
+    },
+
+    Feiticeiro: {
+        hitDie: 6,
+        saves: ["constituicao", "carisma"],
+        primary: "Carisma",
+        armor: "Nenhuma",
+        weapons:
+            "Adagas, dardos, fundas, bordões e bestas leves",
+        tools: "Nenhuma",
+        skills: [
+            "arcanismo",
+            "enganacao",
+            "intuicao",
+            "intimidacao",
+            "persuasao",
+            "religiao",
+        ],
+        choose: 2,
+        info:
+            "O Feiticeiro possui magia inata. Sua habilidade de conjuração é Carisma.",
     },
 };
 
 const BACKGROUNDS = {
     Acólito: {
-        skills: [
-            "intuicao",
-            "religiao",
-        ],
+        skills: ["intuicao", "religiao"],
+        tools: "Nenhuma",
         languages: 2,
-        equipment: [
-            "Símbolo sagrado",
-            "Livro de orações",
-            "5 velas",
-            "Vestuário comum",
-        ],
+        feature: "Abrigo dos Fiéis",
         info:
-            "Personagem ligado a uma instituição religiosa.",
+            "Você serviu a um templo. Recebe proficiência em Intuição e Religião, além de dois idiomas à escolha.",
     },
 
-    Criminoso: {
-        skills: [
-            "enganacao",
-            "furtividade",
-        ],
-        languages: 0,
-        equipment: [
-            "Pé de cabra",
-            "Roupas escuras",
-            "15 PO",
-        ],
-        info:
-            "Personagem acostumado ao submundo e às atividades ilegais.",
-    },
-
-    Eremita: {
-        skills: [
-            "medicina",
-            "religiao",
-        ],
+    "Artesão de Guilda": {
+        skills: ["intuicao", "persuasao"],
+        tools: "Um tipo de ferramenta de artesão",
         languages: 1,
-        equipment: [
-            "Estojo de pergaminhos",
-            "Cobertor",
-            "Roupas comuns",
-            "5 PO",
-        ],
+        feature: "Filiação de Guilda",
         info:
-            "Personagem que passou longo período afastado da sociedade.",
-    },
-
-    Nobre: {
-        skills: [
-            "historia",
-            "persuasao",
-        ],
-        languages: 1,
-        equipment: [
-            "Roupas finas",
-            "Anel de sinete",
-            "Pergaminho de linhagem",
-            "25 PO",
-        ],
-        info:
-            "Personagem de posição social elevada.",
-    },
-
-    Sábio: {
-        skills: [
-            "arcanismo",
-            "historia",
-        ],
-        languages: 2,
-        equipment: [
-            "Garrafa de tinta",
-            "Pena",
-            "Pequena faca",
-            "Pergaminho",
-            "10 PO",
-        ],
-        info:
-            "Estudioso dedicado à pesquisa e ao conhecimento.",
-    },
-
-    Soldado: {
-        skills: [
-            "atletismo",
-            "intimidacao",
-        ],
-        languages: 0,
-        equipment: [
-            "Insígnia de patente",
-            "Troféu de guerra",
-            "Jogo de dados",
-            "Roupas comuns",
-            "10 PO",
-        ],
-        info:
-            "Personagem com experiência militar.",
-    },
-
-    Artesão: {
-        skills: [
-            "intuicao",
-            "persuasao",
-        ],
-        languages: 1,
-        equipment: [
-            "Ferramentas de artesão",
-            "Carta de apresentação",
-            "Roupas comuns",
-            "15 PO",
-        ],
-        info:
-            "Personagem treinado em uma profissão artesanal.",
+            "Você pertenceu a uma guilda profissional. Recebe Intuição, Persuasão, ferramentas de artesão e um idioma.",
     },
 
     Artista: {
-        skills: [
-            "acrobacia",
-            "atuacao",
-        ],
-        languages: 1,
-        equipment: [
-            "Instrumento musical",
-            "Favor de admirador",
-            "Traje artístico",
-            "15 PO",
-        ],
+        skills: ["acrobacia", "atuacao"],
+        tools: "Kit de disfarce e um instrumento musical",
+        languages: 0,
+        feature: "Pela Demanda Popular",
         info:
-            "Personagem acostumado a apresentações e vida artística.",
+            "Você viveu como artista ou entertainer. Recebe Acrobacia, Atuação, kit de disfarce e um instrumento musical.",
+    },
+
+    Charlatão: {
+        skills: ["enganacao", "prestidigitacao"],
+        tools: "Kit de disfarce e kit de falsificação",
+        languages: 0,
+        feature: "Identidade Falsa",
+        info:
+            "Você viveu de enganações e golpes. Recebe Enganação, Prestidigitação, kit de disfarce e kit de falsificação.",
+    },
+
+    Criminoso: {
+        skills: ["enganacao", "furtividade"],
+        tools: "Kit de jogo e ferramentas de ladrão",
+        languages: 0,
+        feature: "Contato Criminoso",
+        info:
+            "Você possui experiência no submundo. Recebe Enganação, Furtividade, um kit de jogo e ferramentas de ladrão.",
+    },
+
+    Eremita: {
+        skills: ["medicina", "religiao"],
+        tools: "Kit de herbalismo",
+        languages: 1,
+        feature: "Descoberta",
+        info:
+            "Você passou um longo período isolado. Recebe Medicina, Religião, kit de herbalismo e um idioma.",
+    },
+
+    "Herói do Povo": {
+        skills: ["adestrar", "sobrevivencia"],
+        tools: "Ferramentas de artesão e veículos terrestres",
+        languages: 0,
+        feature: "Hospitalidade Rústica",
+        info:
+            "Você veio de uma origem humilde e ganhou fama entre seu povo. Recebe Adestrar Animais e Sobrevivência.",
+    },
+
+    Nobre: {
+        skills: ["historia", "persuasao"],
+        tools: "Um kit de jogo",
+        languages: 1,
+        feature: "Posição de Privilégio",
+        info:
+            "Você pertence a uma família de prestígio. Recebe História, Persuasão, um kit de jogo e um idioma.",
+    },
+
+    Órfão: {
+        skills: ["prestidigitacao", "furtividade"],
+        tools: "Kit de disfarce e ferramentas de ladrão",
+        languages: 0,
+        feature: "Segredos da Cidade",
+        info:
+            "Você sobreviveu nas ruas. Recebe Prestidigitação, Furtividade, kit de disfarce e ferramentas de ladrão.",
+    },
+
+    Sábio: {
+        skills: ["arcanismo", "historia"],
+        tools: "Nenhuma",
+        languages: 2,
+        feature: "Pesquisador",
+        info:
+            "Você dedicou sua vida ao estudo. Recebe Arcanismo, História e dois idiomas.",
+    },
+
+    Soldado: {
+        skills: ["atletismo", "intimidacao"],
+        tools: "Um kit de jogo e veículos terrestres",
+        languages: 0,
+        feature: "Patente Militar",
+        info:
+            "Você possui experiência militar. Recebe Atletismo, Intimidação, um kit de jogo e veículos terrestres.",
+    },
+
+    Forasteiro: {
+        skills: ["atletismo", "sobrevivencia"],
+        tools: "Um instrumento musical",
+        languages: 1,
+        feature: "Viajante",
+        info:
+            "Você cresceu longe das grandes cidades. Recebe Atletismo, Sobrevivência, um instrumento musical e um idioma.",
     },
 };
 
 const STEP_DATA = [
     {
         id: 1,
-        title: "Conceito",
-        subtitle: "Comece definindo quem é seu personagem.",
-        icon: UserRound,
-    },
-    {
-        id: 2,
-        title: "Raça",
-        subtitle: "Escolha a origem e herança do personagem.",
+        name: "Conceito",
         icon: Sparkles,
     },
     {
+        id: 2,
+        name: "Raça",
+        icon: UserRound,
+    },
+    {
         id: 3,
-        title: "Classe",
-        subtitle: "Defina seu papel e estilo de jogo.",
+        name: "Classe",
         icon: Sword,
     },
     {
         id: 4,
-        title: "Antecedente",
-        subtitle: "Escolha o passado que moldou seu personagem.",
+        name: "Antecedente",
         icon: BookOpen,
     },
     {
         id: 5,
-        title: "Proficiências",
-        subtitle: "Escolha suas habilidades e conhecimentos.",
+        name: "Proficiências",
         icon: Shield,
     },
     {
         id: 6,
-        title: "Atributos",
-        subtitle: "Defina as capacidades básicas do personagem.",
+        name: "Atributos",
         icon: Dices,
     },
     {
         id: 7,
-        title: "Detalhes",
-        subtitle: "Complete a personalidade e os detalhes narrativos.",
-        icon: Info,
+        name: "Detalhes",
+        icon: Backpack,
     },
     {
         id: 8,
-        title: "Ficha",
-        subtitle: "Revise e finalize seu personagem.",
-        icon: Heart,
+        name: "Ficha",
+        icon: Check,
     },
 ];
 
-function getAbilityModifier(score) {
-    return Math.floor((Number(score) - 10) / 2);
+function getModifier(score) {
+    return Math.floor((score - 10) / 2);
 }
 
 function formatModifier(value) {
@@ -946,33 +743,63 @@ function formatModifier(value) {
 }
 
 function getProficiencyBonus(level) {
-    const currentLevel = Math.max(1, Number(level) || 1);
-
-    if (currentLevel >= 17) return 6;
-    if (currentLevel >= 13) return 5;
-    if (currentLevel >= 9) return 4;
-    if (currentLevel >= 5) return 3;
+    if (level >= 17) return 6;
+    if (level >= 13) return 5;
+    if (level >= 9) return 4;
+    if (level >= 5) return 3;
 
     return 2;
 }
 
-function getSpellcastingAbility(className) {
-    const abilities = {
-        Bardo: "carisma",
-        Bruxo: "carisma",
-        Feiticeiro: "carisma",
-        Clérigo: "sabedoria",
-        Druida: "sabedoria",
-        Mago: "inteligencia",
-        Paladino: "carisma",
-        Patrulheiro: "sabedoria",
+function getAbilityBonus(
+    race,
+    subrace,
+    extraAbilities = []
+) {
+    const bonus = {
+        forca: 0,
+        destreza: 0,
+        constituicao: 0,
+        inteligencia: 0,
+        sabedoria: 0,
+        carisma: 0,
     };
 
-    return abilities[className] || null;
+    const selectedRace = RACES[race];
+
+    if (selectedRace?.bonus) {
+        Object.entries(selectedRace.bonus).forEach(
+            ([key, value]) => {
+                bonus[key] += value;
+            }
+        );
+    }
+
+    if (
+        selectedRace?.subraces?.[subrace]?.bonus
+    ) {
+        Object.entries(
+            selectedRace.subraces[subrace].bonus
+        ).forEach(([key, value]) => {
+            bonus[key] += value;
+        });
+    }
+
+    extraAbilities.forEach((ability) => {
+        if (ability) {
+            bonus[ability] += 1;
+        }
+    });
+
+    return bonus;
 }
 
-function getInitialCharacter() {
-    return {
+export default function CriarPersonagem({
+    onNavigate,
+}) {
+    const [currentStep, setCurrentStep] = useState(1);
+
+    const [character, setCharacter] = useState({
         name: "",
         race: "Humano",
         subrace: "",
@@ -989,10 +816,7 @@ function getInitialCharacter() {
             carisma: 8,
         },
 
-        extraAbilities: [
-            "",
-            "",
-        ],
+        extraAbilities: ["", ""],
 
         classSkills: [],
         raceSkills: [],
@@ -1007,371 +831,1954 @@ function getInitialCharacter() {
         concept: "",
 
         extraLanguages: [],
+
         equipment: [],
         spells: [],
-    };
-}
+    });
 
-function createEmptyCharacter() {
-    return getInitialCharacter();
-}
+    const [infoModal, setInfoModal] =
+        useState(null);
 
-function normalizeArray(value) {
-    return Array.isArray(value) ? value : [];
-}
+    const [completedCharacter, setCompletedCharacter] =
+        useState(null);
 
-function getRaceData(character) {
-    return RACES[character?.race] || RACES.Humano;
-}
+    const selectedRace =
+        RACES[character.race];
 
-function getClassData(character) {
-    return CLASSES[character?.class] || CLASSES.Guerreiro;
-}
+    const selectedClass =
+        CLASSES[character.class];
 
-function getBackgroundData(character) {
-    return BACKGROUNDS[character?.background] || BACKGROUNDS.Soldado;
-}
+    const selectedBackground =
+        BACKGROUNDS[character.background];
 
-function calculateAbilityScores(character) {
-    const raceData = getRaceData(character);
-    const subraceData =
-        raceData?.subraces?.[character?.subrace] || {};
-
-    const scores = {
-        forca: Number(character?.abilities?.forca) || 0,
-        destreza: Number(character?.abilities?.destreza) || 0,
-        constituicao: Number(character?.abilities?.constituicao) || 0,
-        inteligencia: Number(character?.abilities?.inteligencia) || 0,
-        sabedoria: Number(character?.abilities?.sabedoria) || 0,
-        carisma: Number(character?.abilities?.carisma) || 0,
-    };
-
-    Object.entries(raceData?.bonus || {}).forEach(
-        ([ability, bonus]) => {
-            scores[ability] += Number(bonus) || 0;
-        }
+    const abilityBonuses = useMemo(
+        () =>
+            getAbilityBonus(
+                character.race,
+                character.subrace,
+                character.extraAbilities
+            ),
+        [
+            character.race,
+            character.subrace,
+            character.extraAbilities,
+        ]
     );
 
-    Object.entries(subraceData?.bonus || {}).forEach(
-        ([ability, bonus]) => {
-            scores[ability] += Number(bonus) || 0;
-        }
-    );
+    const finalAbilities = useMemo(() => {
+        const result = {};
 
-    return scores;
-}
+        ABILITIES.forEach((ability) => {
+            result[ability.id] =
+                character.abilities[
+                    ability.id
+                ] +
+                (abilityBonuses[
+                    ability.id
+                ] || 0);
+        });
 
-function getAllRaceTraits(character) {
-    const raceData = getRaceData(character);
-    const subraceData =
-        raceData?.subraces?.[character?.subrace] || {};
+        return result;
+    }, [
+        character.abilities,
+        abilityBonuses,
+    ]);
 
-    return [
-        ...(raceData?.traits || []),
-        ...(subraceData?.traits || []),
-    ];
-}
+    const modifiers = useMemo(() => {
+        const result = {};
 
-function getAllLanguages(character) {
-    const raceData = getRaceData(character);
-    const backgroundData = getBackgroundData(character);
+        ABILITIES.forEach((ability) => {
+            result[ability.id] =
+                getModifier(
+                    finalAbilities[
+                        ability.id
+                    ]
+                );
+        });
 
-    return [
+        return result;
+    }, [finalAbilities]);
+
+    const proficiencyBonus =
+        getProficiencyBonus(
+            character.level
+        );
+
+    const backgroundSkills =
+        selectedBackground?.skills || [];
+
+    const availableClassSkills =
+        selectedClass
+            ? selectedClass.skills.filter(
+                  (skill) =>
+                      !backgroundSkills.includes(
+                          skill
+                      )
+              )
+            : [];
+
+    const totalSkillProficiencies = [
         ...new Set([
-            ...(raceData?.languages || []),
-            ...(backgroundData?.languagesList || []),
-            ...normalizeArray(character?.extraLanguages),
+            ...backgroundSkills,
+            ...character.classSkills,
+            ...character.raceSkills,
         ]),
     ];
-}
 
-function getSelectedSkills(character) {
-    return [
-        ...new Set([
-            ...(getClassData(character)?.skills || []),
-            ...(getBackgroundData(character)?.skills || []),
-            ...normalizeArray(character?.classSkills),
-            ...normalizeArray(character?.raceSkills),
-        ]),
-    ];
-}
-
-function getSkillBonus(
-    skill,
-    abilities,
-    proficientSkills,
-    proficiencyBonus
-) {
-    const abilityScore = Number(abilities?.[skill?.ability]) || 10;
-    const modifier = getAbilityModifier(abilityScore);
-    const proficient = proficientSkills.includes(skill.id);
-
-    return {
-        modifier,
-        proficient,
-        bonus:
-            modifier +
-            (proficient ? Number(proficiencyBonus) || 0 : 0),
-    };
-}
-
-function getSavingThrowBonus(
-    ability,
-    abilities,
-    savingThrows,
-    proficiencyBonus
-) {
-    const abilityScore = Number(abilities?.[ability?.id]) || 10;
-    const modifier = getAbilityModifier(abilityScore);
-    const proficient = savingThrows.includes(ability.id);
-
-    return {
-        modifier,
-        proficient,
-        bonus:
-            modifier +
-            (proficient ? Number(proficiencyBonus) || 0 : 0),
-    };
-}
-
-function buildCharacter(character) {
-    const abilityScores = calculateAbilityScores(character);
-
-    const modifiers = {
-        forca: getAbilityModifier(abilityScores.forca),
-        destreza: getAbilityModifier(abilityScores.destreza),
-        constituicao: getAbilityModifier(abilityScores.constituicao),
-        inteligencia: getAbilityModifier(abilityScores.inteligencia),
-        sabedoria: getAbilityModifier(abilityScores.sabedoria),
-        carisma: getAbilityModifier(abilityScores.carisma),
-    };
-
-    const proficiencyBonus = getProficiencyBonus(character.level);
-
-    const selectedClass = getClassData(character);
-    const selectedRace = getRaceData(character);
-    const selectedBackground = getBackgroundData(character);
-
-    const proficientSkills = getSelectedSkills(character);
-
-    const savingThrows = selectedClass?.saves || [];
-
-    const skills = SKILLS.map((skill) => ({
-        ...skill,
-        ...getSkillBonus(
-            skill,
-            abilityScores,
-            proficientSkills,
-            proficiencyBonus
-        ),
-    }));
-
-    const saves = ABILITIES.map((ability) => ({
-        ...ability,
-        ...getSavingThrowBonus(
-            ability,
-            abilityScores,
-            savingThrows,
-            proficiencyBonus
-        ),
-    }));
-
-    const hitDie = Number(selectedClass?.hitDie) || 8;
-
-    const hitPoints =
-        hitDie +
-        modifiers.constituicao;
-
-    let armorClass =
-        10 +
-        modifiers.destreza;
-
-    if (character.class === "Monge") {
-        armorClass =
-            10 +
-            modifiers.destreza +
-            modifiers.sabedoria;
-    }
-
-    if (character.class === "Bárbaro") {
-        armorClass =
-            10 +
-            modifiers.destreza +
-            modifiers.constituicao;
-    }
-
-    const initiative =
-        modifiers.destreza;
-
-    const spellAbility =
-        getSpellcastingAbility(character.class);
-
-    const spellAbilityModifier =
-        spellAbility
-            ? modifiers[spellAbility]
-            : null;
-
-    const spellSaveDC =
-        spellAbilityModifier !== null
-            ? 8 +
-              proficiencyBonus +
-              spellAbilityModifier
-            : null;
-
-    const spellAttack =
-        spellAbilityModifier !== null
-            ? proficiencyBonus +
-              spellAbilityModifier
-            : null;
-
-    const traits = [
-        ...(selectedClass?.traits || []),
-        ...getAllRaceTraits(character),
-    ];
-
-    const languages = getAllLanguages(character);
-
-    const equipment = [
-        ...(selectedBackground?.equipment || []),
-        ...normalizeArray(character.equipment),
-    ];
-
-    const spells = normalizeArray(character.spells)
-        .map((spellId) => {
-            if (typeof spellId === "object") {
-                return spellId;
-            }
-
-            return searchSpells("").find(
-                (spell) => spell.id === spellId
-            );
-        })
-        .filter(Boolean);
-
-    return {
-        ...character,
-
-        id:
-            character.id ||
-            `character-${Date.now()}-${Math.random()
-                .toString(36)
-                .slice(2, 8)}`,
-
-        system: "dnd5e",
-        systemName: "D&D 5e",
-
-        raceData: selectedRace,
-        classData: selectedClass,
-        backgroundData: selectedBackground,
-
-        abilityScores,
-        modifiers,
-
-        proficiencyBonus,
-
-        skills,
-        saves,
-
-        savingThrows,
-
-        hitDie,
-
-        hitPoints,
-
-        armorClass,
-
-        initiative,
-
-        spellAbility,
-        spellAbilityModifier,
-        spellSaveDC,
-        spellAttack,
-
-        traits,
-
-        languages,
-
-        equipment,
-
-        spells,
-
-        createdAt:
-            character.createdAt ||
-            new Date().toISOString(),
-
-        updatedAt:
-            new Date().toISOString(),
-    };
-}
-
-function CharacterStepConcept({
-    character,
-    setCharacter,
-}) {
-    function updateField(field, value) {
+    function updateCharacter(
+        field,
+        value
+    ) {
         setCharacter((current) => ({
             ...current,
             [field]: value,
         }));
     }
 
+    function updateAbility(
+        ability,
+        value
+    ) {
+        setCharacter((current) => ({
+            ...current,
+            abilities: {
+                ...current.abilities,
+                [ability]: Number(value),
+            },
+        }));
+    }
+
+    function changeRace(race) {
+        setCharacter((current) => ({
+            ...current,
+            race,
+            subrace: "",
+            extraAbilities:
+                race === "Meio-Elfo"
+                    ? ["", ""]
+                    : ["", ""],
+            raceSkills: [],
+        }));
+    }
+
+    function changeClass(
+        nextClass
+    ) {
+        setCharacter((current) => ({
+            ...current,
+            class: nextClass,
+            classSkills: [],
+        }));
+    }
+
+    function changeBackground(
+        background
+    ) {
+        setCharacter((current) => ({
+            ...current,
+            background,
+            classSkills: [],
+        }));
+    }
+
+    function toggleClassSkill(
+        skill
+    ) {
+        setCharacter((current) => {
+            const exists =
+                current.classSkills.includes(
+                    skill
+                );
+
+            if (exists) {
+                return {
+                    ...current,
+                    classSkills:
+                        current.classSkills.filter(
+                            (item) =>
+                                item !== skill
+                        ),
+                };
+            }
+
+            if (
+                current.classSkills.length >=
+                selectedClass.choose
+            ) {
+                return current;
+            }
+
+            return {
+                ...current,
+                classSkills: [
+                    ...current.classSkills,
+                    skill,
+                ],
+            };
+        });
+    }
+
+    function toggleRaceSkill(
+        skill
+    ) {
+        setCharacter((current) => {
+            const exists =
+                current.raceSkills.includes(
+                    skill
+                );
+
+            if (exists) {
+                return {
+                    ...current,
+                    raceSkills:
+                        current.raceSkills.filter(
+                            (item) =>
+                                item !== skill
+                        ),
+                };
+            }
+
+            if (
+                current.raceSkills.length >=
+                selectedRace.skillChoices
+            ) {
+                return current;
+            }
+
+            return {
+                ...current,
+                raceSkills: [
+                    ...current.raceSkills,
+                    skill,
+                ],
+            };
+        });
+    }
+
+    function openInfo(
+        title,
+        content,
+        benefits = []
+    ) {
+        setInfoModal({
+            title,
+            content,
+            benefits,
+        });
+    }
+        function toggleLanguage(language) {
+        setCharacter((current) => {
+            const exists =
+                current.extraLanguages.includes(language);
+
+            if (exists) {
+                return {
+                    ...current,
+                    extraLanguages:
+                        current.extraLanguages.filter(
+                            (item) => item !== language
+                        ),
+                };
+            }
+
+            const maxLanguages =
+                selectedBackground?.languages || 0;
+
+            if (
+                current.extraLanguages.length >=
+                maxLanguages
+            ) {
+                return current;
+            }
+
+            return {
+                ...current,
+                extraLanguages: [
+                    ...current.extraLanguages,
+                    language,
+                ],
+            };
+        });
+    }
+
+    function toggleSpell(spellId) {
+        setCharacter((current) => {
+            const exists =
+                current.spells.includes(spellId);
+
+            if (exists) {
+                return {
+                    ...current,
+                    spells: current.spells.filter(
+                        (spell) => spell !== spellId
+                    ),
+                };
+            }
+
+            return {
+                ...current,
+                spells: [
+                    ...current.spells,
+                    spellId,
+                ],
+            };
+        });
+    }
+
+    function rollAbilities() {
+        const values = [
+            15,
+            14,
+            13,
+            12,
+            10,
+            8,
+        ];
+
+        const shuffled = [...values].sort(
+            () => Math.random() - 0.5
+        );
+
+        const nextAbilities = {};
+
+        ABILITIES.forEach(
+            (ability, index) => {
+                nextAbilities[ability.id] =
+                    shuffled[index];
+            }
+        );
+
+        setCharacter((current) => ({
+            ...current,
+            abilities: nextAbilities,
+        }));
+    }
+
+    function resetAbilities() {
+        setCharacter((current) => ({
+            ...current,
+            abilities: {
+                forca: 15,
+                destreza: 14,
+                constituicao: 13,
+                inteligencia: 12,
+                sabedoria: 10,
+                carisma: 8,
+            },
+        }));
+    }
+
+    function validateStep(step) {
+        if (step === 1) {
+            if (
+                !character.name.trim()
+            ) {
+                alert(
+                    "Digite um nome para o personagem."
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        if (step === 2) {
+            if (!character.race) {
+                alert(
+                    "Escolha uma raça para continuar."
+                );
+
+                return false;
+            }
+
+            const race =
+                RACES[character.race];
+
+            if (
+                race?.subraces &&
+                !character.subrace
+            ) {
+                alert(
+                    "Escolha uma sub-raça para continuar."
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        if (step === 3) {
+            if (!character.class) {
+                alert(
+                    "Escolha uma classe para continuar."
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        if (step === 4) {
+            if (!character.background) {
+                alert(
+                    "Escolha um antecedente para continuar."
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        if (step === 5) {
+            const required =
+                selectedClass?.choose || 0;
+
+            if (
+                character.classSkills.length <
+                required
+            ) {
+                alert(
+                    `Escolha ${required} perícia(s) da classe.`
+                );
+
+                return false;
+            }
+
+            if (
+                selectedBackground?.languages > 0 &&
+                character.extraLanguages.length <
+                    selectedBackground.languages
+            ) {
+                alert(
+                    `Escolha ${selectedBackground.languages} idioma(s) adicional(is).`
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        if (step === 6) {
+            const invalid =
+                ABILITIES.some(
+                    (ability) =>
+                        Number(
+                            character.abilities[
+                                ability.id
+                            ]
+                        ) < 1
+                );
+
+            if (invalid) {
+                alert(
+                    "Todos os atributos precisam ter valores válidos."
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        if (step === 7) {
+            return true;
+        }
+
+        return true;
+    }
+
+    function goNext() {
+        if (!validateStep(currentStep)) {
+            return;
+        }
+
+        if (
+            currentStep <
+            STEP_DATA.length
+        ) {
+            setCurrentStep(
+                (current) => current + 1
+            );
+
+            return;
+        }
+
+        finishCharacter();
+    }
+
+    function goBack() {
+        if (currentStep > 1) {
+            setCurrentStep(
+                (current) => current - 1
+            );
+
+            return;
+        }
+
+        onNavigate?.("personagens");
+    }
+
+    function buildCharacter() {
+        const selectedRaceData =
+            RACES[character.race];
+
+        const selectedSubraceData =
+            selectedRaceData?.subraces?.[
+                character.subrace
+            ];
+
+        const raceTraits = [
+            ...(selectedRaceData?.traits || []),
+            ...(selectedSubraceData?.traits || []),
+        ];
+
+        const languages = [
+            ...(selectedRaceData?.languages || []),
+            ...character.extraLanguages,
+        ].filter(
+            (language, index, array) =>
+                array.indexOf(language) ===
+                index
+        );
+
+        const saves = ABILITIES.map(
+            (ability) => ({
+                id: ability.id,
+                name: ability.name,
+                proficient:
+                    selectedClass?.saves?.includes(
+                        ability.id
+                    ) || false,
+                bonus:
+                    modifiers[ability.id] +
+                    (selectedClass?.saves?.includes(
+                        ability.id
+                    )
+                        ? proficiencyBonus
+                        : 0),
+            })
+        );
+
+        const skills = SKILLS.map(
+            (skill) => {
+                const proficient =
+                    totalSkillProficiencies.includes(
+                        skill.id
+                    );
+
+                return {
+                    ...skill,
+                    proficient,
+                    bonus:
+                        modifiers[
+                            skill.ability
+                        ] +
+                        (proficient
+                            ? proficiencyBonus
+                            : 0),
+                };
+            }
+        );
+
+        const hitPoints =
+            selectedClass.hitDie +
+            modifiers.constituicao;
+
+        const armorClass =
+            10 + modifiers.destreza;
+
+        const initiative =
+            modifiers.destreza;
+
+        const passivePerception =
+            10 +
+            modifiers.sabedoria +
+            (totalSkillProficiencies.includes(
+                "percepcao"
+            )
+                ? proficiencyBonus
+                : 0);
+
+        const spellcastingClasses = [
+            "Bardo",
+            "Bruxo",
+            "Clérigo",
+            "Druida",
+            "Feiticeiro",
+            "Mago",
+            "Paladino",
+            "Patrulheiro",
+        ];
+
+        let spellAbility = null;
+
+        if (
+            spellcastingClasses.includes(
+                character.class
+            )
+        ) {
+            if (
+                [
+                    "Bardo",
+                    "Bruxo",
+                    "Feiticeiro",
+                    "Paladino",
+                ].includes(
+                    character.class
+                )
+            ) {
+                spellAbility =
+                    "carisma";
+            }
+
+            if (
+                [
+                    "Clérigo",
+                    "Druida",
+                    "Patrulheiro",
+                ].includes(
+                    character.class
+                )
+            ) {
+                spellAbility =
+                    "sabedoria";
+            }
+
+            if (
+                character.class === "Mago"
+            ) {
+                spellAbility =
+                    "inteligencia";
+            }
+        }
+
+        const spellAbilityModifier =
+            spellAbility
+                ? modifiers[
+                      spellAbility
+                  ]
+                : null;
+
+        const spellSaveDC =
+            spellAbilityModifier !== null
+                ? 8 +
+                  proficiencyBonus +
+                  spellAbilityModifier
+                : null;
+
+        const spellAttack =
+            spellAbilityModifier !== null
+                ? proficiencyBonus +
+                  spellAbilityModifier
+                : null;
+
+        const now =
+            new Date().toISOString();
+
+        return {
+            id: `dnd5e-${Date.now()}-${Math.random()
+                .toString(36)
+                .slice(2, 9)}`,
+
+            system: "dnd5e",
+            systemName: "D&D 5e",
+
+            name:
+                character.name.trim(),
+
+            race: character.race,
+            subrace:
+                character.subrace,
+
+            class: character.class,
+            background:
+                character.background,
+
+            level: Number(
+                character.level
+            ),
+
+            experience: Number(
+                character.experience || 0
+            ),
+
+            alignment:
+                character.alignment,
+
+            concept:
+                character.concept,
+
+            abilities: {
+                ...finalAbilities,
+            },
+
+            abilityModifiers: {
+                ...modifiers,
+            },
+
+            proficiencyBonus,
+
+            savingThrows: saves,
+
+            skills,
+
+            classSkills: [
+                ...character.classSkills,
+            ],
+
+            backgroundSkills: [
+                ...backgroundSkills,
+            ],
+
+            raceSkills: [
+                ...character.raceSkills,
+            ],
+
+            hitPoints,
+            maxHitPoints: hitPoints,
+
+            armorClass,
+            initiative,
+            passivePerception,
+
+            spellcasting: {
+                ability:
+                    spellAbility,
+                abilityModifier:
+                    spellAbilityModifier,
+                saveDC: spellSaveDC,
+                attackBonus:
+                    spellAttack,
+            },
+
+            spells: [
+                ...character.spells,
+            ],
+
+            languages,
+
+            equipment: [
+                ...character.equipment,
+            ],
+
+            traits: raceTraits,
+
+            personality:
+                character.personality,
+
+            ideal:
+                character.ideal,
+
+            bond:
+                character.bond,
+
+            flaw:
+                character.flaw,
+
+            speed:
+                selectedSubraceData?.speed ||
+                selectedRaceData?.speed ||
+                30,
+
+            hitDie:
+                selectedClass.hitDie,
+
+            classInfo:
+                selectedClass.info,
+
+            raceInfo:
+                selectedRaceData.info,
+
+            backgroundInfo:
+                selectedBackground.info,
+
+            createdAt: now,
+            updatedAt: now,
+        };
+    }
+
+    function finishCharacter() {
+        if (!validateStep(8)) {
+            return;
+        }
+
+        const finalCharacter =
+            buildCharacter();
+
+        try {
+            const storageKey =
+                "ordo-rpgistas-personagens";
+
+            const saved =
+                localStorage.getItem(
+                    storageKey
+                );
+
+            let characters = [];
+
+            if (saved) {
+                try {
+                    const parsed =
+                        JSON.parse(saved);
+
+                    if (
+                        Array.isArray(
+                            parsed
+                        )
+                    ) {
+                        characters =
+                            parsed;
+                    }
+                } catch {
+                    characters = [];
+                }
+            }
+
+            const existingIndex =
+                characters.findIndex(
+                    (item) =>
+                        item?.id ===
+                        finalCharacter.id
+                );
+
+            if (
+                existingIndex >= 0
+            ) {
+                characters[
+                    existingIndex
+                ] = finalCharacter;
+            } else {
+                characters.push(
+                    finalCharacter
+                );
+            }
+
+            localStorage.setItem(
+                storageKey,
+                JSON.stringify(
+                    characters
+                )
+            );
+
+            window.dispatchEvent(
+                new Event("ordo-characters-updated")
+            );
+
+            setCompletedCharacter(
+                finalCharacter
+            );
+        } catch (error) {
+            console.error(
+                "Erro ao salvar personagem:",
+                error
+            );
+
+            alert(
+                "Não foi possível salvar o personagem. Verifique o armazenamento do navegador."
+            );
+
+            return;
+        }
+    }
+
+    const currentStepData =
+        STEP_DATA.find(
+            (step) =>
+                step.id === currentStep
+        );
+
+    const progress =
+        (currentStep /
+            STEP_DATA.length) *
+        100;
+
     return (
-        <div className="creator-step-content">
-            <div className="creator-section-heading">
-                <div className="creator-section-icon">
-                    <UserRound size={22} />
+        <PageBase
+            title="Criar Personagem"
+            subtitle="Monte seu personagem de D&D passo a passo."
+            icon={Dices}
+            onNavigate={onNavigate}
+        >
+            <div className="criar-personagem-page">
+                <div className="criar-top-bar">
+                    <button
+                        type="button"
+                        className="criar-back-button"
+                        onClick={goBack}
+                    >
+                        <ArrowLeft
+                            size={16}
+                        />
+
+                        <span>
+                            Voltar
+                        </span>
+                    </button>
+
+                    <span className="criar-step-counter">
+                        ETAPA{" "}
+                        {currentStep}{" "}
+                        DE{" "}
+                        {STEP_DATA.length}
+                    </span>
                 </div>
 
+                <div className="criar-progress">
+                    <div
+                        className="criar-progress-bar"
+                        style={{
+                            width: `${progress}%`,
+                        }}
+                    />
+                </div>
+
+                <div className="criar-step-navigation">
+                    {STEP_DATA.map(
+                        (step) => {
+                            const StepIcon =
+                                step.icon;
+
+                            const active =
+                                currentStep ===
+                                step.id;
+
+                            const completed =
+                                currentStep >
+                                step.id;
+
+                            return (
+                                <button
+                                    key={
+                                        step.id
+                                    }
+                                    type="button"
+                                    className={`criar-step-item ${
+                                        active
+                                            ? "active"
+                                            : ""
+                                    } ${
+                                        completed
+                                            ? "completed"
+                                            : ""
+                                    }`}
+                                    onClick={() => {
+                                        if (
+                                            step.id <
+                                            currentStep
+                                        ) {
+                                            setCurrentStep(
+                                                step.id
+                                            );
+                                        }
+                                    }}
+                                >
+                                    <span className="criar-step-number">
+                                        {completed ? (
+                                            <Check
+                                                size={
+                                                    13
+                                                }
+                                            />
+                                        ) : (
+                                            step.id
+                                        )}
+                                    </span>
+
+                                    <span>
+                                        {
+                                            step.name
+                                        }
+                                    </span>
+                                </button>
+                            );
+                        }
+                    )}
+                </div>
+
+                <motion.div
+                    className="criar-content"
+                    key={currentStep}
+                    initial={{
+                        opacity: 0,
+                        x: 15,
+                    }}
+                    animate={{
+                        opacity: 1,
+                        x: 0,
+                    }}
+                    transition={{
+                        duration: 0.25,
+                    }}
+                >
+                    {currentStep ===
+                        1 && (
+                        <ConceptStep
+                            character={
+                                character
+                            }
+                            updateCharacter={
+                                updateCharacter
+                            }
+                        />
+                    )}
+
+                    {currentStep ===
+                        2 && (
+                        <RaceStep
+                            character={
+                                character
+                            }
+                            selectedRace={
+                                selectedRace
+                            }
+                            changeRace={
+                                changeRace
+                            }
+                            updateCharacter={
+                                updateCharacter
+                            }
+                            openInfo={
+                                openInfo
+                            }
+                        />
+                    )}
+
+                    {currentStep ===
+                        3 && (
+                        <ClassStep
+                            character={
+                                character
+                            }
+                            selectedClass={
+                                selectedClass
+                            }
+                            changeClass={
+                                changeClass
+                            }
+                            openInfo={
+                                openInfo
+                            }
+                        />
+                    )}
+
+                    {currentStep ===
+                        4 && (
+                        <BackgroundStep
+                            character={
+                                character
+                            }
+                            selectedBackground={
+                                selectedBackground
+                            }
+                            changeBackground={
+                                changeBackground
+                            }
+                            openInfo={
+                                openInfo
+                            }
+                        />
+                    )}
+
+                    {currentStep ===
+                        5 && (
+                        <ProficiencyStep
+                            character={
+                                character
+                            }
+                            selectedClass={
+                                selectedClass
+                            }
+                            availableClassSkills={
+                                availableClassSkills
+                            }
+                            backgroundSkills={
+                                backgroundSkills
+                            }
+                            totalSkillProficiencies={
+                                totalSkillProficiencies
+                            }
+                            toggleClassSkill={
+                                toggleClassSkill
+                            }
+                            toggleRaceSkill={
+                                toggleRaceSkill
+                            }
+                            toggleLanguage={
+                                toggleLanguage
+                            }
+                            selectedBackground={
+                                selectedBackground
+                            }
+                            extraLanguages={
+                                character.extraLanguages
+                            }
+                        />
+                    )}
+
+                    {currentStep ===
+                        6 && (
+                        <AbilitiesStep
+                            character={
+                                character
+                            }
+                            finalAbilities={
+                                finalAbilities
+                            }
+                            modifiers={
+                                modifiers
+                            }
+                            updateAbility={
+                                updateAbility
+                            }
+                            rollAbilities={
+                                rollAbilities
+                            }
+                            resetAbilities={
+                                resetAbilities
+                            }
+                        />
+                    )}
+
+                    {currentStep ===
+                        7 && (
+                        <DetailsStep
+                            character={
+                                character
+                            }
+                            updateCharacter={
+                                updateCharacter
+                            }
+                        />
+                    )}
+
+                    {currentStep ===
+                        8 && (
+                        <CharacterPreviewStep
+                            character={
+                                character
+                            }
+                            finalAbilities={
+                                finalAbilities
+                            }
+                            modifiers={
+                                modifiers
+                            }
+                            proficiencyBonus={
+                                proficiencyBonus
+                            }
+                            selectedRace={
+                                selectedRace
+                            }
+                            selectedClass={
+                                selectedClass
+                            }
+                            selectedBackground={
+                                selectedBackground
+                            }
+                            totalSkillProficiencies={
+                                totalSkillProficiencies
+                            }
+                            completedCharacter={
+                                completedCharacter
+                            }
+                        />
+                    )}
+                </motion.div>
+
+                <div className="criar-bottom-actions">
+                    <button
+                        type="button"
+                        className="criar-action-button"
+                        onClick={
+                            goBack
+                        }
+                    >
+                        <ArrowLeft
+                            size={16}
+                        />
+
+                        <span>
+                            {currentStep ===
+                            1
+                                ? "Cancelar"
+                                : "Anterior"}
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        className="criar-action-button primary"
+                        onClick={
+                            goNext
+                        }
+                    >
+                        <span>
+                            {currentStep ===
+                            STEP_DATA.length
+                                ? "Salvar personagem"
+                                : "Continuar"}
+                        </span>
+
+                        {currentStep ===
+                        STEP_DATA.length ? (
+                            <Check
+                                size={16}
+                            />
+                        ) : (
+                            <ArrowRight
+                                size={16}
+                            />
+                        )}
+                    </button>
+                </div>
+            </div>
+
+            {infoModal && (
+                <InfoModal
+                    infoModal={
+                        infoModal
+                    }
+                    onClose={() =>
+                        setInfoModal(
+                            null
+                        )
+                    }
+                />
+            )}
+        </PageBase>
+    );
+}
+function ConceptStep({
+    character,
+    updateCharacter,
+}) {
+    return (
+        <div className="criar-step-card">
+            <div className="criar-step-header">
                 <div>
-                    <span>IDENTIDADE</span>
-                    <h2>Quem é seu personagem?</h2>
+                    <span>PASSO 1</span>
+                    <h2>Conceito do personagem</h2>
                     <p>
-                        Comece criando a identidade básica do
-                        seu aventureiro.
+                        Comece definindo a identidade básica do seu personagem.
                     </p>
                 </div>
             </div>
 
-            <div className="creator-form-grid">
-                <label className="creator-field creator-field-full">
+            <div className="criar-field-grid">
+                <label className="criar-field criar-field-full">
                     <span>Nome do personagem</span>
 
                     <input
                         type="text"
                         value={character.name}
                         onChange={(event) =>
-                            updateField(
-                                "name",
-                                event.target.value
-                            )
+                            updateCharacter("name", event.target.value)
                         }
-                        placeholder="Ex.: Aric Valen"
+                        placeholder="Digite o nome do personagem"
+                        maxLength={60}
                     />
                 </label>
 
-                <label className="creator-field creator-field-full">
+                <label className="criar-field criar-field-full">
                     <span>Conceito</span>
 
-                    <input
-                        type="text"
+                    <textarea
                         value={character.concept}
                         onChange={(event) =>
-                            updateField(
-                                "concept",
-                                event.target.value
-                            )
+                            updateCharacter("concept", event.target.value)
                         }
-                        placeholder="Ex.: Guerreiro errante em busca de vingança"
+                        placeholder="Descreva brevemente quem é seu personagem..."
+                        rows={5}
+                        maxLength={500}
                     />
-                </label>
 
-                <label className="creator-field">
+                    <small>
+                        {character.concept.length}/500
+                    </small>
+                </label>
+            </div>
+        </div>
+    );
+}
+
+
+function RaceStep({
+    character,
+    updateCharacter,
+    selectedRace,
+    toggleRaceSkill,
+}) {
+    return (
+        <div className="criar-step-card">
+            <div className="criar-step-header">
+                <div>
+                    <span>PASSO 2</span>
+                    <h2>Raça</h2>
+                    <p>
+                        Escolha a raça que define parte da origem e das
+                        características do personagem.
+                    </p>
+                </div>
+            </div>
+
+            <div className="criar-option-grid">
+                {RACES.map((race) => {
+                    const selected = character.race === race.id;
+
+                    return (
+                        <button
+                            key={race.id}
+                            type="button"
+                            className={`criar-option-card ${
+                                selected ? "active" : ""
+                            }`}
+                            onClick={() => {
+                                updateCharacter("race", race.id);
+                                updateCharacter(
+                                    "subrace",
+                                    race.subraces?.[0]?.id || ""
+                                );
+                                updateCharacter(
+                                    "raceSkills",
+                                    []
+                                );
+                            }}
+                        >
+                            <div className="criar-option-icon">
+                                {race.icon}
+                            </div>
+
+                            <div className="criar-option-content">
+                                <strong>{race.name}</strong>
+
+                                <span>
+                                    {race.description}
+                                </span>
+                            </div>
+
+                            <div className="criar-option-check">
+                                {selected ? "✓" : ""}
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
+
+            {selectedRace?.subraces?.length > 0 && (
+                <section className="criar-section">
+                    <div className="criar-section-title">
+                        <div>
+                            <span>VARIAÇÃO</span>
+                            <h3>Sub-raça</h3>
+                        </div>
+                    </div>
+
+                    <div className="criar-option-grid">
+                        {selectedRace.subraces.map((subrace) => {
+                            const selected =
+                                character.subrace === subrace.id;
+
+                            return (
+                                <button
+                                    key={subrace.id}
+                                    type="button"
+                                    className={`criar-option-card ${
+                                        selected ? "active" : ""
+                                    }`}
+                                    onClick={() =>
+                                        updateCharacter(
+                                            "subrace",
+                                            subrace.id
+                                        )
+                                    }
+                                >
+                                    <div className="criar-option-content">
+                                        <strong>{subrace.name}</strong>
+
+                                        <span>
+                                            {subrace.description}
+                                        </span>
+                                    </div>
+
+                                    <div className="criar-option-check">
+                                        {selected ? "✓" : ""}
+                                    </div>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </section>
+            )}
+
+            {selectedRace?.skillOptions?.length > 0 && (
+                <section className="criar-section">
+                    <div className="criar-section-title">
+                        <div>
+                            <span>CARACTERÍSTICAS</span>
+                            <h3>Escolhas da raça</h3>
+                        </div>
+                    </div>
+
+                    <div className="criar-check-grid">
+                        {selectedRace.skillOptions.map((skillId) => {
+                            const skill = SKILLS.find(
+                                (item) => item.id === skillId
+                            );
+
+                            if (!skill) return null;
+
+                            const checked =
+                                character.raceSkills.includes(skill.id);
+
+                            return (
+                                <button
+                                    key={skill.id}
+                                    type="button"
+                                    className={`criar-check-item ${
+                                        checked ? "active" : ""
+                                    }`}
+                                    onClick={() =>
+                                        toggleRaceSkill(skill.id)
+                                    }
+                                >
+                                    <span className="criar-check-box">
+                                        {checked ? "✓" : ""}
+                                    </span>
+
+                                    <span>
+                                        <strong>{skill.name}</strong>
+                                        <small>
+                                            {skill.ability}
+                                        </small>
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </section>
+            )}
+        </div>
+    );
+}
+
+
+function ClassStep({
+    character,
+    updateCharacter,
+    selectedClass,
+}) {
+    return (
+        <div className="criar-step-card">
+            <div className="criar-step-header">
+                <div>
+                    <span>PASSO 3</span>
+                    <h2>Classe</h2>
+                    <p>
+                        Escolha a classe que define o principal estilo de
+                        jogo e as capacidades do personagem.
+                    </p>
+                </div>
+            </div>
+
+            <div className="criar-option-grid">
+                {CLASSES.map((item) => {
+                    const selected = character.class === item.id;
+
+                    return (
+                        <button
+                            key={item.id}
+                            type="button"
+                            className={`criar-option-card ${
+                                selected ? "active" : ""
+                            }`}
+                            onClick={() => {
+                                updateCharacter("class", item.id);
+                                updateCharacter(
+                                    "classSkills",
+                                    []
+                                );
+                                updateCharacter(
+                                    "spells",
+                                    []
+                                );
+                            }}
+                        >
+                            <div className="criar-option-icon">
+                                {item.icon}
+                            </div>
+
+                            <div className="criar-option-content">
+                                <strong>{item.name}</strong>
+
+                                <span>
+                                    {item.description}
+                                </span>
+
+                                <small>
+                                    Dado de vida: d{item.hitDie}
+                                </small>
+                            </div>
+
+                            <div className="criar-option-check">
+                                {selected ? "✓" : ""}
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
+
+            {selectedClass && (
+                <section className="criar-section">
+                    <div className="criar-section-title">
+                        <div>
+                            <span>CLASSE SELECIONADA</span>
+                            <h3>{selectedClass.name}</h3>
+                        </div>
+                    </div>
+
+                    <div className="criar-info-grid">
+                        <div className="criar-info-box">
+                            <span>DADO DE VIDA</span>
+                            <strong>
+                                d{selectedClass.hitDie}
+                            </strong>
+                        </div>
+
+                        <div className="criar-info-box">
+                            <span>ATRIBUTO PRINCIPAL</span>
+                            <strong>
+                                {selectedClass.primaryAbility ||
+                                    "Variável"}
+                            </strong>
+                        </div>
+                    </div>
+                </section>
+            )}
+        </div>
+    );
+}
+
+
+function BackgroundStep({
+    character,
+    updateCharacter,
+    selectedBackground,
+}) {
+    return (
+        <div className="criar-step-card">
+            <div className="criar-step-header">
+                <div>
+                    <span>PASSO 4</span>
+                    <h2>Antecedente</h2>
+                    <p>
+                        O passado do personagem ajuda a definir sua
+                        experiência antes da aventura começar.
+                    </p>
+                </div>
+            </div>
+
+            <div className="criar-option-grid">
+                {BACKGROUNDS.map((background) => {
+                    const selected =
+                        character.background === background.id;
+
+                    return (
+                        <button
+                            key={background.id}
+                            type="button"
+                            className={`criar-option-card ${
+                                selected ? "active" : ""
+                            }`}
+                            onClick={() => {
+                                updateCharacter(
+                                    "background",
+                                    background.id
+                                );
+
+                                updateCharacter(
+                                    "extraLanguages",
+                                    []
+                                );
+                            }}
+                        >
+                            <div className="criar-option-content">
+                                <strong>
+                                    {background.name}
+                                </strong>
+
+                                <span>
+                                    {background.description}
+                                </span>
+                            </div>
+
+                            <div className="criar-option-check">
+                                {selected ? "✓" : ""}
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
+
+            {selectedBackground && (
+                <section className="criar-section">
+                    <div className="criar-section-title">
+                        <div>
+                            <span>DETALHES</span>
+                            <h3>
+                                {selectedBackground.name}
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div className="criar-info-grid">
+                        <div className="criar-info-box">
+                            <span>PERÍCIAS</span>
+
+                            <strong>
+                                {selectedBackground.skills
+                                    ?.map((skillId) => {
+                                        const skill = SKILLS.find(
+                                            (item) =>
+                                                item.id ===
+                                                skillId
+                                        );
+
+                                        return skill?.name;
+                                    })
+                                    .filter(Boolean)
+                                    .join(", ") ||
+                                    "Nenhuma definida"}
+                            </strong>
+                        </div>
+
+                        <div className="criar-info-box">
+                            <span>IDIOMAS</span>
+
+                            <strong>
+                                {selectedBackground.languages ||
+                                    0}
+                            </strong>
+                        </div>
+                    </div>
+                </section>
+            )}
+        </div>
+    );
+}
+
+
+function ProficiencyStep({
+    character,
+    toggleClassSkill,
+    selectedClass,
+}) {
+    const availableSkills =
+        selectedClass?.skillOptions ||
+        selectedClass?.skills ||
+        [];
+
+    return (
+        <div className="criar-step-card">
+            <div className="criar-step-header">
+                <div>
+                    <span>PASSO 5</span>
+                    <h2>Proficiências</h2>
+                    <p>
+                        Selecione as perícias concedidas pela classe.
+                    </p>
+                </div>
+            </div>
+
+            <section className="criar-section">
+                <div className="criar-section-title">
+                    <div>
+                        <span>PERÍCIAS</span>
+                        <h3>
+                            Proficiências de classe
+                        </h3>
+                    </div>
+
+                    <span className="criar-section-counter">
+                        {character.classSkills.length}
+                    </span>
+                </div>
+
+                <div className="criar-check-grid">
+                    {availableSkills.map((skillId) => {
+                        const skill =
+                            typeof skillId === "object"
+                                ? skillId
+                                : SKILLS.find(
+                                      (item) =>
+                                          item.id === skillId
+                                  );
+
+                        if (!skill) return null;
+
+                        const checked =
+                            character.classSkills.includes(
+                                skill.id
+                            );
+
+                        return (
+                            <button
+                                key={skill.id}
+                                type="button"
+                                className={`criar-check-item ${
+                                    checked ? "active" : ""
+                                }`}
+                                onClick={() =>
+                                    toggleClassSkill(skill.id)
+                                }
+                            >
+                                <span className="criar-check-box">
+                                    {checked ? "✓" : ""}
+                                </span>
+
+                                <span>
+                                    <strong>
+                                        {skill.name}
+                                    </strong>
+
+                                    <small>
+                                        {skill.ability}
+                                    </small>
+                                </span>
+                            </button>
+                        );
+                    })}
+
+                    {availableSkills.length === 0 && (
+                        <div className="criar-empty-message">
+                            <strong>
+                                Nenhuma perícia configurada.
+                            </strong>
+
+                            <span>
+                                As opções de perícia desta classe
+                                poderão ser configuradas posteriormente.
+                            </span>
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            <section className="criar-section">
+                <div className="criar-section-title">
+                    <div>
+                        <span>IDIOMAS</span>
+                        <h3>Idiomas adicionais</h3>
+                    </div>
+                </div>
+
+                <div className="criar-check-grid">
+                    {LANGUAGES.map((language) => {
+                        const checked =
+                            character.extraLanguages.includes(
+                                language.id
+                            );
+
+                        return (
+                            <button
+                                key={language.id}
+                                type="button"
+                                className={`criar-check-item ${
+                                    checked ? "active" : ""
+                                }`}
+                                onClick={() =>
+                                    toggleLanguage(language.id)
+                                }
+                            >
+                                <span className="criar-check-box">
+                                    {checked ? "✓" : ""}
+                                </span>
+
+                                <span>
+                                    <strong>
+                                        {language.name}
+                                    </strong>
+
+                                    <small>
+                                        {language.description}
+                                    </small>
+                                </span>
+                            </button>
+                        );
+                    })}
+                </div>
+            </section>
+        </div>
+    );
+}
+function AbilitiesStep({
+    character,
+    updateAbility,
+    rollAbilities,
+    resetAbilities,
+}) {
+    return (
+        <div className="criar-step-card">
+            <div className="criar-step-header">
+                <div>
+                    <span>PASSO 6</span>
+                    <h2>Atributos</h2>
+                    <p>
+                        Distribua os valores de atributo do seu personagem.
+                    </p>
+                </div>
+
+                <div className="criar-step-actions">
+                    <button
+                        type="button"
+                        className="criar-secondary-button"
+                        onClick={rollAbilities}
+                    >
+                        Rolar valores
+                    </button>
+
+                    <button
+                        type="button"
+                        className="criar-secondary-button"
+                        onClick={resetAbilities}
+                    >
+                        Restaurar
+                    </button>
+                </div>
+            </div>
+
+            <div className="criar-abilities-grid">
+                {ABILITIES.map((ability) => {
+                    const value =
+                        Number(
+                            character.abilities?.[ability.id]
+                        ) || 0;
+
+                    const modifier = getAbilityBonus(value);
+
+                    return (
+                        <div
+                            key={ability.id}
+                            className="criar-ability-card"
+                        >
+                            <div className="criar-ability-header">
+                                <div>
+                                    <span>
+                                        {ability.short}
+                                    </span>
+
+                                    <strong>
+                                        {ability.name}
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div className="criar-ability-value">
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="30"
+                                    value={value}
+                                    onChange={(event) =>
+                                        updateAbility(
+                                            ability.id,
+                                            event.target.value
+                                        )
+                                    }
+                                />
+
+                                <div className="criar-ability-modifier">
+                                    {formatModifier(modifier)}
+                                </div>
+                            </div>
+
+                            {ability.description && (
+                                <p>
+                                    {ability.description}
+                                </p>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+
+            <div className="criar-section">
+                <div className="criar-section-title">
+                    <div>
+                        <span>ATRIBUTOS EXTRAS</span>
+                        <h3>Valores personalizados</h3>
+                    </div>
+                </div>
+
+                <div className="criar-field-grid">
+                    {character.extraAbilities.map(
+                        (value, index) => (
+                            <label
+                                key={index}
+                                className="criar-field"
+                            >
+                                <span>
+                                    Atributo extra {index + 1}
+                                </span>
+
+                                <input
+                                    type="text"
+                                    value={value}
+                                    onChange={(event) => {
+                                        const next =
+                                            [
+                                                ...character.extraAbilities,
+                                            ];
+
+                                        next[index] =
+                                            event.target.value;
+
+                                        updateCharacter(
+                                            "extraAbilities",
+                                            next
+                                        );
+                                    }}
+                                    placeholder="Opcional"
+                                />
+                            </label>
+                        )
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+function DetailsStep({
+    character,
+    updateCharacter,
+}) {
+    return (
+        <div className="criar-step-card">
+            <div className="criar-step-header">
+                <div>
+                    <span>PASSO 7</span>
+                    <h2>Detalhes</h2>
+                    <p>
+                        Complete a personalidade e a história do seu
+                        personagem.
+                    </p>
+                </div>
+            </div>
+
+            <div className="criar-field-grid">
+                <label className="criar-field">
                     <span>Alinhamento</span>
 
                     <select
                         value={character.alignment}
                         onChange={(event) =>
-                            updateField(
+                            updateCharacter(
                                 "alignment",
                                 event.target.value
                             )
@@ -1415,2049 +2822,476 @@ function CharacterStepConcept({
                     </select>
                 </label>
 
-                <label className="creator-field">
-                    <span>Nível</span>
+                <label className="criar-field">
+                    <span>Experiência</span>
 
-                    <select
-                        value={character.level}
+                    <input
+                        type="number"
+                        min="0"
+                        value={character.experience}
                         onChange={(event) =>
-                            updateField(
-                                "level",
-                                Number(event.target.value)
-                            )
-                        }
-                    >
-                        {Array.from(
-                            { length: 20 },
-                            (_, index) => index + 1
-                        ).map((level) => (
-                            <option
-                                key={level}
-                                value={level}
-                            >
-                                Nível {level}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-            </div>
-
-            <div className="creator-info-card">
-                <Info size={18} />
-
-                <div>
-                    <strong>
-                        Pense no conceito antes da ficha.
-                    </strong>
-
-                    <p>
-                        Seu conceito pode ser uma frase curta
-                        que resume a personalidade, objetivo
-                        ou papel do personagem na aventura.
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function CharacterStepRace({
-    character,
-    setCharacter,
-}) {
-    const raceData =
-        RACES[character.race] ||
-        RACES.Humano;
-
-    const subraces =
-        Object.keys(raceData.subraces || {});
-
-    function selectRace(race) {
-        const nextRace =
-            RACES[race] || RACES.Humano;
-
-        const nextSubrace =
-            Object.keys(
-                nextRace.subraces || {}
-            )[0] || "";
-
-        setCharacter((current) => ({
-            ...current,
-            race,
-            subrace: nextSubrace,
-        }));
-    }
-
-    function selectSubrace(subrace) {
-        setCharacter((current) => ({
-            ...current,
-            subrace,
-        }));
-    }
-
-    return (
-        <div className="creator-step-content">
-            <div className="creator-section-heading">
-                <div className="creator-section-icon">
-                    <Sparkles size={22} />
-                </div>
-
-                <div>
-                    <span>HERANÇA</span>
-                    <h2>Escolha sua raça</h2>
-                    <p>
-                        A raça define características físicas,
-                        culturais e algumas habilidades.
-                    </p>
-                </div>
-            </div>
-
-            <div className="creator-option-grid">
-                {Object.entries(RACES).map(
-                    ([raceName, race]) => {
-                        const active =
-                            character.race === raceName;
-
-                        return (
-                            <button
-                                type="button"
-                                key={raceName}
-                                className={`creator-option-card ${
-                                    active
-                                        ? "active"
-                                        : ""
-                                }`}
-                                onClick={() =>
-                                    selectRace(
-                                        raceName
-                                    )
-                                }
-                            >
-                                <div className="creator-option-card-top">
-                                    <div className="creator-option-icon">
-                                        <Sparkles
-                                            size={20}
-                                        />
-                                    </div>
-
-                                    {active && (
-                                        <span className="creator-option-check">
-                                            <Check
-                                                size={15}
-                                            />
-                                        </span>
-                                    )}
-                                </div>
-
-                                <strong>
-                                    {raceName}
-                                </strong>
-
-                                <span>
-                                    {race.info}
-                                </span>
-                            </button>
-                        );
-                    }
-                )}
-            </div>
-
-            {subraces.length > 0 && (
-                <div className="creator-subsection">
-                    <div className="creator-subsection-heading">
-                        <div>
-                            <span>VARIANTE</span>
-                            <h3>
-                                Escolha uma sub-raça
-                            </h3>
-                        </div>
-                    </div>
-
-                    <div className="creator-mini-option-grid">
-                        {subraces.map(
-                            (subraceName) => {
-                                const subrace =
-                                    raceData
-                                        .subraces?.[
-                                        subraceName
-                                    ];
-
-                                const active =
-                                    character.subrace ===
-                                    subraceName;
-
-                                return (
-                                    <button
-                                        type="button"
-                                        key={
-                                            subraceName
-                                        }
-                                        className={`creator-mini-option ${
-                                            active
-                                                ? "active"
-                                                : ""
-                                        }`}
-                                        onClick={() =>
-                                            selectSubrace(
-                                                subraceName
-                                            )
-                                        }
-                                    >
-                                        <div>
-                                            <strong>
-                                                {
-                                                    subraceName
-                                                }
-                                            </strong>
-
-                                            <span>
-                                                {Object.entries(
-                                                    subrace
-                                                        ?.bonus ||
-                                                        {}
-                                                )
-                                                    .map(
-                                                        ([
-                                                            ability,
-                                                            bonus,
-                                                        ]) =>
-                                                            `+${bonus} ${ability}`
-                                                    )
-                                                    .join(
-                                                        " • "
-                                                    )}
-                                            </span>
-                                        </div>
-
-                                        {active && (
-                                            <Check
-                                                size={
-                                                    17
-                                                }
-                                            />
-                                        )}
-                                    </button>
-                                );
-                            }
-                        )}
-                    </div>
-                </div>
-            )}
-
-            <div className="creator-info-card">
-                <Sparkles size={18} />
-
-                <div>
-                    <strong>
-                        Características raciais
-                    </strong>
-
-                    <p>
-                        {raceData.info}
-                    </p>
-
-                    <div className="creator-tag-list">
-                        {raceData.traits?.map(
-                            (trait) => (
-                                <span
-                                    key={trait}
-                                >
-                                    {trait}
-                                </span>
-                            )
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function CharacterStepClass({
-    character,
-    setCharacter,
-}) {
-    const classData =
-        CLASSES[character.class] ||
-        CLASSES.Guerreiro;
-
-    function selectClass(className) {
-        setCharacter((current) => ({
-            ...current,
-            class: className,
-            classSkills: [],
-        }));
-    }
-
-    return (
-        <div className="creator-step-content">
-            <div className="creator-section-heading">
-                <div className="creator-section-icon">
-                    <Sword size={22} />
-                </div>
-
-                <div>
-                    <span>PROFISSÃO</span>
-                    <h2>Escolha sua classe</h2>
-                    <p>
-                        Sua classe determina seu estilo de
-                        combate, habilidades e poderes.
-                    </p>
-                </div>
-            </div>
-
-            <div className="creator-option-grid">
-                {Object.entries(CLASSES).map(
-                    ([className, classInfo]) => {
-                        const active =
-                            character.class ===
-                            className;
-
-                        return (
-                            <button
-                                type="button"
-                                key={className}
-                                className={`creator-option-card ${
-                                    active
-                                        ? "active"
-                                        : ""
-                                }`}
-                                onClick={() =>
-                                    selectClass(
-                                        className
-                                    )
-                                }
-                            >
-                                <div className="creator-option-card-top">
-                                    <div className="creator-option-icon">
-                                        <Sword
-                                            size={20}
-                                        />
-                                    </div>
-
-                                    {active && (
-                                        <span className="creator-option-check">
-                                            <Check
-                                                size={15}
-                                            />
-                                        </span>
-                                    )}
-                                </div>
-
-                                <strong>
-                                    {className}
-                                </strong>
-
-                                <span>
-                                    {classInfo.info}
-                                </span>
-
-                                <small>
-                                    d
-                                    {
-                                        classInfo.hitDie
-                                    }{" "}
-                                    • atributo principal:{" "}
-                                    {
-                                        ABILITIES.find(
-                                            (
-                                                ability
-                                            ) =>
-                                                ability.id ===
-                                                classInfo.primary
-                                        )?.name
-                                    }
-                                </small>
-                            </button>
-                        );
-                    }
-                )}
-            </div>
-
-            <div className="creator-info-card">
-                <Sword size={18} />
-
-                <div>
-                    <strong>
-                        Características da classe
-                    </strong>
-
-                    <p>
-                        {classData.info}
-                    </p>
-
-                    <div className="creator-tag-list">
-                        {classData.traits?.map(
-                            (trait) => (
-                                <span
-                                    key={trait}
-                                >
-                                    {trait}
-                                </span>
-                            )
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function CharacterStepBackground({
-    character,
-    setCharacter,
-}) {
-    const backgroundData =
-        BACKGROUNDS[
-            character.background
-        ] ||
-        BACKGROUNDS.Soldado;
-
-    function selectBackground(
-        background
-    ) {
-        setCharacter((current) => ({
-            ...current,
-            background,
-        }));
-    }
-
-    return (
-        <div className="creator-step-content">
-            <div className="creator-section-heading">
-                <div className="creator-section-icon">
-                    <BookOpen size={22} />
-                </div>
-
-                <div>
-                    <span>HISTÓRIA</span>
-                    <h2>Escolha seu antecedente</h2>
-                    <p>
-                        O passado do personagem influencia
-                        suas perícias e equipamentos.
-                    </p>
-                </div>
-            </div>
-
-            <div className="creator-option-grid">
-                {Object.entries(
-                    BACKGROUNDS
-                ).map(
-                    ([
-                        backgroundName,
-                        background,
-                    ]) => {
-                        const active =
-                            character.background ===
-                            backgroundName;
-
-                        return (
-                            <button
-                                type="button"
-                                key={
-                                    backgroundName
-                                }
-                                className={`creator-option-card ${
-                                    active
-                                        ? "active"
-                                        : ""
-                                }`}
-                                onClick={() =>
-                                    selectBackground(
-                                        backgroundName
-                                    )
-                                }
-                            >
-                                <div className="creator-option-card-top">
-                                    <div className="creator-option-icon">
-                                        <BookOpen
-                                            size={20}
-                                        />
-                                    </div>
-
-                                    {active && (
-                                        <span className="creator-option-check">
-                                            <Check
-                                                size={15}
-                                            />
-                                        </span>
-                                    )}
-                                </div>
-
-                                <strong>
-                                    {
-                                        backgroundName
-                                    }
-                                </strong>
-
-                                <span>
-                                    {
-                                        background.info
-                                    }
-                                </span>
-
-                                <small>
-                                    Perícias:{" "}
-                                    {background.skills
-                                        .map(
-                                            (
-                                                skillId
-                                            ) =>
-                                                SKILLS.find(
-                                                    (
-                                                        skill
-                                                    ) =>
-                                                        skill.id ===
-                                                        skillId
-                                                )?.name
-                                        )
-                                        .filter(Boolean)
-                                        .join(
-                                            ", "
-                                        )}
-                                </small>
-                            </button>
-                        );
-                    }
-                )}
-            </div>
-
-            <div className="creator-info-card">
-                <BookOpen size={18} />
-
-                <div>
-                    <strong>
-                        Antecedente selecionado:{" "}
-                        {character.background}
-                    </strong>
-
-                    <p>
-                        {backgroundData.info}
-                    </p>
-
-                    <div className="creator-tag-list">
-                        {backgroundData.skills?.map(
-                            (skillId) => {
-                                const skill =
-                                    SKILLS.find(
-                                        (
-                                            item
-                                        ) =>
-                                            item.id ===
-                                            skillId
-                                    );
-
-                                if (!skill) {
-                                    return null;
-                                }
-
-                                return (
-                                    <span
-                                        key={
-                                            skill.id
-                                        }
-                                    >
-                                        {
-                                            skill.name
-                                        }
-                                    </span>
-                                );
-                            }
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function CharacterStepSkills({
-    character,
-    setCharacter,
-}) {
-    const classData =
-        getClassData(character);
-
-    const backgroundData =
-        getBackgroundData(character);
-
-    const availableClassSkills =
-        classData.skills || [];
-
-    const backgroundSkills =
-        backgroundData.skills || [];
-
-    const selectedClassSkills =
-        normalizeArray(
-            character.classSkills
-        );
-
-    const selectedRaceSkills =
-        normalizeArray(
-            character.raceSkills
-        );
-
-    function toggleClassSkill(
-        skillId
-    ) {
-        setCharacter((current) => {
-            const selected =
-                normalizeArray(
-                    current.classSkills
-                );
-
-            const exists =
-                selected.includes(
-                    skillId
-                );
-
-            return {
-                ...current,
-                classSkills: exists
-                    ? selected.filter(
-                          (id) =>
-                              id !==
-                              skillId
-                      )
-                    : [
-                          ...selected,
-                          skillId,
-                      ],
-            };
-        });
-    }
-
-    function toggleLanguage(
-        language
-    ) {
-        setCharacter((current) => {
-            const selected =
-                normalizeArray(
-                    current.extraLanguages
-                );
-
-            const exists =
-                selected.includes(
-                    language
-                );
-
-            return {
-                ...current,
-                extraLanguages: exists
-                    ? selected.filter(
-                          (item) =>
-                              item !==
-                              language
-                      )
-                    : [
-                          ...selected,
-                          language,
-                      ],
-            };
-        });
-    }
-
-    return (
-        <div className="creator-step-content">
-            <div className="creator-section-heading">
-                <div className="creator-section-icon">
-                    <Shield size={22} />
-                </div>
-
-                <div>
-                    <span>PROFICIÊNCIAS</span>
-                    <h2>
-                        Defina suas habilidades
-                    </h2>
-                    <p>
-                        Escolha as perícias adicionais
-                        que seu personagem domina.
-                    </p>
-                </div>
-            </div>
-
-            <div className="creator-selection-block">
-                <div className="creator-selection-heading">
-                    <div>
-                        <span>CLASSE</span>
-                        <h3>
-                            Perícias de{" "}
-                            {character.class}
-                        </h3>
-                    </div>
-
-                    <small>
-                        {selectedClassSkills.length}{" "}
-                        selecionadas
-                    </small>
-                </div>
-
-                <div className="creator-skill-grid">
-                    {availableClassSkills.map(
-                        (skillId) => {
-                            const skill =
-                                SKILLS.find(
-                                    (item) =>
-                                        item.id ===
-                                        skillId
-                                );
-
-                            if (!skill) {
-                                return null;
-                            }
-
-                            const active =
-                                selectedClassSkills.includes(
-                                    skillId
-                                );
-
-                            const backgroundHas =
-                                backgroundSkills.includes(
-                                    skillId
-                                );
-
-                            return (
-                                <button
-                                    type="button"
-                                    key={
-                                        skillId
-                                    }
-                                    className={`creator-skill-option ${
-                                        active ||
-                                        backgroundHas
-                                            ? "active"
-                                            : ""
-                                    }`}
-                                    onClick={() =>
-                                        toggleClassSkill(
-                                            skillId
-                                        )
-                                    }
-                                    disabled={
-                                        backgroundHas
-                                    }
-                                >
-                                    <div>
-                                        <strong>
-                                            {
-                                                skill.name
-                                            }
-                                        </strong>
-
-                                        <span>
-                                            {
-                                                ABILITIES.find(
-                                                    (
-                                                        ability
-                                                    ) =>
-                                                        ability.id ===
-                                                        skill.ability
-                                                )
-                                                    ?.name
-                                            }
-                                        </span>
-                                    </div>
-
-                                    {active ||
-                                    backgroundHas ? (
-                                        <Check
-                                            size={
-                                                16
-                                            }
-                                        />
-                                    ) : null}
-                                </button>
-                            );
-                        }
-                    )}
-                </div>
-            </div>
-
-            <div className="creator-selection-block">
-                <div className="creator-selection-heading">
-                    <div>
-                        <span>ANTECEDENTE</span>
-                        <h3>
-                            Perícias de{" "}
-                            {character.background}
-                        </h3>
-                    </div>
-                </div>
-
-                <div className="creator-skill-grid">
-                    {backgroundSkills.map(
-                        (skillId) => {
-                            const skill =
-                                SKILLS.find(
-                                    (item) =>
-                                        item.id ===
-                                        skillId
-                                );
-
-                            if (!skill) {
-                                return null;
-                            }
-
-                            return (
-                                <div
-                                    key={
-                                        skillId
-                                    }
-                                    className="creator-skill-option active creator-skill-static"
-                                >
-                                    <div>
-                                        <strong>
-                                            {
-                                                skill.name
-                                            }
-                                        </strong>
-
-                                        <span>
-                                            {
-                                                ABILITIES.find(
-                                                    (
-                                                        ability
-                                                    ) =>
-                                                        ability.id ===
-                                                        skill.ability
-                                                )
-                                                    ?.name
-                                            }
-                                        </span>
-                                    </div>
-
-                                    <Check
-                                        size={16}
-                                    />
-                                </div>
-                            );
-                        }
-                    )}
-                </div>
-            </div>
-
-            <div className="creator-selection-block">
-                <div className="creator-selection-heading">
-                    <div>
-                        <span>IDIOMAS</span>
-                        <h3>
-                            Idiomas adicionais
-                        </h3>
-                    </div>
-                </div>
-
-                <div className="creator-language-grid">
-                    {LANGUAGES.map(
-                        (language) => {
-                            const alreadyKnown =
-                                getRaceData(
-                                    character
+                            updateCharacter(
+                                "experience",
+                                Math.max(
+                                    0,
+                                    Number(event.target.value) || 0
                                 )
-                                    .languages?.includes(
-                                        language
-                                    );
-
-                            const active =
-                                normalizeArray(
-                                    character.extraLanguages
-                                ).includes(
-                                    language
-                                );
-
-                            return (
-                                <button
-                                    type="button"
-                                    key={
-                                        language
-                                    }
-                                    className={`creator-language-option ${
-                                        active ||
-                                        alreadyKnown
-                                            ? "active"
-                                            : ""
-                                    }`}
-                                    disabled={
-                                        alreadyKnown
-                                    }
-                                    onClick={() =>
-                                        toggleLanguage(
-                                            language
-                                        )
-                                    }
-                                >
-                                    <span>
-                                        {
-                                            language
-                                        }
-                                    </span>
-
-                                    {(active ||
-                                        alreadyKnown) && (
-                                        <Check
-                                            size={
-                                                15
-                                            }
-                                        />
-                                    )}
-                                </button>
-                            );
-                        }
-                    )}
-                </div>
-            </div>
-
-            <div className="creator-info-card">
-                <Shield size={18} />
-
-                <div>
-                    <strong>
-                        Suas proficiências
-                    </strong>
-
-                    <p>
-                        Perícias vindas da classe e do
-                        antecedente são combinadas automaticamente
-                        na ficha final.
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function CharacterStepAbilities({
-    character,
-    setCharacter,
-}) {
-    const abilityScores =
-        calculateAbilityScores(character);
-
-    function updateAbility(
-        abilityId,
-        value
-    ) {
-        const numericValue =
-            Number(value);
-
-        setCharacter((current) => ({
-            ...current,
-            abilities: {
-                ...current.abilities,
-                [abilityId]:
-                    Number.isNaN(
-                        numericValue
-                    )
-                        ? 0
-                        : numericValue,
-            },
-        }));
-    }
-
-    function rollAbilities() {
-        const values = [
-            15,
-            14,
-            13,
-            12,
-            10,
-            8,
-        ];
-
-        const shuffled = [
-            ...values,
-        ].sort(
-            () =>
-                Math.random() -
-                0.5
-        );
-
-        const nextAbilities = {};
-
-        ABILITIES.forEach(
-            (ability, index) => {
-                nextAbilities[
-                    ability.id
-                ] = shuffled[index];
-            }
-        );
-
-        setCharacter((current) => ({
-            ...current,
-            abilities:
-                nextAbilities,
-        }));
-    }
-
-    return (
-        <div className="creator-step-content">
-            <div className="creator-section-heading">
-                <div className="creator-section-icon">
-                    <Dices size={22} />
-                </div>
-
-                <div>
-                    <span>ATRIBUTOS</span>
-
-                    <h2>
-                        Defina suas capacidades
-                    </h2>
-
-                    <p>
-                        Ajuste os seis atributos principais
-                        do personagem.
-                    </p>
-                </div>
-
-                <button
-                    type="button"
-                    className="creator-secondary-button"
-                    onClick={
-                        rollAbilities
-                    }
-                >
-                    <Dices size={17} />
-                    Rolar valores
-                </button>
-            </div>
-
-            <div className="creator-ability-grid">
-                {ABILITIES.map(
-                    (ability) => {
-                        const baseScore =
-                            Number(
-                                character
-                                    .abilities?.[
-                                    ability.id
-                                ]
-                            ) || 0;
-
-                        const finalScore =
-                            abilityScores[
-                                ability.id
-                            ];
-
-                        const modifier =
-                            getAbilityModifier(
-                                finalScore
-                            );
-
-                        return (
-                            <div
-                                className="creator-ability-card"
-                                key={
-                                    ability.id
-                                }
-                            >
-                                <div className="creator-ability-header">
-                                    <div>
-                                        <span>
-                                            {
-                                                ability.short
-                                            }
-                                        </span>
-
-                                        <strong>
-                                            {
-                                                ability.name
-                                            }
-                                        </strong>
-                                    </div>
-
-                                    <div className="creator-ability-modifier">
-                                        {formatModifier(
-                                            modifier
-                                        )}
-                                    </div>
-                                </div>
-
-                                <input
-                                    type="number"
-                                    min="1"
-                                    max="30"
-                                    value={
-                                        baseScore
-                                    }
-                                    onChange={(
-                                        event
-                                    ) =>
-                                        updateAbility(
-                                            ability.id,
-                                            event
-                                                .target
-                                                .value
-                                        )
-                                    }
-                                />
-
-                                <small>
-                                    {ability.description}
-                                </small>
-
-                                {finalScore !==
-                                    baseScore && (
-                                    <div className="creator-ability-bonus">
-                                        Base:{" "}
-                                        {
-                                            baseScore
-                                        }{" "}
-                                        → Final:{" "}
-                                        {
-                                            finalScore
-                                        }
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    }
-                )}
-            </div>
-
-            <div className="creator-ability-summary">
-                <div>
-                    <span>
-                        FORÇA
-                    </span>
-
-                    <strong>
-                        {abilityScores.forca}
-                    </strong>
-
-                    <small>
-                        {formatModifier(
-                            getAbilityModifier(
-                                abilityScores.forca
                             )
-                        )}
-                    </small>
-                </div>
-
-                <div>
-                    <span>
-                        DESTREZA
-                    </span>
-
-                    <strong>
-                        {
-                            abilityScores.destreza
                         }
-                    </strong>
+                    />
+                </label>
 
-                    <small>
-                        {formatModifier(
-                            getAbilityModifier(
-                                abilityScores.destreza
-                            )
-                        )}
-                    </small>
-                </div>
-
-                <div>
-                    <span>
-                        CONSTITUIÇÃO
-                    </span>
-
-                    <strong>
-                        {
-                            abilityScores.constituicao
-                        }
-                    </strong>
-
-                    <small>
-                        {formatModifier(
-                            getAbilityModifier(
-                                abilityScores.constituicao
-                            )
-                        )}
-                    </small>
-                </div>
-
-                <div>
-                    <span>
-                        INTELIGÊNCIA
-                    </span>
-
-                    <strong>
-                        {
-                            abilityScores.inteligencia
-                        }
-                    </strong>
-
-                    <small>
-                        {formatModifier(
-                            getAbilityModifier(
-                                abilityScores.inteligencia
-                            )
-                        )}
-                    </small>
-                </div>
-
-                <div>
-                    <span>
-                        SABEDORIA
-                    </span>
-
-                    <strong>
-                        {
-                            abilityScores.sabedoria
-                        }
-                    </strong>
-
-                    <small>
-                        {formatModifier(
-                            getAbilityModifier(
-                                abilityScores.sabedoria
-                            )
-                        )}
-                    </small>
-                </div>
-
-                <div>
-                    <span>
-                        CARISMA
-                    </span>
-
-                    <strong>
-                        {
-                            abilityScores.carisma
-                        }
-                    </strong>
-
-                    <small>
-                        {formatModifier(
-                            getAbilityModifier(
-                                abilityScores.carisma
-                            )
-                        )}
-                    </small>
-                </div>
-            </div>
-
-            <div className="creator-info-card">
-                <Dices size={18} />
-
-                <div>
-                    <strong>
-                        Valores dos atributos
-                    </strong>
-
-                    <p>
-                        Os valores informados são usados
-                        para calcular automaticamente os
-                        modificadores, perícias, resistências,
-                        pontos de vida e demais estatísticas.
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function CharacterStepDetails({
-    character,
-    setCharacter,
-}) {
-    function updateField(
-        field,
-        value
-    ) {
-        setCharacter((current) => ({
-            ...current,
-            [field]: value,
-        }));
-    }
-
-    return (
-        <div className="creator-step-content">
-            <div className="creator-section-heading">
-                <div className="creator-section-icon">
-                    <UserRound size={22} />
-                </div>
-
-                <div>
-                    <span>
-                        PERSONALIDADE
-                    </span>
-
-                    <h2>
-                        Dê vida ao personagem
-                    </h2>
-
-                    <p>
-                        Agora defina os detalhes que tornam
-                        seu personagem único.
-                    </p>
-                </div>
-            </div>
-
-            <div className="creator-form-grid">
-                <label className="creator-field creator-field-full">
-                    <span>
-                        Traço de personalidade
-                    </span>
+                <label className="criar-field criar-field-full">
+                    <span>Personalidade</span>
 
                     <textarea
-                        value={
-                            character.personality
-                        }
+                        value={character.personality}
                         onChange={(event) =>
-                            updateField(
+                            updateCharacter(
                                 "personality",
-                                event.target
-                                    .value
+                                event.target.value
                             )
                         }
                         placeholder="Como seu personagem costuma agir?"
                         rows={4}
+                        maxLength={500}
                     />
                 </label>
 
-                <label className="creator-field creator-field-full">
-                    <span>
-                        Ideal
-                    </span>
+                <label className="criar-field">
+                    <span>Ideal</span>
 
                     <textarea
-                        value={
-                            character.ideal
-                        }
+                        value={character.ideal}
                         onChange={(event) =>
-                            updateField(
+                            updateCharacter(
                                 "ideal",
-                                event.target
-                                    .value
+                                event.target.value
                             )
                         }
-                        placeholder="No que seu personagem acredita?"
+                        placeholder="O que guia seu personagem?"
                         rows={4}
+                        maxLength={300}
                     />
                 </label>
 
-                <label className="creator-field">
-                    <span>
-                        Vínculo
-                    </span>
+                <label className="criar-field">
+                    <span>Vínculo</span>
 
                     <textarea
-                        value={
-                            character.bond
-                        }
+                        value={character.bond}
                         onChange={(event) =>
-                            updateField(
+                            updateCharacter(
                                 "bond",
-                                event.target
-                                    .value
+                                event.target.value
                             )
                         }
                         placeholder="O que é importante para ele?"
                         rows={4}
+                        maxLength={300}
                     />
                 </label>
 
-                <label className="creator-field">
-                    <span>
-                        Defeito
-                    </span>
+                <label className="criar-field">
+                    <span>Defeito</span>
 
                     <textarea
-                        value={
-                            character.flaw
-                        }
+                        value={character.flaw}
                         onChange={(event) =>
-                            updateField(
+                            updateCharacter(
                                 "flaw",
-                                event.target
-                                    .value
+                                event.target.value
                             )
                         }
-                        placeholder="Qual é sua maior fraqueza?"
+                        placeholder="Qual é sua principal fraqueza?"
                         rows={4}
+                        maxLength={300}
                     />
                 </label>
-            </div>
-
-            <div className="creator-info-card">
-                <UserRound size={18} />
-
-                <div>
-                    <strong>
-                        Personalidade
-                    </strong>
-
-                    <p>
-                        Esses campos são narrativos e podem
-                        ser usados durante a interpretação do
-                        personagem e dentro das campanhas.
-                    </p>
-                </div>
             </div>
         </div>
     );
 }
 
-function CharacterStepSheet({
+
+function CharacterPreviewStep({
     character,
+    selectedRace,
+    selectedClass,
+    selectedBackground,
+    derived,
 }) {
-    const finalCharacter =
-        buildCharacter(
-            character
-        );
+    const raceName =
+        selectedRace?.name ||
+        character.race ||
+        "Não definida";
 
-    const abilityScores =
-        finalCharacter.abilityScores;
+    const className =
+        selectedClass?.name ||
+        character.class ||
+        "Não definida";
 
-    const modifiers =
-        finalCharacter.modifiers;
-
-    const spellList =
-        finalCharacter.spells ||
-        [];
+    const backgroundName =
+        selectedBackground?.name ||
+        character.background ||
+        "Não definido";
 
     return (
-        <div className="creator-step-content">
-            <div className="creator-section-heading">
-                <div className="creator-section-icon">
-                    <Heart size={22} />
-                </div>
-
+        <div className="criar-step-card">
+            <div className="criar-step-header">
                 <div>
-                    <span>
-                        REVISÃO
-                    </span>
-
-                    <h2>
-                        Sua ficha está pronta
-                    </h2>
-
+                    <span>PASSO 8</span>
+                    <h2>Ficha do personagem</h2>
                     <p>
-                        Revise os principais dados antes de
-                        finalizar o personagem.
+                        Confira os principais dados antes de salvar sua
+                        ficha.
                     </p>
                 </div>
             </div>
 
-            <div className="character-sheet-preview">
-                <div className="character-sheet-header">
-                    <div className="character-sheet-avatar">
-                        <UserRound size={30} />
-                    </div>
-
+            <div className="criar-character-preview">
+                <div className="criar-character-preview-header">
                     <div>
-                        <span>
-                            D&D 5E
-                        </span>
+                        <span>ORDO RPGISTAS</span>
 
                         <h2>
-                            {finalCharacter.name ||
+                            {character.name ||
                                 "Personagem sem nome"}
                         </h2>
 
                         <p>
-                            {finalCharacter.race}
-                            {finalCharacter.subrace
-                                ? ` • ${finalCharacter.subrace}`
-                                : ""}{" "}
-                            •{" "}
-                            {finalCharacter.class}
+                            {raceName} • {className}
                         </p>
                     </div>
 
-                    <div className="character-sheet-level">
-                        <span>
-                            NÍVEL
-                        </span>
-
+                    <div className="criar-character-level">
+                        <small>NÍVEL</small>
                         <strong>
-                            {
-                                finalCharacter.level
-                            }
+                            {character.level}
                         </strong>
                     </div>
                 </div>
 
-                <div className="character-sheet-stat-grid">
-                    <div>
-                        <span>
-                            PV
-                        </span>
+                <div className="criar-info-grid">
+                    <div className="criar-info-box">
+                        <span>RAÇA</span>
+                        <strong>{raceName}</strong>
+                    </div>
 
+                    <div className="criar-info-box">
+                        <span>CLASSE</span>
+                        <strong>{className}</strong>
+                    </div>
+
+                    <div className="criar-info-box">
+                        <span>ANTECEDENTE</span>
                         <strong>
-                            {
-                                finalCharacter.hitPoints
-                            }
+                            {backgroundName}
                         </strong>
                     </div>
 
-                    <div>
-                        <span>
-                            CA
-                        </span>
-
+                    <div className="criar-info-box">
+                        <span>ALINHAMENTO</span>
                         <strong>
-                            {
-                                finalCharacter.armorClass
-                            }
-                        </strong>
-                    </div>
-
-                    <div>
-                        <span>
-                            INICIATIVA
-                        </span>
-
-                        <strong>
-                            {formatModifier(
-                                finalCharacter.initiative
-                            )}
-                        </strong>
-                    </div>
-
-                    <div>
-                        <span>
-                            PROFICIÊNCIA
-                        </span>
-
-                        <strong>
-                            {formatModifier(
-                                finalCharacter.proficiencyBonus
-                            )}
+                            {character.alignment}
                         </strong>
                     </div>
                 </div>
 
-                <div className="character-sheet-section">
-                    <div className="character-sheet-section-title">
-                        <Dices size={18} />
-
-                        <h3>
-                            Atributos
-                        </h3>
+                <section className="criar-section">
+                    <div className="criar-section-title">
+                        <div>
+                            <span>ATRIBUTOS</span>
+                            <h3>
+                                Modificadores
+                            </h3>
+                        </div>
                     </div>
 
-                    <div className="character-sheet-abilities">
-                        {ABILITIES.map(
-                            (ability) => (
-                                <div
-                                    key={
+                    <div className="criar-preview-abilities">
+                        {ABILITIES.map((ability) => {
+                            const value =
+                                Number(
+                                    character.abilities?.[
                                         ability.id
-                                    }
+                                    ]
+                                ) || 0;
+
+                            const modifier =
+                                getAbilityBonus(value);
+
+                            return (
+                                <div
+                                    key={ability.id}
+                                    className="criar-preview-ability"
                                 >
                                     <span>
-                                        {
-                                            ability.short
-                                        }
+                                        {ability.short}
                                     </span>
 
                                     <strong>
-                                        {
-                                            abilityScores[
-                                                ability.id
-                                            ]
-                                        }
+                                        {value}
                                     </strong>
 
                                     <small>
                                         {formatModifier(
-                                            modifiers[
-                                                ability.id
-                                            ]
+                                            modifier
                                         )}
                                     </small>
                                 </div>
-                            )
-                        )}
+                            );
+                        })}
                     </div>
-                </div>
+                </section>
 
-                <div className="character-sheet-columns">
-                    <div className="character-sheet-section">
-                        <div className="character-sheet-section-title">
-                            <Shield
-                                size={18}
-                            />
-
-                            <h3>
-                                Perícias
-                            </h3>
-                        </div>
-
-                        <div className="character-sheet-list">
-                            {finalCharacter.skills
-                                .filter(
-                                    (
-                                        skill
-                                    ) =>
-                                        skill.proficient
-                                )
-                                .map(
-                                    (
-                                        skill
-                                    ) => (
-                                        <div
-                                            key={
-                                                skill.id
-                                            }
-                                        >
-                                            <span>
-                                                {
-                                                    skill.name
-                                                }
-                                            </span>
-
-                                            <strong>
-                                                {formatModifier(
-                                                    skill.bonus
-                                                )}
-                                            </strong>
-                                        </div>
-                                    )
-                                )}
-                        </div>
-                    </div>
-
-                    <div className="character-sheet-section">
-                        <div className="character-sheet-section-title">
-                            <Shield
-                                size={18}
-                            />
-
-                            <h3>
-                                Resistências
-                            </h3>
-                        </div>
-
-                        <div className="character-sheet-list">
-                            {finalCharacter.saves.map(
-                                (
-                                    save
-                                ) => (
-                                    <div
-                                        key={
-                                            save.id
-                                        }
-                                    >
-                                        <span>
-                                            {
-                                                save.name
-                                            }
-                                        </span>
-
-                                        <strong>
-                                            {formatModifier(
-                                                save.bonus
-                                            )}
-                                        </strong>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="character-sheet-columns">
-                    <div className="character-sheet-section">
-                        <div className="character-sheet-section-title">
-                            <Backpack
-                                size={18}
-                            />
-
-                            <h3>
-                                Equipamentos
-                            </h3>
-                        </div>
-
-                        <div className="character-sheet-tag-list">
-                            {finalCharacter.equipment
-                                .slice(
-                                    0,
-                                    12
-                                )
-                                .map(
-                                    (
-                                        item,
-                                        index
-                                    ) => (
-                                        <span
-                                            key={`${item}-${index}`}
-                                        >
-                                            {
-                                                item
-                                            }
-                                        </span>
-                                    )
-                                )}
-                        </div>
-                    </div>
-
-                    <div className="character-sheet-section">
-                        <div className="character-sheet-section-title">
-                            <BookOpen
-                                size={18}
-                            />
-
-                            <h3>
-                                Idiomas
-                            </h3>
-                        </div>
-
-                        <div className="character-sheet-tag-list">
-                            {finalCharacter.languages
-                                .map(
-                                    (
-                                        language
-                                    ) => (
-                                        <span
-                                            key={
-                                                language
-                                            }
-                                        >
-                                            {
-                                                language
-                                            }
-                                        </span>
-                                    )
-                                )}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="character-sheet-section">
-                    <div className="character-sheet-section-title">
-                        <Sparkles
-                            size={18}
-                        />
-
-                        <h3>
-                            Características
-                        </h3>
-                    </div>
-
-                    <div className="character-sheet-traits">
-                        {finalCharacter.traits.map(
-                            (
-                                trait
-                            ) => (
-                                <div
-                                    key={
-                                        trait
-                                    }
-                                >
-                                    <strong>
-                                        {
-                                            trait
-                                        }
-                                    </strong>
-                                </div>
-                            )
-                        )}
-                    </div>
-                </div>
-
-                {spellList.length >
-                    0 && (
-                    <div className="character-sheet-section">
-                        <div className="character-sheet-section-title">
-                            <Sparkles
-                                size={18}
-                            />
-
-                            <h3>
-                                Magias
-                            </h3>
-                        </div>
-
-                        <div className="character-sheet-spells">
-                            {spellList.map(
-                                (
-                                    spell
-                                ) => (
-                                    <div
-                                        key={
-                                            spell.id
-                                        }
-                                    >
-                                        <strong>
-                                            {
-                                                spell.name
-                                            }
-                                        </strong>
-
-                                        <span>
-                                            Nível{" "}
-                                            {
-                                                spell.level
-                                            }{" "}
-                                            •{" "}
-                                            {
-                                                spell.school
-                                            }
-                                        </span>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    </div>
-                )}
-
-                {finalCharacter.spellAbility && (
-                    <div className="character-sheet-spell-stats">
+                <section className="criar-section">
+                    <div className="criar-section-title">
                         <div>
-                            <span>
-                                ATRIBUTO DE MAGIA
-                            </span>
+                            <span>COMBATE</span>
+                            <h3>
+                                Estatísticas derivadas
+                            </h3>
+                        </div>
+                    </div>
 
+                    <div className="criar-info-grid">
+                        <div className="criar-info-box">
+                            <span>PONTOS DE VIDA</span>
                             <strong>
-                                {
-                                    ABILITIES.find(
-                                        (
-                                            ability
-                                        ) =>
-                                            ability.id ===
-                                            finalCharacter.spellAbility
-                                    )?.name
-                                }
+                                {derived.hitPoints}
                             </strong>
                         </div>
 
-                        <div>
-                            <span>
-                                CD DE MAGIA
-                            </span>
-
+                        <div className="criar-info-box">
+                            <span>CLASSE DE ARMADURA</span>
                             <strong>
-                                {
-                                    finalCharacter.spellSaveDC
-                                }
+                                {derived.armorClass}
                             </strong>
                         </div>
 
-                        <div>
-                            <span>
-                                ATAQUE DE MAGIA
-                            </span>
-
+                        <div className="criar-info-box">
+                            <span>INICIATIVA</span>
                             <strong>
                                 {formatModifier(
-                                    finalCharacter.spellAttack
+                                    derived.initiative
+                                )}
+                            </strong>
+                        </div>
+
+                        <div className="criar-info-box">
+                            <span>BÔNUS DE PROFICIÊNCIA</span>
+                            <strong>
+                                {formatModifier(
+                                    derived.proficiencyBonus
                                 )}
                             </strong>
                         </div>
                     </div>
+                </section>
+
+                {derived.spellSaveDC !== null && (
+                    <section className="criar-section">
+                        <div className="criar-section-title">
+                            <div>
+                                <span>MAGIA</span>
+                                <h3>
+                                    Estatísticas mágicas
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div className="criar-info-grid">
+                            <div className="criar-info-box">
+                                <span>
+                                    HABILIDADE DE CONJURAÇÃO
+                                </span>
+
+                                <strong>
+                                    {derived.spellAbility ||
+                                        "—"}
+                                </strong>
+                            </div>
+
+                            <div className="criar-info-box">
+                                <span>
+                                    CD DE RESISTÊNCIA
+                                </span>
+
+                                <strong>
+                                    {derived.spellSaveDC}
+                                </strong>
+                            </div>
+
+                            <div className="criar-info-box">
+                                <span>
+                                    ATAQUE MÁGICO
+                                </span>
+
+                                <strong>
+                                    {formatModifier(
+                                        derived.spellAttack
+                                    )}
+                                </strong>
+                            </div>
+                        </div>
+                    </section>
                 )}
+            </div>
+        </div>
+    );
+}
 
-                <div className="character-sheet-roleplay">
+
+function InfoModal({
+    open,
+    title,
+    message,
+    onClose,
+}) {
+    if (!open) return null;
+
+    return (
+        <div
+            className="criar-modal-backdrop"
+            role="presentation"
+            onClick={onClose}
+        >
+            <div
+                className="criar-modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="criar-modal-title"
+                onClick={(event) =>
+                    event.stopPropagation()
+                }
+            >
+                <div className="criar-modal-header">
                     <div>
-                        <span>
-                            PERSONALIDADE
-                        </span>
+                        <span>ORDO RPGISTAS</span>
 
-                        <p>
-                            {finalCharacter.personality ||
-                                "Não informado."}
-                        </p>
+                        <h2 id="criar-modal-title">
+                            {title}
+                        </h2>
                     </div>
 
-                    <div>
-                        <span>
-                            IDEAL
-                        </span>
+                    <button
+                        type="button"
+                        className="criar-modal-close"
+                        onClick={onClose}
+                        aria-label="Fechar"
+                    >
+                        <X size={18} />
+                    </button>
+                </div>
 
-                        <p>
-                            {finalCharacter.ideal ||
-                                "Não informado."}
-                        </p>
-                    </div>
+                <div className="criar-modal-body">
+                    <p>{message}</p>
+                </div>
 
-                    <div>
-                        <span>
-                            VÍNCULO
-                        </span>
-
-                        <p>
-                            {finalCharacter.bond ||
-                                "Não informado."}
-                        </p>
-                    </div>
-
-                    <div>
-                        <span>
-                            DEFEITO
-                        </span>
-
-                        <p>
-                            {finalCharacter.flaw ||
-                                "Não informado."}
-                        </p>
-                    </div>
+                <div className="criar-modal-footer">
+                    <button
+                        type="button"
+                        className="criar-primary-button"
+                        onClick={onClose}
+                    >
+                        Entendido
+                    </button>
                 </div>
             </div>
         </div>
     );
 }
+
 
 function CharacterSheet({
     character,
     onBack,
 }) {
-    const finalCharacter =
-        buildCharacter(
-            character
-        );
+    const abilities =
+        character?.abilities || {};
+
+    const modifiers =
+        character?.modifiers || {};
 
     return (
-        <main className="character-sheet-page">
-            <div className="character-sheet-page-background" />
+        <main className="criar-character-sheet-page">
+            <div className="criar-character-sheet-background" />
 
-            <div className="character-sheet-page-overlay" />
-
-            <div className="character-sheet-page-content">
-                <button
-                    type="button"
-                    className="character-sheet-back"
-                    onClick={onBack}
-                >
-                    <ArrowLeft size={18} />
-                    <span>
-                        Voltar para personagens
-                    </span>
-                </button>
-
-                <div className="character-sheet-page-header">
+            <div className="criar-character-sheet-content">
+                <header className="criar-character-sheet-header">
                     <div>
-                        <span>
-                            ORDO RPGISTAS
-                        </span>
+                        <span>ORDO RPGISTAS</span>
 
                         <h1>
-                            Ficha de personagem
+                            {character.name ||
+                                "Personagem"}
                         </h1>
 
                         <p>
-                            Dungeons & Dragons 5e
+                            {character.race} •{" "}
+                            {character.class} • Nível{" "}
+                            {character.level}
                         </p>
                     </div>
 
-                    <div className="character-sheet-page-system">
-                        <Sparkles size={18} />
+                    <button
+                        type="button"
+                        className="criar-secondary-button"
+                        onClick={onBack}
+                    >
+                        Voltar para personagens
+                    </button>
+                </header>
 
-                        <span>
-                            D&D 5E
-                        </span>
-                    </div>
-                </div>
-
-                <div className="character-sheet-page-card">
-                    <div className="character-sheet-main-header">
-                        <div className="character-sheet-main-avatar">
-                            <UserRound size={38} />
-                        </div>
-
-                        <div className="character-sheet-main-identity">
-                            <span>
-                                PERSONAGEM
-                            </span>
-
-                            <h2>
-                                {finalCharacter.name ||
-                                    "Personagem sem nome"}
-                            </h2>
-
-                            <p>
-                                {finalCharacter.race}
-                                {finalCharacter.subrace
-                                    ? ` • ${finalCharacter.subrace}`
-                                    : ""}{" "}
-                                •{" "}
-                                {
-                                    finalCharacter.class
-                                }{" "}
-                                •{" "}
-                                {
-                                    finalCharacter.background
-                                }
-                            </p>
-                        </div>
-
-                        <div className="character-sheet-main-level">
-                            <span>
-                                NÍVEL
-                            </span>
-
+                <section className="criar-character-sheet-card">
+                    <div className="criar-info-grid">
+                        <div className="criar-info-box">
+                            <span>RAÇA</span>
                             <strong>
-                                {
-                                    finalCharacter.level
-                                }
+                                {character.race}
+                            </strong>
+                        </div>
+
+                        <div className="criar-info-box">
+                            <span>CLASSE</span>
+                            <strong>
+                                {character.class}
+                            </strong>
+                        </div>
+
+                        <div className="criar-info-box">
+                            <span>ANTECEDENTE</span>
+                            <strong>
+                                {character.background}
+                            </strong>
+                        </div>
+
+                        <div className="criar-info-box">
+                            <span>NÍVEL</span>
+                            <strong>
+                                {character.level}
                             </strong>
                         </div>
                     </div>
 
-                    <div className="character-sheet-main-stats">
-                        <div>
-                            <span>
-                                PONTOS DE VIDA
-                            </span>
-
-                            <strong>
-                                {
-                                    finalCharacter.hitPoints
-                                }
-                            </strong>
+                    <section className="criar-section">
+                        <div className="criar-section-title">
+                            <div>
+                                <span>ATRIBUTOS</span>
+                                <h3>
+                                    Valores e modificadores
+                                </h3>
+                            </div>
                         </div>
 
-                        <div>
-                            <span>
-                                CLASSE DE ARMADURA
-                            </span>
-
-                            <strong>
-                                {
-                                    finalCharacter.armorClass
-                                }
-                            </strong>
-                        </div>
-
-                        <div>
-                            <span>
-                                INICIATIVA
-                            </span>
-
-                            <strong>
-                                {formatModifier(
-                                    finalCharacter.initiative
-                                )}
-                            </strong>
-                        </div>
-
-                        <div>
-                            <span>
-                                PROFICIÊNCIA
-                            </span>
-
-                            <strong>
-                                {formatModifier(
-                                    finalCharacter.proficiencyBonus
-                                )}
-                            </strong>
-                        </div>
-                    </div>
-
-                    <div className="character-sheet-main-section">
-                        <div className="character-sheet-main-section-header">
-                            <Dices size={19} />
-
-                            <h3>
-                                Atributos
-                            </h3>
-                        </div>
-
-                        <div className="character-sheet-main-abilities">
+                        <div className="criar-preview-abilities">
                             {ABILITIES.map(
-                                (
-                                    ability
-                                ) => (
+                                (ability) => (
                                     <div
                                         key={
                                             ability.id
                                         }
+                                        className="criar-preview-ability"
                                     >
                                         <span>
                                             {
@@ -3467,8 +3301,7 @@ function CharacterSheet({
 
                                         <strong>
                                             {
-                                                finalCharacter
-                                                    .abilityScores[
+                                                abilities[
                                                     ability.id
                                                 ]
                                             }
@@ -3476,1018 +3309,155 @@ function CharacterSheet({
 
                                         <small>
                                             {formatModifier(
-                                                finalCharacter
-                                                    .modifiers[
+                                                modifiers[
                                                     ability.id
-                                                ]
+                                                ] || 0
                                             )}
                                         </small>
                                     </div>
                                 )
                             )}
                         </div>
-                    </div>
+                    </section>
 
-                    <div className="character-sheet-main-grid">
-                        <div className="character-sheet-main-section">
-                            <div className="character-sheet-main-section-header">
-                                <Shield
-                                    size={19}
-                                />
-
+                    <section className="criar-section">
+                        <div className="criar-section-title">
+                            <div>
+                                <span>COMBATE</span>
                                 <h3>
-                                    Perícias
+                                    Estatísticas
                                 </h3>
                             </div>
-
-                            <div className="character-sheet-main-list">
-                                {finalCharacter.skills.map(
-                                    (
-                                        skill
-                                    ) => (
-                                        <div
-                                            key={
-                                                skill.id
-                                            }
-                                        >
-                                            <span>
-                                                {
-                                                    skill.name
-                                                }
-                                            </span>
-
-                                            <strong>
-                                                {formatModifier(
-                                                    skill.bonus
-                                                )}
-                                            </strong>
-                                        </div>
-                                    )
-                                )}
-                            </div>
                         </div>
 
-                        <div className="character-sheet-main-section">
-                            <div className="character-sheet-main-section-header">
-                                <Shield
-                                    size={19}
-                                />
+                        <div className="criar-info-grid">
+                            <div className="criar-info-box">
+                                <span>
+                                    PONTOS DE VIDA
+                                </span>
 
+                                <strong>
+                                    {character.hitPoints ??
+                                        "—"}
+                                </strong>
+                            </div>
+
+                            <div className="criar-info-box">
+                                <span>
+                                    CLASSE DE ARMADURA
+                                </span>
+
+                                <strong>
+                                    {character.armorClass ??
+                                        "—"}
+                                </strong>
+                            </div>
+
+                            <div className="criar-info-box">
+                                <span>
+                                    INICIATIVA
+                                </span>
+
+                                <strong>
+                                    {formatModifier(
+                                        character.initiative ||
+                                            0
+                                    )}
+                                </strong>
+                            </div>
+
+                            <div className="criar-info-box">
+                                <span>
+                                    PROFICIÊNCIA
+                                </span>
+
+                                <strong>
+                                    {formatModifier(
+                                        character.proficiencyBonus ||
+                                            0
+                                    )}
+                                </strong>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="criar-section">
+                        <div className="criar-section-title">
+                            <div>
+                                <span>PERSONALIDADE</span>
                                 <h3>
-                                    Resistências
+                                    Detalhes
                                 </h3>
                             </div>
-
-                            <div className="character-sheet-main-list">
-                                {finalCharacter.saves.map(
-                                    (
-                                        save
-                                    ) => (
-                                        <div
-                                            key={
-                                                save.id
-                                            }
-                                        >
-                                            <span>
-                                                {
-                                                    save.name
-                                                }
-                                            </span>
-
-                                            <strong>
-                                                {formatModifier(
-                                                    save.bonus
-                                                )}
-                                            </strong>
-                                        </div>
-                                    )
-                                )}
-                            </div>
                         </div>
-                    </div>
 
-                    <div className="character-sheet-main-grid">
-                        <div className="character-sheet-main-section">
-                            <div className="character-sheet-main-section-header">
-                                <Backpack
-                                    size={19}
-                                />
+                        <div className="criar-character-text-grid">
+                            <div>
+                                <span>
+                                    CONCEITO
+                                </span>
 
-                                <h3>
-                                    Equipamentos
-                                </h3>
+                                <p>
+                                    {character.concept ||
+                                        "Não informado."}
+                                </p>
                             </div>
 
-                            <div className="character-sheet-main-tags">
-                                {finalCharacter.equipment.map(
-                                    (
-                                        item,
-                                        index
-                                    ) => (
-                                        <span
-                                            key={`${item}-${index}`}
-                                        >
-                                            {
-                                                item
-                                            }
-                                        </span>
-                                    )
-                                )}
-                            </div>
-                        </div>
+                            <div>
+                                <span>
+                                    PERSONALIDADE
+                                </span>
 
-                        <div className="character-sheet-main-section">
-                            <div className="character-sheet-main-section-header">
-                                <BookOpen
-                                    size={19}
-                                />
-
-                                <h3>
-                                    Idiomas
-                                </h3>
+                                <p>
+                                    {character.personality ||
+                                        "Não informado."}
+                                </p>
                             </div>
 
-                            <div className="character-sheet-main-tags">
-                                {finalCharacter.languages.map(
-                                    (
-                                        language
-                                    ) => (
-                                        <span
-                                            key={
-                                                language
-                                            }
-                                        >
-                                            {
-                                                language
-                                            }
-                                        </span>
-                                    )
-                                )}
-                            </div>
-                        </div>
-                    </div>
+                            <div>
+                                <span>IDEAL</span>
 
-                    <div className="character-sheet-main-section">
-                        <div className="character-sheet-main-section-header">
-                            <Sparkles
-                                size={19}
-                            />
-
-                            <h3>
-                                Características
-                            </h3>
-                        </div>
-
-                        <div className="character-sheet-main-traits">
-                            {finalCharacter.traits.map(
-                                (
-                                    trait
-                                ) => (
-                                    <div
-                                        key={
-                                            trait
-                                        }
-                                    >
-                                        <strong>
-                                            {
-                                                trait
-                                            }
-                                        </strong>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    </div>
-
-                    {finalCharacter.spells?.length >
-                        0 && (
-                        <div className="character-sheet-main-section">
-                            <div className="character-sheet-main-section-header">
-                                <Sparkles
-                                    size={
-                                        19
-                                    }
-                                />
-
-                                <h3>
-                                    Magias
-                                </h3>
+                                <p>
+                                    {character.ideal ||
+                                        "Não informado."}
+                                </p>
                             </div>
 
-                            <div className="character-sheet-main-spells">
-                                {finalCharacter.spells.map(
-                                    (
-                                        spell
-                                    ) => (
-                                        <div
-                                            key={
-                                                spell.id
-                                            }
-                                        >
-                                            <strong>
-                                                {
-                                                    spell.name
-                                                }
-                                            </strong>
+                            <div>
+                                <span>VÍNCULO</span>
 
-                                            <span>
-                                                Nível{" "}
-                                                {
-                                                    spell.level
-                                                }{" "}
-                                                •{" "}
-                                                {
-                                                    spell.school
-                                                }
-                                            </span>
-                                        </div>
-                                    )
-                                )}
+                                <p>
+                                    {character.bond ||
+                                        "Não informado."}
+                                </p>
+                            </div>
+
+                            <div>
+                                <span>DEFEITO</span>
+
+                                <p>
+                                    {character.flaw ||
+                                        "Não informado."}
+                                </p>
                             </div>
                         </div>
-                    )}
-
-                    <div className="character-sheet-main-roleplay">
-                        <div>
-                            <span>
-                                PERSONALIDADE
-                            </span>
-
-                            <p>
-                                {finalCharacter.personality ||
-                                    "Não informado."}
-                            </p>
-                        </div>
-
-                        <div>
-                            <span>
-                                IDEAL
-                            </span>
-
-                            <p>
-                                {finalCharacter.ideal ||
-                                    "Não informado."}
-                            </p>
-                        </div>
-
-                        <div>
-                            <span>
-                                VÍNCULO
-                            </span>
-
-                            <p>
-                                {finalCharacter.bond ||
-                                    "Não informado."}
-                            </p>
-                        </div>
-
-                        <div>
-                            <span>
-                                DEFEITO
-                            </span>
-
-                            <p>
-                                {finalCharacter.flaw ||
-                                    "Não informado."}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                    </section>
+                </section>
             </div>
         </main>
     );
 }
 
-export default function CriarPersonagem({
-    onNavigate,
-}) {
-    const [character, setCharacter] =
-        useState(createEmptyCharacter);
 
-    const [currentStep, setCurrentStep] =
-        useState(1);
-
-    const [completedCharacter, setCompletedCharacter] =
-        useState(null);
-
-    const [showExitModal, setShowExitModal] =
-        useState(false);
-
-    const currentStepData =
-        STEP_DATA.find(
-            (step) =>
-                step.id === currentStep
-        ) || STEP_DATA[0];
-
-    const progress =
-        (currentStep /
-            STEP_DATA.length) *
-        100;
-
-    const isFirstStep =
-        currentStep === 1;
-
-    const isLastStep =
-        currentStep ===
-        STEP_DATA.length;
-
-    const canContinue =
-        currentStep === 1
-            ? character.name.trim().length >
-              0
-            : true;
-
-    const spellOptions = useMemo(() => {
-        return searchSpells("");
-    }, []);
-
-    function updateCharacter(
-        updates
-    ) {
-        setCharacter((current) => ({
-            ...current,
-            ...updates,
-        }));
-    }
-
-    function goNext() {
-        if (!canContinue) {
-            return;
-        }
-
-        if (isLastStep) {
-            finishCharacter();
-            return;
-        }
-
-        setCurrentStep(
-            (current) =>
-                Math.min(
-                    current + 1,
-                    STEP_DATA.length
-                )
-        );
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-    }
-
-    function goPrevious() {
-        if (isFirstStep) {
-            setShowExitModal(true);
-            return;
-        }
-
-        setCurrentStep(
-            (current) =>
-                Math.max(
-                    current - 1,
-                    1
-                )
-        );
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-    }
-
-    function goToStep(step) {
-        if (
-            step < 1 ||
-            step >
-                STEP_DATA.length
-        ) {
-            return;
-        }
-
-        if (
-            step >
-                currentStep &&
-            !canContinue
-        ) {
-            return;
-        }
-
-        setCurrentStep(step);
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-    }
-
-    function finishCharacter() {
-        const finalCharacter =
-            buildCharacter(
-                character
-            );
-
-        const savedCharacters =
-            JSON.parse(
-                localStorage.getItem(
-                    "ordo-rpgistas-personagens"
-                ) || "[]"
-            );
-
-        const characterIndex =
-            savedCharacters.findIndex(
-                (savedCharacter) =>
-                    savedCharacter.id ===
-                    finalCharacter.id
-            );
-
-        let nextCharacters;
-
-        if (
-            characterIndex >= 0
-        ) {
-            nextCharacters =
-                savedCharacters.map(
-                    (
-                        savedCharacter,
-                        index
-                    ) =>
-                        index ===
-                        characterIndex
-                            ? finalCharacter
-                            : savedCharacter
-                );
-        } else {
-            nextCharacters = [
-                ...savedCharacters,
-                finalCharacter,
-            ];
-        }
-
-        localStorage.setItem(
-            "ordo-rpgistas-personagens",
-            JSON.stringify(
-                nextCharacters
-            )
-        );
-
-        setCompletedCharacter(
-            finalCharacter
-        );
-
-        setCurrentStep(
-            STEP_DATA.length
-        );
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-    }
-
-    function handleExit() {
-        setShowExitModal(false);
-
-        if (onNavigate) {
-            onNavigate(
-                "personagens"
-            );
-        }
-    }
-
-    if (completedCharacter) {
-        return (
-            <CharacterSheet
-                character={
-                    completedCharacter
-                }
-                onBack={() =>
-                    onNavigate?.(
-                        "personagens"
-                    )
-                }
-            />
-        );
-    }
-
-    const StepIcon =
-        currentStepData.icon;
-
-    return (
-        <PageBase
-            title="Criar Personagem"
-            subtitle="Construa seu aventureiro passo a passo."
-            icon={Dices}
-            onNavigate={onNavigate}
-        >
-            <div className="character-creator">
-                <div className="creator-topbar">
-                    <button
-                        type="button"
-                        className="creator-back-button"
-                        onClick={
-                            goPrevious
-                        }
-                    >
-                        <ArrowLeft
-                            size={18}
-                        />
-
-                        <span>
-                            Voltar
-                        </span>
-                    </button>
-
-                    <div className="creator-progress-wrapper">
-                        <div className="creator-progress-info">
-                            <span>
-                                ETAPA{" "}
-                                {
-                                    currentStep
-                                }{" "}
-                                DE{" "}
-                                {
-                                    STEP_DATA.length
-                                }
-                            </span>
-
-                            <strong>
-                                {
-                                    currentStepData.title
-                                }
-                            </strong>
-                        </div>
-
-                        <div className="creator-progress-bar">
-                            <motion.div
-                                className="creator-progress-fill"
-                                initial={{
-                                    width: 0,
-                                }}
-                                animate={{
-                                    width: `${progress}%`,
-                                }}
-                                transition={{
-                                    duration:
-                                        0.35,
-                                    ease: "easeOut",
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="creator-step-icon">
-                        <StepIcon
-                            size={19}
-                        />
-                    </div>
-                </div>
-
-                <div className="creator-step-navigation">
-                    {STEP_DATA.map(
-                        (step) => {
-                            const Icon =
-                                step.icon;
-
-                            const active =
-                                currentStep ===
-                                step.id;
-
-                            const completed =
-                                currentStep >
-                                step.id;
-
-                            return (
-                                <button
-                                    type="button"
-                                    key={
-                                        step.id
-                                    }
-                                    className={`creator-step-nav-item ${
-                                        active
-                                            ? "active"
-                                            : ""
-                                    } ${
-                                        completed
-                                            ? "completed"
-                                            : ""
-                                    }`}
-                                    onClick={() =>
-                                        goToStep(
-                                            step.id
-                                        )
-                                    }
-                                >
-                                    <span className="creator-step-nav-icon">
-                                        {completed ? (
-                                            <Check
-                                                size={
-                                                    15
-                                                }
-                                            />
-                                        ) : (
-                                            <Icon
-                                                size={
-                                                    15
-                                                }
-                                            />
-                                        )}
-                                    </span>
-
-                                    <span className="creator-step-nav-label">
-                                        {
-                                            step.title
-                                        }
-                                    </span>
-                                </button>
-                            );
-                        }
-                    )}
-                </div>
-
-                <motion.div
-                    key={currentStep}
-                    className="creator-main-card"
-                    initial={{
-                        opacity: 0,
-                        x: 20,
-                    }}
-                    animate={{
-                        opacity: 1,
-                        x: 0,
-                    }}
-                    transition={{
-                        duration:
-                            0.3,
-                        ease: "easeOut",
-                    }}
-                >
-                    <div className="creator-card-heading">
-                        <div className="creator-card-heading-icon">
-                            <StepIcon
-                                size={24}
-                            />
-                        </div>
-
-                        <div>
-                            <span>
-                                {
-                                    currentStepData.title
-                                }
-                            </span>
-
-                            <h2>
-                                {
-                                    currentStepData.subtitle
-                                }
-                            </h2>
-                        </div>
-                    </div>
-
-                    {currentStep ===
-                        1 && (
-                        <CharacterStepConcept
-                            character={
-                                character
-                            }
-                            setCharacter={
-                                setCharacter
-                            }
-                        />
-                    )}
-
-                    {currentStep ===
-                        2 && (
-                        <CharacterStepRace
-                            character={
-                                character
-                            }
-                            setCharacter={
-                                setCharacter
-                            }
-                        />
-                    )}
-
-                    {currentStep ===
-                        3 && (
-                        <CharacterStepClass
-                            character={
-                                character
-                            }
-                            setCharacter={
-                                setCharacter
-                            }
-                        />
-                    )}
-
-                    {currentStep ===
-                        4 && (
-                        <CharacterStepBackground
-                            character={
-                                character
-                            }
-                            setCharacter={
-                                setCharacter
-                            }
-                        />
-                    )}
-
-                    {currentStep ===
-                        5 && (
-                        <CharacterStepSkills
-                            character={
-                                character
-                            }
-                            setCharacter={
-                                setCharacter
-                            }
-                        />
-                    )}
-
-                    {currentStep ===
-                        6 && (
-                        <CharacterStepAbilities
-                            character={
-                                character
-                            }
-                            setCharacter={
-                                setCharacter
-                            }
-                        />
-                    )}
-
-                    {currentStep ===
-                        7 && (
-                        <CharacterStepDetails
-                            character={
-                                character
-                            }
-                            setCharacter={
-                                setCharacter
-                            }
-                        />
-                    )}
-
-                    {currentStep ===
-                        8 && (
-                        <CharacterStepSheet
-                            character={
-                                character
-                            }
-                        />
-                    )}
-
-                    {currentStep ===
-                        8 && (
-                        <div className="creator-spell-selector">
-                            <div className="creator-selection-heading">
-                                <div>
-                                    <span>
-                                        MAGIA
-                                    </span>
-
-                                    <h3>
-                                        Magias disponíveis
-                                    </h3>
-                                </div>
-
-                                <small>
-                                    {
-                                        spellOptions.length
-                                    }{" "}
-                                    opções
-                                </small>
-                            </div>
-
-                            <div className="creator-spell-grid">
-                                {spellOptions
-                                    .filter(
-                                        (
-                                            spell
-                                        ) =>
-                                            spell.classes.includes(
-                                                character.class
-                                            )
-                                    )
-                                    .map(
-                                        (
-                                            spell
-                                        ) => {
-                                            const active =
-                                                character.spells.includes(
-                                                    spell.id
-                                                );
-
-                                            return (
-                                                <button
-                                                    type="button"
-                                                    key={
-                                                        spell.id
-                                                    }
-                                                    className={`creator-spell-option ${
-                                                        active
-                                                            ? "active"
-                                                            : ""
-                                                    }`}
-                                                    onClick={() =>
-                                                        setCharacter(
-                                                            (
-                                                                current
-                                                            ) => ({
-                                                                ...current,
-                                                                spells:
-                                                                    active
-                                                                        ? current.spells.filter(
-                                                                              (
-                                                                                  id
-                                                                              ) =>
-                                                                                  id !==
-                                                                                  spell.id
-                                                                          )
-                                                                        : [
-                                                                              ...current.spells,
-                                                                              spell.id,
-                                                                          ],
-                                                            })
-                                                        )
-                                                    }
-                                                >
-                                                    <div>
-                                                        <strong>
-                                                            {
-                                                                spell.name
-                                                            }
-                                                        </strong>
-
-                                                        <span>
-                                                            Nível{" "}
-                                                            {
-                                                                spell.level
-                                                            }{" "}
-                                                            •{" "}
-                                                            {
-                                                                spell.school
-                                                            }
-                                                        </span>
-                                                    </div>
-
-                                                    {active && (
-                                                        <Check
-                                                            size={
-                                                                17
-                                                            }
-                                                        />
-                                                    )}
-                                                </button>
-                                            );
-                                        }
-                                    )}
-                            </div>
-                        </div>
-                    )}
-                </motion.div>
-
-                <div className="creator-bottom-navigation">
-                    <button
-                        type="button"
-                        className="creator-navigation-secondary"
-                        onClick={
-                            goPrevious
-                        }
-                    >
-                        <ArrowLeft
-                            size={18}
-                        />
-
-                        <span>
-                            {isFirstStep
-                                ? "Cancelar"
-                                : "Anterior"}
-                        </span>
-                    </button>
-
-                    <div className="creator-navigation-status">
-                        <span>
-                            {
-                                currentStepData.title
-                            }
-                        </span>
-
-                        <small>
-                            {currentStep} /{" "}
-                            {
-                                STEP_DATA.length
-                            }
-                        </small>
-                    </div>
-
-                    <button
-                        type="button"
-                        className="creator-navigation-primary"
-                        onClick={
-                            goNext
-                        }
-                        disabled={
-                            !canContinue
-                        }
-                    >
-                        <span>
-                            {isLastStep
-                                ? "Finalizar personagem"
-                                : "Continuar"}
-                        </span>
-
-                        {isLastStep ? (
-                            <Check
-                                size={18}
-                            />
-                        ) : (
-                            <ArrowRight
-                                size={18}
-                            />
-                        )}
-                    </button>
-                </div>
-            </div>
-
-            {showExitModal && (
-                <div className="creator-modal-backdrop">
-                    <motion.div
-                        className="creator-exit-modal"
-                        initial={{
-                            opacity: 0,
-                            scale: 0.95,
-                            y: 15,
-                        }}
-                        animate={{
-                            opacity: 1,
-                            scale: 1,
-                            y: 0,
-                        }}
-                        transition={{
-                            duration:
-                                0.2,
-                        }}
-                    >
-                        <button
-                            type="button"
-                            className="creator-modal-close"
-                            onClick={() =>
-                                setShowExitModal(
-                                    false
-                                )
-                            }
-                        >
-                            <X
-                                size={18}
-                            />
-                        </button>
-
-                        <div className="creator-modal-icon">
-                            <ArrowLeft
-                                size={24}
-                            />
-                        </div>
-
-                        <span>
-                            SAIR DO CRIADOR
-                        </span>
-
-                        <h2>
-                            Deseja voltar?
-                        </h2>
-
-                        <p>
-                            Seu personagem ainda não foi
-                            salvo. Se você sair agora,
-                            as alterações desta criação
-                            serão perdidas.
-                        </p>
-
-                        <div className="creator-modal-actions">
-                            <button
-                                type="button"
-                                className="creator-modal-cancel"
-                                onClick={() =>
-                                    setShowExitModal(
-                                        false
-                                    )
-                                }
-                            >
-                                Continuar criando
-                            </button>
-
-                            <button
-                                type="button"
-                                className="creator-modal-confirm"
-                                onClick={
-                                    handleExit
-                                }
-                            >
-                                Sair
-                            </button>
-                        </div>
-                    </motion.div>
-                </div>
-            )}
-        </PageBase>
-    );
-}
+export {
+    ConceptStep,
+    RaceStep,
+    ClassStep,
+    BackgroundStep,
+    ProficiencyStep,
+    AbilitiesStep,
+    DetailsStep,
+    CharacterPreviewStep,
+    InfoModal,
+    CharacterSheet,
+};
