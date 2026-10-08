@@ -69,10 +69,6 @@ function getCharacterId(character) {
         return String(character.id);
     }
 
-    /*
-     * Compatibilidade com fichas antigas que possam ter
-     * sido salvas antes de possuírem um ID.
-     */
     return [
         character?.name || "personagem",
         character?.createdAt || "",
@@ -85,6 +81,21 @@ function normalizeCharacter(character) {
         return null;
     }
 
+    const normalizedSystem =
+        character.system === "dnd5e"
+            ? "dnd"
+            : character.system === "ordem"
+                ? "ordem"
+                : "dnd";
+
+    const normalizedSystemName =
+        character.systemName ||
+        (
+            normalizedSystem === "ordem"
+                ? "ORDEM PARANORMAL"
+                : "DUNGEONS & DRAGONS"
+        );
+
     return {
         ...character,
 
@@ -94,13 +105,9 @@ function normalizeCharacter(character) {
             character.name ||
             "Personagem sem nome",
 
-        system:
-            character.system ||
-            "dnd",
+        system: normalizedSystem,
 
-        systemName:
-            character.systemName ||
-            "DUNGEONS & DRAGONS",
+        systemName: normalizedSystemName,
 
         level:
             Number(character.level) || 1,
@@ -123,10 +130,18 @@ function normalizeCharacter(character) {
     };
 }
 
+function normalizeCharacters(characters) {
+    if (!Array.isArray(characters)) {
+        return [];
+    }
+
+    return characters
+        .map(normalizeCharacter)
+        .filter(Boolean);
+}
+
 export default function Personagens({ onNavigate }) {
-    const [characters, setCharacters] = useState(
-        []
-    );
+    const [characters, setCharacters] = useState([]);
 
     const [search, setSearch] = useState("");
 
@@ -139,34 +154,33 @@ export default function Personagens({ onNavigate }) {
         setShowSystemSelector,
     ] = useState(false);
 
-    /*
-     * CARREGA AS FICHAS SALVAS ASSIM QUE A PÁGINA
-     * DE PERSONAGENS É ABERTA.
-     */
     useEffect(() => {
         const storedCharacters =
             loadCharacters();
 
         const normalizedCharacters =
-            storedCharacters
-                .map(normalizeCharacter)
-                .filter(Boolean);
+            normalizeCharacters(
+                storedCharacters
+            );
 
         setCharacters(
             normalizedCharacters
         );
 
         /*
-         * Caso existam fichas antigas sem ID,
-         * normalizamos e salvamos novamente.
+         * Salva novamente a versão normalizada.
+         *
+         * Isso corrige fichas antigas que:
+         * - não tinham ID;
+         * - usavam system: "dnd5e";
+         * - não tinham systemName.
          */
         if (
-            normalizedCharacters.length !==
-                storedCharacters.length ||
-            normalizedCharacters.some(
-                (character, index) =>
-                    character.id !==
-                    storedCharacters[index]?.id
+            JSON.stringify(
+                normalizedCharacters
+            ) !==
+            JSON.stringify(
+                storedCharacters
             )
         ) {
             saveCharacters(
@@ -175,11 +189,6 @@ export default function Personagens({ onNavigate }) {
         }
     }, []);
 
-    /*
-     * Mantém a lista sincronizada quando outra parte
-     * do site alterar o localStorage e disparar o
-     * evento "storage".
-     */
     useEffect(() => {
         function handleStorageChange(event) {
             if (
@@ -192,9 +201,9 @@ export default function Personagens({ onNavigate }) {
                 loadCharacters();
 
             setCharacters(
-                storedCharacters
-                    .map(normalizeCharacter)
-                    .filter(Boolean)
+                normalizeCharacters(
+                    storedCharacters
+                )
             );
         }
 
@@ -333,10 +342,6 @@ export default function Personagens({ onNavigate }) {
                             String(id)
                     );
 
-                /*
-                 * IMPORTANTE:
-                 * também remove do localStorage.
-                 */
                 saveCharacters(
                     updatedCharacters
                 );
@@ -350,11 +355,8 @@ export default function Personagens({ onNavigate }) {
         character
     ) {
         /*
-         * Por enquanto a edição completa ainda
-         * não está conectada ao criador.
-         *
-         * Mantemos a função para não quebrar
-         * o botão existente.
+         * A edição completa será conectada
+         * posteriormente ao criador.
          */
         console.log(
             "Editar personagem:",
@@ -369,49 +371,36 @@ export default function Personagens({ onNavigate }) {
     function handleOpenCharacter(
         character
     ) {
-        /*
-         * Guarda a ficha que o usuário selecionou
-         * para que outras telas possam utilizá-la.
-         */
         try {
             sessionStorage.setItem(
                 "ordo-rpgistas-personagem-selecionado",
                 JSON.stringify(character)
             );
+
+            /*
+             * Enquanto a tela completa da ficha
+             * não estiver conectada, mostramos
+             * uma confirmação simples.
+             */
+            alert(
+                `Ficha de "${character.name}" selecionada.`
+            );
         } catch (error) {
             console.error(
-                "Não foi possível selecionar o personagem:",
+                "Não foi possível selecionar a ficha:",
                 error
             );
         }
-
-        /*
-         * No momento, a abertura da ficha é
-         * representada pelo console e pelo alerta.
-         *
-         * A ficha completa poderá ser conectada
-         * depois ao visualizador/editor.
-         */
-        console.log(
-            "Abrir ficha:",
-            character
-        );
-
-        alert(
-            `Ficha de ${character.name} selecionada.`
-        );
     }
 
     return (
         <PageBase
             title="Personagens"
-            subtitle="Crie, organize e acompanhe todos os seus personagens."
-            icon={Shield}
+            subtitle="Crie, organize e gerencie seus aventureiros."
+            icon={UserRound}
             onNavigate={onNavigate}
         >
             <div className="personagens-page">
-
-                {/* TOPO */}
 
                 <motion.section
                     className="personagens-toolbar"
@@ -428,29 +417,19 @@ export default function Personagens({ onNavigate }) {
                     }}
                 >
                     <div className="personagens-toolbar-text">
-
                         <span>
-                            SEU ARQUIVO DE AVENTUREIROS
+                            SEUS AVENTUREIROS
                         </span>
 
                         <h2>
-                            {characters.length ===
-                            0
-                                ? "Nenhum personagem ainda"
-                                : `${characters.length} personagem${
-                                      characters.length >
-                                      1
-                                          ? "s"
-                                          : ""
-                                  }`}
+                            Personagens salvos
                         </h2>
 
                         <p>
-                            Crie fichas para suas
-                            aventuras de D&D e
-                            outros sistemas.
+                            Todas as suas fichas
+                            organizadas em um só
+                            lugar.
                         </p>
-
                     </div>
 
                     <button
@@ -462,43 +441,24 @@ export default function Personagens({ onNavigate }) {
                     >
                         <Plus size={18} />
 
-                        <span>
-                            Criar personagem
-                        </span>
+                        Criar personagem
                     </button>
                 </motion.section>
 
-                {/* FILTROS */}
+                <section className="personagens-filters">
 
-                <motion.section
-                    className="personagens-filters"
-                    initial={{
-                        opacity: 0,
-                        y: 15,
-                    }}
-                    animate={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    transition={{
-                        duration: 0.5,
-                        delay: 0.1,
-                    }}
-                >
                     <div className="personagens-search">
-
-                        <Search size={18} />
+                        <Search size={17} />
 
                         <input
                             type="text"
-                            placeholder="Pesquisar personagem..."
                             value={search}
                             onChange={(event) =>
                                 setSearch(
-                                    event.target
-                                        .value
+                                    event.target.value
                                 )
                             }
+                            placeholder="Pesquisar personagem..."
                         />
 
                         {search && (
@@ -508,11 +468,11 @@ export default function Personagens({ onNavigate }) {
                                 onClick={() =>
                                     setSearch("")
                                 }
+                                title="Limpar pesquisa"
                             >
-                                <X size={16} />
+                                <X size={15} />
                             </button>
                         )}
-
                     </div>
 
                     <div className="personagens-filter-buttons">
@@ -548,7 +508,7 @@ export default function Personagens({ onNavigate }) {
                                 )
                             }
                         >
-                            <Sword size={15} />
+                            <Sword size={14} />
                             D&D
                         </button>
 
@@ -566,14 +526,12 @@ export default function Personagens({ onNavigate }) {
                                 )
                             }
                         >
-                            <Shield size={15} />
+                            <Shield size={14} />
                             Ordem
                         </button>
 
                     </div>
-                </motion.section>
-
-                {/* LISTA */}
+                </section>
 
                 {filteredCharacters.length >
                 0 ? (
@@ -617,8 +575,7 @@ export default function Personagens({ onNavigate }) {
 
                                         <div className="personagem-card-top">
 
-                                            <div className="personagem-card-system-icon">
-
+                                            <div className="personagem-system-icon">
                                                 {isDnd ? (
                                                     <Sword
                                                         size={
@@ -632,19 +589,11 @@ export default function Personagens({ onNavigate }) {
                                                         }
                                                     />
                                                 )}
-
                                             </div>
-
-                                            <span className="personagem-card-system">
-                                                {character.systemName ||
-                                                    (isDnd
-                                                        ? "DUNGEONS & DRAGONS"
-                                                        : "ORDEM PARANORMAL")}
-                                            </span>
 
                                             <button
                                                 type="button"
-                                                className="personagem-card-menu"
+                                                className="personagem-more"
                                                 onClick={() =>
                                                     handleEditCharacter(
                                                         character
@@ -661,70 +610,41 @@ export default function Personagens({ onNavigate }) {
 
                                         </div>
 
-                                        <div className="personagem-card-main">
+                                        <div className="personagem-card-content">
 
-                                            <div className="personagem-card-avatar">
+                                            <span className="personagem-system">
+                                                {character.systemName ||
+                                                    (isDnd
+                                                        ? "DUNGEONS & DRAGONS"
+                                                        : "ORDEM PARANORMAL")}
+                                            </span>
 
-                                                <UserRound
-                                                    size={
-                                                        30
-                                                    }
-                                                />
+                                            <h3>
+                                                {character.name ||
+                                                    "Personagem sem nome"}
+                                            </h3>
 
-                                            </div>
+                                            <p>
+                                                {character.race ||
+                                                    "Raça não definida"}
+                                                {" • "}
+                                                {character.class ||
+                                                    "Classe não definida"}
+                                            </p>
 
-                                            <div className="personagem-card-title">
-
-                                                <h3>
-                                                    {character.name ||
-                                                        "Personagem sem nome"}
-                                                </h3>
+                                            <div className="personagem-level">
 
                                                 <span>
-                                                    {character.race ||
-                                                        "Raça não definida"}
-                                                    {" • "}
-                                                    {character.class ||
-                                                        "Classe não definida"}
-                                                </span>
-
-                                            </div>
-
-                                        </div>
-
-                                        <div className="personagem-card-stats">
-
-                                            <div>
-                                                <span>
-                                                    NÍVEL
-                                                </span>
-
-                                                <strong>
+                                                    Nível{" "}
                                                     {character.level ||
                                                         1}
-                                                </strong>
-                                            </div>
-
-                                            <div>
-                                                <span>
-                                                    RAÇA
                                                 </span>
 
-                                                <strong>
-                                                    {character.race ||
-                                                        "—"}
-                                                </strong>
-                                            </div>
-
-                                            <div>
                                                 <span>
-                                                    CLASSE
+                                                    {character.background ||
+                                                        "Aventureiro"}
                                                 </span>
 
-                                                <strong>
-                                                    {character.class ||
-                                                        "—"}
-                                                </strong>
                                             </div>
 
                                         </div>
@@ -794,48 +714,32 @@ export default function Personagens({ onNavigate }) {
 
                     </section>
                 ) : (
-                    /* ESTADO VAZIO */
-
                     <motion.section
                         className="personagens-empty"
                         initial={{
                             opacity: 0,
-                            scale: 0.97,
+                            y: 20,
                         }}
                         animate={{
                             opacity: 1,
-                            scale: 1,
-                        }}
-                        transition={{
-                            duration: 0.5,
+                            y: 0,
                         }}
                     >
-
                         <div className="personagens-empty-icon">
-                            {characters.length ===
-                            0 ? (
-                                <Sparkles
-                                    size={32}
-                                />
-                            ) : (
-                                <Search
-                                    size={32}
-                                />
-                            )}
+                            <UserRound
+                                size={34}
+                            />
                         </div>
 
                         <span className="personagens-empty-eyebrow">
-                            {characters.length ===
-                            0
-                                ? "SUA JORNADA COMEÇA AQUI"
-                                : "NENHUM RESULTADO"}
+                            NENHUMA FICHA ENCONTRADA
                         </span>
 
                         <h2>
                             {characters.length ===
                             0
-                                ? "Crie seu primeiro personagem"
-                                : "Nenhum personagem encontrado"}
+                                ? "Sua aventura começa aqui."
+                                : "Nenhum personagem corresponde à pesquisa."}
                         </h2>
 
                         <p>
@@ -862,11 +766,8 @@ export default function Personagens({ onNavigate }) {
                                 personagem
                             </button>
                         )}
-
                     </motion.section>
                 )}
-
-                {/* RODAPÉ INFORMATIVO */}
 
                 <section className="personagens-info-grid">
 
@@ -929,8 +830,6 @@ export default function Personagens({ onNavigate }) {
 
                 </section>
 
-                {/* MODAL DE ESCOLHA DO SISTEMA */}
-
                 {showSystemSelector && (
                     <div
                         className="personagens-modal-overlay"
@@ -938,7 +837,6 @@ export default function Personagens({ onNavigate }) {
                             closeSystemSelector
                         }
                     >
-
                         <motion.div
                             className="personagens-system-modal"
                             initial={{
@@ -981,9 +879,11 @@ export default function Personagens({ onNavigate }) {
 
                                 <button
                                     type="button"
+                                    className="personagens-modal-close"
                                     onClick={
                                         closeSystemSelector
                                     }
+                                    title="Fechar"
                                 >
                                     <X size={20} />
                                 </button>
@@ -994,7 +894,7 @@ export default function Personagens({ onNavigate }) {
 
                                 <button
                                     type="button"
-                                    className="personagens-system-option personagens-system-option-dnd"
+                                    className="personagens-system-choice personagens-system-choice-dnd"
                                     onClick={() =>
                                         handleSelectSystem(
                                             "dnd"
@@ -1002,7 +902,7 @@ export default function Personagens({ onNavigate }) {
                                     }
                                 >
 
-                                    <div className="personagens-system-option-icon">
+                                    <div className="personagens-system-choice-icon">
                                         <Sword
                                             size={
                                                 26
@@ -1010,7 +910,8 @@ export default function Personagens({ onNavigate }) {
                                         />
                                     </div>
 
-                                    <div>
+                                    <div className="personagens-system-choice-content">
+
                                         <span>
                                             DUNGEONS &
                                             DRAGONS
@@ -1030,13 +931,14 @@ export default function Personagens({ onNavigate }) {
                                             grandes
                                             aventuras.
                                         </p>
+
                                     </div>
 
                                 </button>
 
                                 <button
                                     type="button"
-                                    className="personagens-system-option personagens-system-option-ordem"
+                                    className="personagens-system-choice personagens-system-choice-ordem"
                                     onClick={() =>
                                         handleSelectSystem(
                                             "ordem"
@@ -1044,7 +946,7 @@ export default function Personagens({ onNavigate }) {
                                     }
                                 >
 
-                                    <div className="personagens-system-option-icon">
+                                    <div className="personagens-system-choice-icon">
                                         <Shield
                                             size={
                                                 26
@@ -1052,7 +954,8 @@ export default function Personagens({ onNavigate }) {
                                         />
                                     </div>
 
-                                    <div>
+                                    <div className="personagens-system-choice-content">
+
                                         <span>
                                             ORDEM
                                             PARANORMAL
@@ -1072,6 +975,7 @@ export default function Personagens({ onNavigate }) {
                                             trás da
                                             realidade.
                                         </p>
+
                                     </div>
 
                                 </button>
@@ -1094,7 +998,6 @@ export default function Personagens({ onNavigate }) {
                             </div>
 
                         </motion.div>
-
                     </div>
                 )}
 
