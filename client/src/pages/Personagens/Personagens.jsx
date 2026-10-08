@@ -19,36 +19,23 @@ import PageBase from "../PageBase";
 
 import "./Personagens.css";
 
+const STORAGE_KEY = "ordo-rpgistas-personagens";
+
 function loadCharacters() {
     try {
-        const stored = JSON.parse(
-            localStorage.getItem("ordo-rpgistas-personagens") || "[]"
-        );
+        const stored = localStorage.getItem(STORAGE_KEY);
 
-        const normalizedCharacters = stored.map((character, index) => ({
-            ...character,
+        if (!stored) {
+            return [];
+        }
 
-            id:
-                character.id ||
-                `legacy-${index}-${character.createdAt || Date.now()}`,
+        const parsed = JSON.parse(stored);
 
-            system: character.system || "dnd",
+        if (!Array.isArray(parsed)) {
+            return [];
+        }
 
-            systemName:
-                character.systemName ||
-                "Dungeons & Dragons",
-
-            name:
-                character.name ||
-                "Personagem sem nome",
-
-            level:
-                Number(character.level) || 1,
-        }));
-
-        persistCharacters(normalizedCharacters);
-
-        return normalizedCharacters;
+        return parsed;
     } catch (error) {
         console.error(
             "Não foi possível carregar os personagens:",
@@ -59,70 +46,234 @@ function loadCharacters() {
     }
 }
 
-function persistCharacters(nextCharacters) {
+function saveCharacters(characters) {
     try {
         localStorage.setItem(
-            "ordo-rpgistas-personagens",
-            JSON.stringify(nextCharacters)
+            STORAGE_KEY,
+            JSON.stringify(characters)
         );
+
+        return true;
     } catch (error) {
         console.error(
             "Não foi possível salvar os personagens:",
             error
         );
+
+        return false;
     }
+}
+
+function getCharacterId(character) {
+    if (character?.id) {
+        return String(character.id);
+    }
+
+    /*
+     * Compatibilidade com fichas antigas que possam ter
+     * sido salvas antes de possuírem um ID.
+     */
+    return [
+        character?.name || "personagem",
+        character?.createdAt || "",
+        character?.system || "dnd",
+    ].join("-");
+}
+
+function normalizeCharacter(character) {
+    if (!character || typeof character !== "object") {
+        return null;
+    }
+
+    return {
+        ...character,
+
+        id: getCharacterId(character),
+
+        name:
+            character.name ||
+            "Personagem sem nome",
+
+        system:
+            character.system ||
+            "dnd",
+
+        systemName:
+            character.systemName ||
+            "DUNGEONS & DRAGONS",
+
+        level:
+            Number(character.level) || 1,
+
+        race:
+            character.race ||
+            "Humano",
+
+        class:
+            character.class ||
+            "Aventureiro",
+
+        background:
+            character.background ||
+            "",
+
+        createdAt:
+            character.createdAt ||
+            new Date().toISOString(),
+    };
 }
 
 export default function Personagens({ onNavigate }) {
     const [characters, setCharacters] = useState(
-        () => loadCharacters()
+        []
     );
 
     const [search, setSearch] = useState("");
 
-    const [filter, setFilter] = useState("todos");
+    const [filter, setFilter] = useState(
+        "todos"
+    );
 
-    const [showSystemSelector, setShowSystemSelector] =
-        useState(false);
+    const [
+        showSystemSelector,
+        setShowSystemSelector,
+    ] = useState(false);
 
+    /*
+     * CARREGA AS FICHAS SALVAS ASSIM QUE A PÁGINA
+     * DE PERSONAGENS É ABERTA.
+     */
     useEffect(() => {
-        setCharacters(loadCharacters());
-    }, []);
+        const storedCharacters =
+            loadCharacters();
 
-    const filteredCharacters = useMemo(() => {
-        const normalizedSearch =
-            search.trim().toLowerCase();
+        const normalizedCharacters =
+            storedCharacters
+                .map(normalizeCharacter)
+                .filter(Boolean);
 
-        return characters.filter((character) => {
-            const matchesSearch =
-                !normalizedSearch ||
-                character.name
-                    .toLowerCase()
-                    .includes(normalizedSearch) ||
-                character.systemName
-                    .toLowerCase()
-                    .includes(normalizedSearch);
-
-            const matchesFilter =
-                filter === "todos" ||
-                character.system === filter;
-
-            return (
-                matchesSearch &&
-                matchesFilter
-            );
-        });
-    }, [
-        characters,
-        search,
-        filter,
-    ]);
-
-    function openCharacterCreator() {
-        localStorage.removeItem(
-            "ordo-rpgistas-personagem-editando"
+        setCharacters(
+            normalizedCharacters
         );
 
+        /*
+         * Caso existam fichas antigas sem ID,
+         * normalizamos e salvamos novamente.
+         */
+        if (
+            normalizedCharacters.length !==
+                storedCharacters.length ||
+            normalizedCharacters.some(
+                (character, index) =>
+                    character.id !==
+                    storedCharacters[index]?.id
+            )
+        ) {
+            saveCharacters(
+                normalizedCharacters
+            );
+        }
+    }, []);
+
+    /*
+     * Mantém a lista sincronizada quando outra parte
+     * do site alterar o localStorage e disparar o
+     * evento "storage".
+     */
+    useEffect(() => {
+        function handleStorageChange(event) {
+            if (
+                event.key !== STORAGE_KEY
+            ) {
+                return;
+            }
+
+            const storedCharacters =
+                loadCharacters();
+
+            setCharacters(
+                storedCharacters
+                    .map(normalizeCharacter)
+                    .filter(Boolean)
+            );
+        }
+
+        window.addEventListener(
+            "storage",
+            handleStorageChange
+        );
+
+        return () => {
+            window.removeEventListener(
+                "storage",
+                handleStorageChange
+            );
+        };
+    }, []);
+
+    const filteredCharacters =
+        useMemo(() => {
+            const normalizedSearch =
+                search
+                    .trim()
+                    .toLowerCase();
+
+            return characters.filter(
+                (character) => {
+                    const characterName =
+                        String(
+                            character.name || ""
+                        ).toLowerCase();
+
+                    const systemName =
+                        String(
+                            character.systemName ||
+                                ""
+                        ).toLowerCase();
+
+                    const characterClass =
+                        String(
+                            character.class || ""
+                        ).toLowerCase();
+
+                    const characterRace =
+                        String(
+                            character.race || ""
+                        ).toLowerCase();
+
+                    const matchesSearch =
+                        !normalizedSearch ||
+                        characterName.includes(
+                            normalizedSearch
+                        ) ||
+                        systemName.includes(
+                            normalizedSearch
+                        ) ||
+                        characterClass.includes(
+                            normalizedSearch
+                        ) ||
+                        characterRace.includes(
+                            normalizedSearch
+                        );
+
+                    const matchesFilter =
+                        filter === "todos" ||
+                        character.system ===
+                            filter;
+
+                    return (
+                        matchesSearch &&
+                        matchesFilter
+                    );
+                }
+            );
+        }, [
+            characters,
+            search,
+            filter,
+        ]);
+
+    function openCharacterCreator() {
         setShowSystemSelector(true);
     }
 
@@ -156,7 +307,8 @@ export default function Personagens({ onNavigate }) {
         const character =
             characters.find(
                 (item) =>
-                    item.id === id
+                    String(item.id) ===
+                    String(id)
             );
 
         if (!character) {
@@ -174,17 +326,22 @@ export default function Personagens({ onNavigate }) {
 
         setCharacters(
             (currentCharacters) => {
-                const nextCharacters =
+                const updatedCharacters =
                     currentCharacters.filter(
                         (item) =>
-                            item.id !== id
+                            String(item.id) !==
+                            String(id)
                     );
 
-                persistCharacters(
-                    nextCharacters
+                /*
+                 * IMPORTANTE:
+                 * também remove do localStorage.
+                 */
+                saveCharacters(
+                    updatedCharacters
                 );
 
-                return nextCharacters;
+                return updatedCharacters;
             }
         );
     }
@@ -192,13 +349,56 @@ export default function Personagens({ onNavigate }) {
     function handleEditCharacter(
         character
     ) {
-        localStorage.setItem(
-            "ordo-rpgistas-personagem-editando",
-            String(character.id)
+        /*
+         * Por enquanto a edição completa ainda
+         * não está conectada ao criador.
+         *
+         * Mantemos a função para não quebrar
+         * o botão existente.
+         */
+        console.log(
+            "Editar personagem:",
+            character
         );
 
-        onNavigate?.(
-            "criar-personagem"
+        alert(
+            "A edição completa da ficha será conectada ao criador de personagem."
+        );
+    }
+
+    function handleOpenCharacter(
+        character
+    ) {
+        /*
+         * Guarda a ficha que o usuário selecionou
+         * para que outras telas possam utilizá-la.
+         */
+        try {
+            sessionStorage.setItem(
+                "ordo-rpgistas-personagem-selecionado",
+                JSON.stringify(character)
+            );
+        } catch (error) {
+            console.error(
+                "Não foi possível selecionar o personagem:",
+                error
+            );
+        }
+
+        /*
+         * No momento, a abertura da ficha é
+         * representada pelo console e pelo alerta.
+         *
+         * A ficha completa poderá ser conectada
+         * depois ao visualizador/editor.
+         */
+        console.log(
+            "Abrir ficha:",
+            character
+        );
+
+        alert(
+            `Ficha de ${character.name} selecionada.`
         );
     }
 
@@ -210,6 +410,8 @@ export default function Personagens({ onNavigate }) {
             onNavigate={onNavigate}
         >
             <div className="personagens-page">
+
+                {/* TOPO */}
 
                 <motion.section
                     className="personagens-toolbar"
@@ -232,18 +434,21 @@ export default function Personagens({ onNavigate }) {
                         </span>
 
                         <h2>
-                            {characters.length === 0
+                            {characters.length ===
+                            0
                                 ? "Nenhum personagem ainda"
                                 : `${characters.length} personagem${
-                                      characters.length > 1
+                                      characters.length >
+                                      1
                                           ? "s"
                                           : ""
                                   }`}
                         </h2>
 
                         <p>
-                            Crie fichas para suas aventuras de
-                            D&D e outros sistemas.
+                            Crie fichas para suas
+                            aventuras de D&D e
+                            outros sistemas.
                         </p>
 
                     </div>
@@ -263,22 +468,50 @@ export default function Personagens({ onNavigate }) {
                     </button>
                 </motion.section>
 
-                <section className="personagens-filters">
+                {/* FILTROS */}
 
+                <motion.section
+                    className="personagens-filters"
+                    initial={{
+                        opacity: 0,
+                        y: 15,
+                    }}
+                    animate={{
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    transition={{
+                        duration: 0.5,
+                        delay: 0.1,
+                    }}
+                >
                     <div className="personagens-search">
 
                         <Search size={18} />
 
                         <input
                             type="text"
+                            placeholder="Pesquisar personagem..."
                             value={search}
                             onChange={(event) =>
                                 setSearch(
-                                    event.target.value
+                                    event.target
+                                        .value
                                 )
                             }
-                            placeholder="Pesquisar personagem..."
                         />
+
+                        {search && (
+                            <button
+                                type="button"
+                                className="personagens-search-clear"
+                                onClick={() =>
+                                    setSearch("")
+                                }
+                            >
+                                <X size={16} />
+                            </button>
+                        )}
 
                     </div>
 
@@ -287,12 +520,15 @@ export default function Personagens({ onNavigate }) {
                         <button
                             type="button"
                             className={
-                                filter === "todos"
+                                filter ===
+                                "todos"
                                     ? "active"
                                     : ""
                             }
                             onClick={() =>
-                                setFilter("todos")
+                                setFilter(
+                                    "todos"
+                                )
                             }
                         >
                             Todos
@@ -301,181 +537,265 @@ export default function Personagens({ onNavigate }) {
                         <button
                             type="button"
                             className={
-                                filter === "dnd"
+                                filter ===
+                                "dnd"
                                     ? "active"
                                     : ""
                             }
                             onClick={() =>
-                                setFilter("dnd")
+                                setFilter(
+                                    "dnd"
+                                )
                             }
                         >
                             <Sword size={15} />
-
                             D&D
                         </button>
 
                         <button
                             type="button"
                             className={
-                                filter === "ordem"
+                                filter ===
+                                "ordem"
                                     ? "active"
                                     : ""
                             }
                             onClick={() =>
-                                setFilter("ordem")
+                                setFilter(
+                                    "ordem"
+                                )
                             }
                         >
                             <Shield size={15} />
-
                             Ordem
                         </button>
 
                     </div>
+                </motion.section>
 
-                </section>
+                {/* LISTA */}
 
-                {filteredCharacters.length > 0 ? (
+                {filteredCharacters.length >
+                0 ? (
                     <section className="personagens-grid">
 
                         {filteredCharacters.map(
-                            (character) => (
-                                <motion.article
-                                    key={character.id}
-                                    className={`personagem-card personagem-card-${character.system}`}
-                                    initial={{
-                                        opacity: 0,
-                                        y: 20,
-                                    }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                    }}
-                                    transition={{
-                                        duration: 0.4,
-                                    }}
-                                >
+                            (
+                                character,
+                                index
+                            ) => {
+                                const isDnd =
+                                    character.system ===
+                                    "dnd";
 
-                                    <div className="personagem-card-top">
+                                return (
+                                    <motion.article
+                                        key={
+                                            character.id ||
+                                            `${character.name}-${index}`
+                                        }
+                                        className={`personagem-card ${
+                                            isDnd
+                                                ? "personagem-card-dnd"
+                                                : "personagem-card-ordem"
+                                        }`}
+                                        initial={{
+                                            opacity: 0,
+                                            y: 20,
+                                        }}
+                                        animate={{
+                                            opacity: 1,
+                                            y: 0,
+                                        }}
+                                        transition={{
+                                            duration: 0.45,
+                                            delay:
+                                                index *
+                                                0.05,
+                                        }}
+                                    >
 
-                                        <div className="personagem-system-icon">
-                                            {character.system ===
-                                            "dnd" ? (
-                                                <Sword size={22} />
-                                            ) : (
-                                                <Shield size={22} />
-                                            )}
-                                        </div>
+                                        <div className="personagem-card-top">
 
-                                        <button
-                                            type="button"
-                                            className="personagem-more"
-                                        >
-                                            <MoreVertical
-                                                size={18}
-                                            />
-                                        </button>
+                                            <div className="personagem-card-system-icon">
 
-                                    </div>
+                                                {isDnd ? (
+                                                    <Sword
+                                                        size={
+                                                            20
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <Shield
+                                                        size={
+                                                            20
+                                                        }
+                                                    />
+                                                )}
 
-                                    <div className="personagem-card-content">
+                                            </div>
 
-                                        <span className="personagem-system">
-                                            {
-                                                character.systemName
-                                            }
-                                        </span>
-
-                                        <h3>
-                                            {
-                                                character.name
-                                            }
-                                        </h3>
-
-                                        <div className="personagem-card-details">
-
-                                            <span>
-                                                Nível{" "}
-                                                {
-                                                    character.level
-                                                }
+                                            <span className="personagem-card-system">
+                                                {character.systemName ||
+                                                    (isDnd
+                                                        ? "DUNGEONS & DRAGONS"
+                                                        : "ORDEM PARANORMAL")}
                                             </span>
 
-                                            {character.class && (
-                                                <>
-                                                    <span>
-                                                        •
-                                                    </span>
-
-                                                    <span>
-                                                        {
-                                                            character.class
-                                                        }
-                                                    </span>
-                                                </>
-                                            )}
-
-                                            {character.race && (
-                                                <>
-                                                    <span>
-                                                        •
-                                                    </span>
-
-                                                    <span>
-                                                        {
-                                                            character.race
-                                                        }
-                                                    </span>
-                                                </>
-                                            )}
+                                            <button
+                                                type="button"
+                                                className="personagem-card-menu"
+                                                onClick={() =>
+                                                    handleEditCharacter(
+                                                        character
+                                                    )
+                                                }
+                                                title="Opções"
+                                            >
+                                                <MoreVertical
+                                                    size={
+                                                        18
+                                                    }
+                                                />
+                                            </button>
 
                                         </div>
 
-                                        {character.concept && (
-                                            <p className="personagem-card-concept">
-                                                {
-                                                    character.concept
+                                        <div className="personagem-card-main">
+
+                                            <div className="personagem-card-avatar">
+
+                                                <UserRound
+                                                    size={
+                                                        30
+                                                    }
+                                                />
+
+                                            </div>
+
+                                            <div className="personagem-card-title">
+
+                                                <h3>
+                                                    {character.name ||
+                                                        "Personagem sem nome"}
+                                                </h3>
+
+                                                <span>
+                                                    {character.race ||
+                                                        "Raça não definida"}
+                                                    {" • "}
+                                                    {character.class ||
+                                                        "Classe não definida"}
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div className="personagem-card-stats">
+
+                                            <div>
+                                                <span>
+                                                    NÍVEL
+                                                </span>
+
+                                                <strong>
+                                                    {character.level ||
+                                                        1}
+                                                </strong>
+                                            </div>
+
+                                            <div>
+                                                <span>
+                                                    RAÇA
+                                                </span>
+
+                                                <strong>
+                                                    {character.race ||
+                                                        "—"}
+                                                </strong>
+                                            </div>
+
+                                            <div>
+                                                <span>
+                                                    CLASSE
+                                                </span>
+
+                                                <strong>
+                                                    {character.class ||
+                                                        "—"}
+                                                </strong>
+                                            </div>
+
+                                        </div>
+
+                                        <div className="personagem-card-actions">
+
+                                            <button
+                                                type="button"
+                                                className="personagem-card-open"
+                                                onClick={() =>
+                                                    handleOpenCharacter(
+                                                        character
+                                                    )
                                                 }
-                                            </p>
-                                        )}
+                                            >
+                                                <BookOpen
+                                                    size={
+                                                        15
+                                                    }
+                                                />
 
-                                    </div>
+                                                Abrir ficha
+                                            </button>
 
-                                    <div className="personagem-card-actions">
+                                            <button
+                                                type="button"
+                                                className="personagem-card-edit"
+                                                onClick={() =>
+                                                    handleEditCharacter(
+                                                        character
+                                                    )
+                                                }
+                                            >
+                                                <Edit3
+                                                    size={
+                                                        15
+                                                    }
+                                                />
 
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                handleEditCharacter(
-                                                    character
-                                                )
-                                            }
-                                        >
-                                            <Edit3 size={15} />
+                                                Editar
+                                            </button>
 
-                                            Editar
-                                        </button>
+                                            <button
+                                                type="button"
+                                                className="personagem-card-delete"
+                                                onClick={() =>
+                                                    handleDeleteCharacter(
+                                                        character.id
+                                                    )
+                                                }
+                                            >
+                                                <Trash2
+                                                    size={
+                                                        15
+                                                    }
+                                                />
 
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                handleDeleteCharacter(
-                                                    character.id
-                                                )
-                                            }
-                                        >
-                                            <Trash2 size={15} />
+                                                Excluir
+                                            </button>
 
-                                            Excluir
-                                        </button>
+                                        </div>
 
-                                    </div>
-
-                                </motion.article>
-                            )
+                                    </motion.article>
+                                );
+                            }
                         )}
 
                     </section>
                 ) : (
+                    /* ESTADO VAZIO */
+
                     <motion.section
                         className="personagens-empty"
                         initial={{
@@ -492,62 +812,88 @@ export default function Personagens({ onNavigate }) {
                     >
 
                         <div className="personagens-empty-icon">
-                            <Sparkles size={32} />
+                            {characters.length ===
+                            0 ? (
+                                <Sparkles
+                                    size={32}
+                                />
+                            ) : (
+                                <Search
+                                    size={32}
+                                />
+                            )}
                         </div>
 
                         <span className="personagens-empty-eyebrow">
-                            SUA JORNADA COMEÇA AQUI
+                            {characters.length ===
+                            0
+                                ? "SUA JORNADA COMEÇA AQUI"
+                                : "NENHUM RESULTADO"}
                         </span>
 
                         <h2>
-                            Crie seu primeiro personagem
+                            {characters.length ===
+                            0
+                                ? "Crie seu primeiro personagem"
+                                : "Nenhum personagem encontrado"}
                         </h2>
 
                         <p>
-                            Escolha um sistema,
-                            construa seu aventureiro
-                            e prepare-se para entrar
-                            em uma nova história.
+                            {characters.length ===
+                            0
+                                ? "Escolha um sistema, construa seu aventureiro e prepare-se para entrar em uma nova história."
+                                : "Tente alterar a pesquisa ou o filtro selecionado para encontrar sua ficha."}
                         </p>
 
-                        <button
-                            type="button"
-                            className="personagens-empty-button"
-                            onClick={
-                                openCharacterCreator
-                            }
-                        >
-                            <Plus size={18} />
+                        {characters.length ===
+                            0 && (
+                            <button
+                                type="button"
+                                className="personagens-empty-button"
+                                onClick={
+                                    openCharacterCreator
+                                }
+                            >
+                                <Plus
+                                    size={18}
+                                />
 
-                            Criar meu primeiro personagem
-                        </button>
+                                Criar meu primeiro
+                                personagem
+                            </button>
+                        )}
 
                     </motion.section>
                 )}
+
+                {/* RODAPÉ INFORMATIVO */}
 
                 <section className="personagens-info-grid">
 
                     <article className="personagens-info-card">
 
                         <div className="personagens-info-icon">
-                            <BookOpen size={20} />
+                            <BookOpen
+                                size={20}
+                            />
                         </div>
 
                         <div>
-
                             <span>
                                 SISTEMAS
                             </span>
 
                             <strong>
-                                D&D e Ordem Paranormal
+                                D&D e Ordem
+                                Paranormal
                             </strong>
 
                             <p>
-                                Outros sistemas poderão
-                                ser adicionados futuramente.
+                                Outros sistemas
+                                poderão ser
+                                adicionados
+                                futuramente.
                             </p>
-
                         </div>
 
                     </article>
@@ -555,30 +901,35 @@ export default function Personagens({ onNavigate }) {
                     <article className="personagens-info-card">
 
                         <div className="personagens-info-icon">
-                            <UserRound size={20} />
+                            <UserRound
+                                size={20}
+                            />
                         </div>
 
                         <div>
-
                             <span>
                                 SUAS FICHAS
                             </span>
 
                             <strong>
-                                Tudo organizado em um só lugar
+                                Tudo organizado em
+                                um só lugar
                             </strong>
 
                             <p>
-                                Personagens, atributos,
-                                equipamentos e informações
-                                da aventura.
+                                Personagens,
+                                atributos,
+                                equipamentos e
+                                informações da
+                                aventura.
                             </p>
-
                         </div>
 
                     </article>
 
                 </section>
+
+                {/* MODAL DE ESCOLHA DO SISTEMA */}
 
                 {showSystemSelector && (
                     <div
@@ -608,36 +959,34 @@ export default function Personagens({ onNavigate }) {
                             }
                         >
 
-                            <button
-                                type="button"
-                                className="personagens-modal-close"
-                                onClick={
-                                    closeSystemSelector
-                                }
-                            >
-                                <X size={19} />
-                            </button>
-
                             <div className="personagens-modal-header">
 
-                                <div className="personagens-modal-symbol">
-                                    <Sparkles size={22} />
+                                <div>
+                                    <span>
+                                        NOVA AVENTURA
+                                    </span>
+
+                                    <h2>
+                                        Escolha o sistema
+                                    </h2>
+
+                                    <p>
+                                        Selecione o
+                                        sistema que
+                                        deseja usar
+                                        para criar
+                                        sua ficha.
+                                    </p>
                                 </div>
 
-                                <span>
-                                    NOVO PERSONAGEM
-                                </span>
-
-                                <h2>
-                                    Escolha o sistema
-                                </h2>
-
-                                <p>
-                                    Cada sistema possui
-                                    suas próprias regras,
-                                    atributos e formas
-                                    de criação.
-                                </p>
+                                <button
+                                    type="button"
+                                    onClick={
+                                        closeSystemSelector
+                                    }
+                                >
+                                    <X size={20} />
+                                </button>
 
                             </div>
 
@@ -645,7 +994,7 @@ export default function Personagens({ onNavigate }) {
 
                                 <button
                                     type="button"
-                                    className="personagens-system-choice personagens-system-choice-dnd"
+                                    className="personagens-system-option personagens-system-option-dnd"
                                     onClick={() =>
                                         handleSelectSystem(
                                             "dnd"
@@ -653,35 +1002,41 @@ export default function Personagens({ onNavigate }) {
                                     }
                                 >
 
-                                    <div className="personagens-system-choice-icon">
-                                        <Sword size={28} />
+                                    <div className="personagens-system-option-icon">
+                                        <Sword
+                                            size={
+                                                26
+                                            }
+                                        />
                                     </div>
 
-                                    <div className="personagens-system-choice-content">
-
+                                    <div>
                                         <span>
-                                            SISTEMA
+                                            DUNGEONS &
+                                            DRAGONS
                                         </span>
 
                                         <strong>
-                                            Dungeons & Dragons
+                                            D&D 5e
                                         </strong>
 
                                         <p>
-                                            Crie um personagem
-                                            para aventuras
-                                            de fantasia.
+                                            Crie um
+                                            aventureiro
+                                            para
+                                            explorar
+                                            reinos,
+                                            masmorras e
+                                            grandes
+                                            aventuras.
                                         </p>
-
                                     </div>
-
-                                    <Plus size={20} />
 
                                 </button>
 
                                 <button
                                     type="button"
-                                    className="personagens-system-choice personagens-system-choice-ordem"
+                                    className="personagens-system-option personagens-system-option-ordem"
                                     onClick={() =>
                                         handleSelectSystem(
                                             "ordem"
@@ -689,32 +1044,52 @@ export default function Personagens({ onNavigate }) {
                                     }
                                 >
 
-                                    <div className="personagens-system-choice-icon">
-                                        <Shield size={28} />
+                                    <div className="personagens-system-option-icon">
+                                        <Shield
+                                            size={
+                                                26
+                                            }
+                                        />
                                     </div>
 
-                                    <div className="personagens-system-choice-content">
-
+                                    <div>
                                         <span>
-                                            SISTEMA
+                                            ORDEM
+                                            PARANORMAL
                                         </span>
 
                                         <strong>
-                                            Ordem Paranormal
+                                            Ordem
+                                            Paranormal
                                         </strong>
 
                                         <p>
-                                            Entre em uma
-                                            realidade onde
-                                            o paranormal
-                                            está presente.
+                                            Enfrente o
+                                            paranormal
+                                            e descubra
+                                            o que se
+                                            esconde por
+                                            trás da
+                                            realidade.
                                         </p>
-
                                     </div>
 
-                                    <Plus size={20} />
-
                                 </button>
+
+                            </div>
+
+                            <div className="personagens-modal-footer">
+
+                                <Sparkles
+                                    size={15}
+                                />
+
+                                <span>
+                                    Mais sistemas
+                                    poderão ser
+                                    adicionados
+                                    futuramente.
+                                </span>
 
                             </div>
 
