@@ -11,6 +11,7 @@ import Configuracoes from "../pages/Configuracoes/Configuracoes";
 import Doacao from "../pages/Doacao/Doacao";
 
 import CriarPersonagem from "../pages/CriarPersonagem/CriarPersonagem";
+import CriarPersonagemOrdem from "../pages/CriarPersonagemOrdem/CriarPersonagemOrdem";
 
 export default function AppNavigation({
     currentPage,
@@ -23,95 +24,76 @@ export default function AppNavigation({
     switch (currentPage) {
         case "home":
             return (
-                <Home
-                    onNavigate={navigate}
-                />
+                <Home onNavigate={navigate} />
             );
 
         case "perfil":
         case "profile":
             return (
-                <Perfil
-                    onNavigate={navigate}
-                />
+                <Perfil onNavigate={navigate} />
             );
 
         case "personagens":
         case "characters":
             return (
-                <Personagens
-                    onNavigate={navigate}
-                />
+                <Personagens onNavigate={navigate} />
             );
 
         case "criar-personagem":
             return (
-                <CriarPersonagem
-                    onNavigate={navigate}
-                />
+                <CriarPersonagem onNavigate={navigate} />
+            );
+
+        case "criar-personagem-ordem":
+            return (
+                <CriarPersonagemOrdem onNavigate={navigate} />
             );
 
         case "campanhas":
         case "campaigns":
             return (
-                <Campanhas
-                    onNavigate={navigate}
-                />
+                <Campanhas onNavigate={navigate} />
             );
 
         case "mapas":
         case "maps":
             return (
-                <Mapas
-                    onNavigate={navigate}
-                />
+                <Mapas onNavigate={navigate} />
             );
 
         case "livros":
         case "books":
             return (
-                <Livros
-                    onNavigate={navigate}
-                />
+                <Livros onNavigate={navigate} />
             );
 
         case "grupos":
         case "groups":
             return (
-                <Grupos
-                    onNavigate={navigate}
-                />
+                <Grupos onNavigate={navigate} />
             );
 
         case "procurar-jogadores":
         case "players":
             return (
-                <ProcurarJogadores
-                    onNavigate={navigate}
-                />
+                <ProcurarJogadores onNavigate={navigate} />
             );
 
         case "configuracoes":
         case "settings":
             return (
-                <Configuracoes
-                    onNavigate={navigate}
-                />
+                <Configuracoes onNavigate={navigate} />
             );
 
         case "doacao":
         case "donation":
             return (
-                <Doacao
-                    onNavigate={navigate}
-                />
+                <Doacao onNavigate={navigate} />
             );
 
         default:
             return (
-                <Home
-                    onNavigate={navigate}
-                />
+                <Home onNavigate={navigate} />
             );
     }
 }
