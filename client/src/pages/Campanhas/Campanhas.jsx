@@ -1,4 +1,3 @@
-```jsx
 import { useEffect, useState } from "react";
 import {
     Crown,
@@ -898,4 +897,3 @@ export default function Campanhas({ onNavigate }) {
         </PageBase>
     );
 }
-```
