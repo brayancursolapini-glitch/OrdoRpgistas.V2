@@ -1,0 +1,956 @@
+```css
+/* =========================================
+   ORDO RPGISTAS — CAMPANHAS
+   ========================================= */
+
+.campanhas-pagina {
+    --camp-gold: #ffc47c;
+    --camp-gold-strong: #e6a451;
+    --camp-text: #f7f3ed;
+    --camp-muted: rgba(235, 231, 224, 0.65);
+    --camp-border: rgba(255, 255, 255, 0.12);
+    --camp-panel: rgba(12, 13, 17, 0.82);
+
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 26px 24px 50px;
+    color: var(--camp-text);
+    box-sizing: border-box;
+}
+
+.campanhas-pagina *,
+.campanhas-pagina *::before,
+.campanhas-pagina *::after {
+    box-sizing: border-box;
+}
+
+.campanhas-pagina button,
+.campanhas-pagina input,
+.campanhas-pagina select,
+.campanhas-pagina textarea {
+    font: inherit;
+}
+
+.campanhas-pagina button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.campanhas-pagina h2,
+.campanhas-pagina h3,
+.campanhas-pagina p {
+    overflow-wrap: anywhere;
+}
+
+.campanhas-pagina h2,
+.campanhas-pagina h3 {
+    color: #fff;
+}
+
+.campanhas-pagina p {
+    color: var(--camp-muted);
+    line-height: 1.7;
+}
+
+/* Cabeçalho */
+
+.campanhas-cabecalho {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.campanhas-introducao {
+    min-width: 0;
+}
+
+.campanha-etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--camp-gold);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    line-height: 1.5;
+}
+
+.campanhas-introducao h2 {
+    margin: 12px 0 8px;
+    font-size: clamp(27px, 3vw, 38px);
+    font-weight: 850;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+}
+
+.campanhas-introducao p {
+    max-width: 580px;
+    margin: 0;
+    font-size: 13px;
+}
+
+/* Botões */
+
+.campanha-botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--camp-border);
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 750;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.campanha-botao:hover {
+    transform: translateY(-1px);
+}
+
+.campanha-botao-principal {
+    flex-shrink: 0;
+    border-color: rgba(255, 196, 124, 0.42);
+    background: linear-gradient(
+        135deg,
+        rgba(176, 112, 49, 0.42),
+        rgba(107, 61, 27, 0.35)
+    );
+    color: #ffe0b6;
+}
+
+.campanha-botao-principal:hover {
+    border-color: rgba(255, 196, 124, 0.7);
+    background: linear-gradient(
+        135deg,
+        rgba(192, 126, 59, 0.52),
+        rgba(126, 73, 32, 0.43)
+    );
+    color: #fff;
+}
+
+.campanha-botao-secundario {
+    background: rgba(0, 0, 0, 0.25);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.campanha-botao-secundario:hover {
+    border-color: rgba(255, 196, 124, 0.35);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.campanha-botao-perigo {
+    border-color: rgba(255, 105, 105, 0.28);
+    background: rgba(130, 35, 35, 0.13);
+    color: #ffb2b2;
+}
+
+.campanha-botao-perigo:hover {
+    border-color: rgba(255, 105, 105, 0.5);
+    background: rgba(130, 35, 35, 0.24);
+}
+
+/* Estatísticas */
+
+.campanhas-estatisticas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 13px;
+    margin-bottom: 27px;
+}
+
+.campanha-estatistica {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid var(--camp-border);
+    border-radius: 13px;
+    background: rgba(8, 9, 12, 0.65);
+}
+
+.campanha-estatistica-icone {
+    display: flex;
+    flex: 0 0 43px;
+    align-items: center;
+    justify-content: center;
+    width: 43px;
+    height: 43px;
+    border: 1px solid rgba(255, 196, 124, 0.22);
+    border-radius: 11px;
+    background: rgba(255, 196, 124, 0.08);
+    color: var(--camp-gold);
+}
+
+.campanha-estatistica > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.campanha-estatistica span {
+    color: var(--camp-muted);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.campanha-estatistica strong {
+    color: #fff;
+    font-size: 25px;
+    font-weight: 850;
+}
+
+/* Busca */
+
+.campanhas-ferramentas {
+    margin-bottom: 20px;
+}
+
+.campanhas-busca {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    min-height: 47px;
+    padding: 0 14px;
+    border: 1px solid var(--camp-border);
+    border-radius: 10px;
+    background: rgba(8, 9, 12, 0.6);
+    color: var(--camp-muted);
+}
+
+.campanhas-busca:focus-within {
+    border-color: rgba(255, 196, 124, 0.55);
+    box-shadow: 0 0 0 3px rgba(255, 170, 70, 0.07);
+}
+
+.campanhas-busca svg {
+    flex-shrink: 0;
+}
+
+.campanhas-busca input {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 12px;
+}
+
+.campanhas-busca input::placeholder {
+    color: rgba(255, 255, 255, 0.37);
+}
+
+/* Lista de campanhas */
+
+.campanhas-lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 17px;
+}
+
+.campanha-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--camp-border);
+    border-radius: 15px;
+    background: rgba(8, 9, 12, 0.76);
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.campanha-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 196, 124, 0.31);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.17);
+}
+
+.campanha-card-capa {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 125px;
+    padding: 18px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+        radial-gradient(
+            ellipse at 80% 15%,
+            rgba(182, 117, 53, 0.2),
+            transparent 52%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(70, 47, 29, 0.65),
+            rgba(12, 13, 17, 0.94)
+        );
+}
+
+.campanha-card-capa::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.3),
+        transparent 70%
+    );
+    content: "";
+    pointer-events: none;
+}
+
+.campanha-card-simbolo {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 51px;
+    height: 51px;
+    border: 1px solid rgba(255, 196, 124, 0.28);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.23);
+    color: var(--camp-gold);
+}
+
+.campanha-card-sistema {
+    position: relative;
+    z-index: 1;
+    max-width: 65%;
+    padding: 7px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.32);
+    color: rgba(255, 255, 255, 0.84);
+    font-size: 10px;
+    line-height: 1.4;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.campanha-card-conteudo {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    padding: 19px;
+}
+
+.campanha-card-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.campanha-status {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    width: fit-content;
+    max-width: 100%;
+    padding: 6px 9px;
+    border: 1px solid rgba(255, 196, 124, 0.2);
+    border-radius: 7px;
+    background: rgba(255, 196, 124, 0.07);
+    color: #f5d3a8;
+    font-size: 10px;
+    font-weight: 750;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.campanha-status.status-em-andamento {
+    border-color: rgba(91, 201, 141, 0.24);
+    background: rgba(53, 142, 91, 0.12);
+    color: #a4e7bd;
+}
+
+.campanha-status.status-concluída {
+    border-color: rgba(150, 150, 170, 0.22);
+    background: rgba(150, 150, 170, 0.1);
+    color: #d0d0df;
+}
+
+.campanha-icone-botao {
+    display: inline-flex;
+    flex: 0 0 36px;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.48);
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.campanha-icone-botao:hover {
+    border-color: rgba(255, 105, 105, 0.25);
+    background: rgba(255, 80, 80, 0.08);
+    color: #ffaaaa;
+}
+
+.campanha-card-conteudo > h3 {
+    margin: 0 0 9px;
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.campanha-card-descricao {
+    display: -webkit-box;
+    min-height: 43px;
+    margin: 0 0 17px;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.75;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.campanha-card-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 17px;
+    margin-bottom: 17px;
+}
+
+.campanha-card-info span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--camp-muted);
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+
+.campanha-card-info svg {
+    flex-shrink: 0;
+    color: var(--camp-gold);
+}
+
+.campanha-card-rodape {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.campanha-card-rodape small {
+    color: rgba(255, 255, 255, 0.42);
+    font-size: 10px;
+}
+
+.campanha-abrir {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 0 5px 7px;
+    border: 0;
+    background: transparent;
+    color: var(--camp-gold);
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: gap 0.2s ease;
+}
+
+.campanha-abrir:hover {
+    gap: 9px;
+}
+
+/* Estado vazio */
+
+.campanhas-vazio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 290px;
+    padding: 40px 24px;
+    border: 1px dashed rgba(255, 255, 255, 0.16);
+    border-radius: 16px;
+    background: rgba(8, 9, 12, 0.43);
+    text-align: center;
+}
+
+.campanhas-vazio-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(255, 196, 124, 0.25);
+    border-radius: 20px;
+    background: rgba(255, 196, 124, 0.07);
+    color: var(--camp-gold);
+}
+
+.campanhas-vazio h3 {
+    margin: 0 0 10px;
+    font-size: 19px;
+    line-height: 1.4;
+}
+
+.campanhas-vazio p {
+    max-width: 440px;
+    margin: 0 0 20px;
+    font-size: 12px;
+}
+
+/* Modal */
+
+.campanha-modal-fundo {
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.77);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+}
+
+.campanha-modal {
+    width: min(100%, 620px);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    border: 1px solid rgba(255, 196, 124, 0.23);
+    border-radius: 17px;
+    background: #111116;
+    box-shadow: 0 25px 90px rgba(0, 0, 0, 0.55);
+}
+
+.campanha-modal-cabecalho {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 25px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.campanha-modal-cabecalho h2 {
+    margin: 10px 0 7px;
+    font-size: 25px;
+    font-weight: 850;
+}
+
+.campanha-modal-cabecalho p {
+    margin: 0;
+    font-size: 12px;
+}
+
+.campanha-modal-cabecalho > .campanha-icone-botao {
+    flex-shrink: 0;
+}
+
+.campanha-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px 25px 25px;
+}
+
+.campanha-formulario-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.campanha-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.campanha-campo label {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.campanha-campo input,
+.campanha-campo select,
+.campanha-campo textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 11px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 9px;
+    outline: none;
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    font-size: 12px;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.campanha-campo textarea {
+    min-height: 105px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.campanha-campo input::placeholder,
+.campanha-campo textarea::placeholder {
+    color: rgba(255, 255, 255, 0.34);
+}
+
+.campanha-campo input:focus,
+.campanha-campo select:focus,
+.campanha-campo textarea:focus {
+    border-color: rgba(255, 196, 124, 0.62);
+    box-shadow: 0 0 0 3px rgba(255, 170, 70, 0.08);
+}
+
+.campanha-campo select option {
+    background: #15151b;
+    color: #fff;
+}
+
+.campanha-campo small {
+    color: rgba(255, 255, 255, 0.43);
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.campanha-formulario-erro {
+    padding: 12px;
+    border: 1px solid rgba(255, 105, 105, 0.28);
+    border-radius: 9px;
+    background: rgba(130, 35, 35, 0.15);
+    color: #ffb5b5;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.campanha-formulario-acoes {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 19px;
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+/* Detalhes da campanha */
+
+.campanha-detalhes > .campanha-botao {
+    margin-bottom: 20px;
+}
+
+.campanha-detalhe-capa {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 13px;
+    min-height: 230px;
+    padding: 27px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 196, 124, 0.19);
+    border-radius: 17px;
+    background:
+        radial-gradient(
+            ellipse at 85% 20%,
+            rgba(193, 119, 48, 0.22),
+            transparent 50%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(69, 46, 28, 0.76),
+            rgba(9, 10, 14, 0.94)
+        );
+}
+
+.campanha-detalhe-simbolo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 57px;
+    height: 57px;
+    border: 1px solid rgba(255, 196, 124, 0.27);
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.22);
+    color: var(--camp-gold);
+}
+
+.campanha-detalhe-capa h2 {
+    margin: 0;
+    font-size: clamp(25px, 4vw, 37px);
+    font-weight: 850;
+    line-height: 1.2;
+}
+
+.campanha-detalhe-conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+    padding-top: 22px;
+}
+
+.campanha-bloco {
+    min-width: 0;
+    padding: 21px;
+    border: 1px solid var(--camp-border);
+    border-radius: 13px;
+    background: rgba(8, 9, 12, 0.58);
+}
+
+.campanha-bloco h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 13px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.campanha-bloco h3 svg {
+    flex-shrink: 0;
+    color: var(--camp-gold);
+}
+
+.campanha-bloco p {
+    margin: 0;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.campanha-detalhe-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.campanha-jogadores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.campanha-jogador {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    border: 1px solid rgba(255, 196, 124, 0.17);
+    border-radius: 9px;
+    background: rgba(255, 196, 124, 0.055);
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.campanha-jogador svg {
+    flex-shrink: 0;
+    color: var(--camp-gold);
+}
+
+.campanha-aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 17px;
+    border: 1px solid rgba(255, 196, 124, 0.18);
+    border-radius: 12px;
+    background: rgba(255, 196, 124, 0.055);
+}
+
+.campanha-aviso > svg {
+    flex-shrink: 0;
+    color: var(--camp-gold);
+}
+
+.campanha-aviso strong {
+    color: #f6d6ad;
+    font-size: 12px;
+}
+
+.campanha-aviso p {
+    margin: 6px 0 0;
+    font-size: 11px;
+}
+
+/* Acessibilidade */
+
+.campanhas-pagina button:focus-visible,
+.campanhas-pagina input:focus-visible,
+.campanhas-pagina select:focus-visible,
+.campanhas-pagina textarea:focus-visible {
+    outline: 2px solid var(--camp-gold);
+    outline-offset: 3px;
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+    .campanhas-lista {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .campanha-card {
+        display: grid;
+        grid-template-columns: 175px minmax(0, 1fr);
+    }
+
+    .campanha-card-capa {
+        min-height: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 0;
+    }
+
+    .campanha-card-sistema {
+        max-width: 100%;
+        text-align: left;
+    }
+}
+
+/* Celulares */
+
+@media (max-width: 600px) {
+    .campanhas-pagina {
+        padding: 19px 12px 35px;
+    }
+
+    .campanhas-cabecalho {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .campanhas-cabecalho > .campanha-botao {
+        width: 100%;
+    }
+
+    .campanhas-introducao h2 {
+        font-size: 29px;
+    }
+
+    .campanhas-estatisticas {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    .campanha-estatistica {
+        padding: 13px;
+    }
+
+    .campanha-estatistica strong {
+        font-size: 22px;
+    }
+
+    .campanha-card {
+        display: flex;
+    }
+
+    .campanha-card-capa {
+        flex-direction: row;
+        align-items: flex-end;
+        min-height: 105px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .campanha-card-conteudo {
+        padding: 15px;
+    }
+
+    .campanha-card-rodape {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .campanha-formulario-grid,
+    .campanha-detalhe-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .campanha-modal-fundo {
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .campanha-modal {
+        max-height: calc(100vh - 20px);
+    }
+
+    .campanha-modal-cabecalho,
+    .campanha-formulario {
+        padding: 18px;
+    }
+
+    .campanha-modal-cabecalho h2 {
+        font-size: 22px;
+    }
+
+    .campanha-formulario-acoes {
+        flex-direction: column-reverse;
+    }
+
+    .campanha-formulario-acoes .campanha-botao {
+        width: 100%;
+    }
+
+    .campanha-detalhe-capa {
+        min-height: 205px;
+        padding: 20px;
+    }
+
+    .campanha-bloco {
+        padding: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .campanhas-pagina *,
+    .campanhas-pagina *::before,
+    .campanhas-pagina *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+```
