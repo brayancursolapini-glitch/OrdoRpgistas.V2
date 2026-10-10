@@ -21,6 +21,11 @@ import "./Personagens.css";
 
 const STORAGE_KEY = "ordo-rpgistas-personagens";
 
+const EDITING_KEY = "ordo-rpgistas-personagem-editando";
+
+const SELECTED_CHARACTER_KEY =
+    "ordo-rpgistas-personagem-selecionado";
+
 function loadCharacters() {
     try {
         const stored = localStorage.getItem(STORAGE_KEY);
@@ -84,44 +89,43 @@ function normalizeCharacter(character) {
     const normalizedSystem =
         character.system === "dnd5e"
             ? "dnd"
-            : character.system === "ordem"
-                ? "ordem"
-                : "dnd";
+            : character.system === "ordem" ||
+                character.system === "ordem-paranormal"
+              ? "ordem"
+              : "dnd";
 
     const normalizedSystemName =
         character.systemName ||
-        (
-            normalizedSystem === "ordem"
-                ? "ORDEM PARANORMAL"
-                : "DUNGEONS & DRAGONS"
-        );
+        (normalizedSystem === "ordem"
+            ? "ORDEM PARANORMAL"
+            : "DUNGEONS & DRAGONS");
 
     return {
         ...character,
 
         id: getCharacterId(character),
 
-        name:
-            character.name ||
-            "Personagem sem nome",
+        name: character.name || "Personagem sem nome",
 
         system: normalizedSystem,
 
         systemName: normalizedSystemName,
 
-        level:
-            Number(character.level) || 1,
+        level: Number(character.level) || 1,
 
         race:
             character.race ||
-            "Humano",
+            character.origem ||
+            "Não definida",
 
         class:
             character.class ||
-            "Aventureiro",
+            character.classe ||
+            "Não definida",
 
         background:
             character.background ||
+            character.trilha ||
             "",
 
         createdAt:
@@ -140,14 +144,71 @@ function normalizeCharacters(characters) {
         .filter(Boolean);
 }
 
+function getCharacterSystem(character) {
+    return character?.system === "ordem"
+        ? "ordem"
+        : "dnd";
+}
+
+function getCharacterProgress(character) {
+    if (getCharacterSystem(character) === "ordem") {
+        const nex = character.nex;
+
+        if (
+            nex !== undefined &&
+            nex !== null &&
+            String(nex).trim() !== ""
+        ) {
+            const nexText = String(nex);
+
+            return nexText.includes("%")
+                ? `NEX ${nexText}`
+                : `NEX ${nexText}%`;
+        }
+
+        return "NEX não definido";
+    }
+
+    return `Nível ${character.level || 1}`;
+}
+
+function getCharacterDescription(character) {
+    if (getCharacterSystem(character) === "ordem") {
+        const origem =
+            character.origem ||
+            character.race ||
+            "Origem não definida";
+
+        const trilha =
+            character.trilha ||
+            character.background ||
+            "";
+
+        const classe =
+            character.classe ||
+            character.class ||
+            "Classe não definida";
+
+        const details = [origem, classe];
+
+        if (trilha && trilha !== classe) {
+            details.push(trilha);
+        }
+
+        return details.join(" • ");
+    }
+
+    return `${character.race || "Raça não definida"} • ${
+        character.class || "Classe não definida"
+    }`;
+}
+
 export default function Personagens({ onNavigate }) {
     const [characters, setCharacters] = useState([]);
 
     const [search, setSearch] = useState("");
 
-    const [filter, setFilter] = useState(
-        "todos"
-    );
+    const [filter, setFilter] = useState("todos");
 
     const [
         showSystemSelector,
@@ -155,62 +216,37 @@ export default function Personagens({ onNavigate }) {
     ] = useState(false);
 
     useEffect(() => {
-        const storedCharacters =
-            loadCharacters();
+        const storedCharacters = loadCharacters();
 
         const normalizedCharacters =
-            normalizeCharacters(
-                storedCharacters
-            );
+            normalizeCharacters(storedCharacters);
 
-        setCharacters(
-            normalizedCharacters
-        );
+        setCharacters(normalizedCharacters);
 
         /*
-         * Salva novamente a versão normalizada.
-         *
-         * Isso corrige fichas antigas que:
-         * - não tinham ID;
-         * - usavam system: "dnd5e";
-         * - não tinham systemName.
+         * Normaliza fichas antigas sem alterar
+         * os atributos específicos de cada sistema.
          */
         if (
-            JSON.stringify(
-                normalizedCharacters
-            ) !==
-            JSON.stringify(
-                storedCharacters
-            )
+            JSON.stringify(normalizedCharacters) !==
+            JSON.stringify(storedCharacters)
         ) {
-            saveCharacters(
-                normalizedCharacters
-            );
+            saveCharacters(normalizedCharacters);
         }
     }, []);
 
     useEffect(() => {
         function handleStorageChange(event) {
-            if (
-                event.key !== STORAGE_KEY
-            ) {
+            if (event.key !== STORAGE_KEY) {
                 return;
             }
 
-            const storedCharacters =
-                loadCharacters();
-
             setCharacters(
-                normalizeCharacters(
-                    storedCharacters
-                )
+                normalizeCharacters(loadCharacters())
             );
         }
 
-        window.addEventListener(
-            "storage",
-            handleStorageChange
-        );
+        window.addEventListener("storage", handleStorageChange);
 
         return () => {
             window.removeEventListener(
@@ -220,67 +256,36 @@ export default function Personagens({ onNavigate }) {
         };
     }, []);
 
-    const filteredCharacters =
-        useMemo(() => {
-            const normalizedSearch =
-                search
-                    .trim()
-                    .toLowerCase();
+    const filteredCharacters = useMemo(() => {
+        const normalizedSearch = search.trim().toLowerCase();
 
-            return characters.filter(
-                (character) => {
-                    const characterName =
-                        String(
-                            character.name || ""
-                        ).toLowerCase();
+        return characters.filter((character) => {
+            const searchableFields = [
+                character.name,
+                character.systemName,
+                character.class,
+                character.classe,
+                character.race,
+                character.origem,
+                character.background,
+                character.trilha,
+            ];
 
-                    const systemName =
-                        String(
-                            character.systemName ||
-                                ""
-                        ).toLowerCase();
+            const matchesSearch =
+                !normalizedSearch ||
+                searchableFields.some((field) =>
+                    String(field || "")
+                        .toLowerCase()
+                        .includes(normalizedSearch)
+                );
 
-                    const characterClass =
-                        String(
-                            character.class || ""
-                        ).toLowerCase();
+            const matchesFilter =
+                filter === "todos" ||
+                getCharacterSystem(character) === filter;
 
-                    const characterRace =
-                        String(
-                            character.race || ""
-                        ).toLowerCase();
-
-                    const matchesSearch =
-                        !normalizedSearch ||
-                        characterName.includes(
-                            normalizedSearch
-                        ) ||
-                        systemName.includes(
-                            normalizedSearch
-                        ) ||
-                        characterClass.includes(
-                            normalizedSearch
-                        ) ||
-                        characterRace.includes(
-                            normalizedSearch
-                        );
-
-                    const matchesFilter =
-                        filter === "todos" ||
-                        character.system ===
-                            filter;
-
-                    return (
-                        matchesSearch &&
-                        matchesFilter
-                    );
-                }
-            );
-        }, [
-            characters,
-            search,
-            filter,
-        ]);
+            return matchesSearch && matchesFilter;
+        });
+    }, [characters, search, filter]);
 
     function openCharacterCreator() {
         setShowSystemSelector(true);
@@ -291,100 +296,79 @@ export default function Personagens({ onNavigate }) {
     }
 
     function handleSelectSystem(system) {
+        setShowSystemSelector(false);
+
+        localStorage.removeItem(EDITING_KEY);
+
         if (system === "dnd") {
-            setShowSystemSelector(false);
-
-            onNavigate?.(
-                "criar-personagem"
-            );
-
+            onNavigate?.("criar-personagem");
             return;
         }
 
         if (system === "ordem") {
-            setShowSystemSelector(false);
-
-            alert(
-                "O criador de personagem de Ordem Paranormal será desenvolvido em seguida."
-            );
-
-            return;
+            onNavigate?.("criar-personagem-ordem");
         }
     }
 
     function handleDeleteCharacter(id) {
-        const character =
-            characters.find(
-                (item) =>
-                    String(item.id) ===
-                    String(id)
-            );
+        const character = characters.find(
+            (item) => String(item.id) === String(id)
+        );
 
         if (!character) {
             return;
         }
 
-        const confirmed =
-            window.confirm(
-                `Deseja realmente excluir o personagem "${character.name}"?`
-            );
+        const confirmed = window.confirm(
+            `Deseja realmente excluir o personagem "${character.name}"?`
+        );
 
         if (!confirmed) {
             return;
         }
 
-        setCharacters(
-            (currentCharacters) => {
-                const updatedCharacters =
-                    currentCharacters.filter(
-                        (item) =>
-                            String(item.id) !==
-                            String(id)
-                    );
+        setCharacters((currentCharacters) => {
+            const updatedCharacters = currentCharacters.filter(
+                (item) => String(item.id) !== String(id)
+            );
 
-                saveCharacters(
-                    updatedCharacters
-                );
+            saveCharacters(updatedCharacters);
 
-                return updatedCharacters;
-            }
-        );
+            return updatedCharacters;
+        });
     }
 
-    function handleEditCharacter(
-        character
-    ) {
-        /*
-         * A edição completa será conectada
-         * posteriormente ao criador.
-         */
-        console.log(
-            "Editar personagem:",
-            character
+    function handleEditCharacter(character) {
+        if (!character) {
+            return;
+        }
+
+        localStorage.setItem(
+            EDITING_KEY,
+            String(character.id)
         );
 
-        alert(
-            "A edição completa da ficha será conectada ao criador de personagem."
-        );
+        if (getCharacterSystem(character) === "ordem") {
+            onNavigate?.("criar-personagem-ordem");
+            return;
+        }
+
+        onNavigate?.("criar-personagem");
     }
 
-    function handleOpenCharacter(
-        character
-    ) {
+    function handleOpenCharacter(character) {
         try {
             sessionStorage.setItem(
-                "ordo-rpgistas-personagem-selecionado",
+                SELECTED_CHARACTER_KEY,
                 JSON.stringify(character)
             );
 
             /*
-             * Enquanto a tela completa da ficha
-             * não estiver conectada, mostramos
-             * uma confirmação simples.
+             * A visualização completa da ficha será
+             * conectada quando criarmos a tela de
+             * consulta de personagens.
              */
-            alert(
-                `Ficha de "${character.name}" selecionada.`
-            );
+            alert(`Ficha de "${character.name}" selecionada.`);
         } catch (error) {
             console.error(
                 "Não foi possível selecionar a ficha:",
@@ -401,7 +385,6 @@ export default function Personagens({ onNavigate }) {
             onNavigate={onNavigate}
         >
             <div className="personagens-page">
-
                 <motion.section
                     className="personagens-toolbar"
                     initial={{
@@ -417,36 +400,27 @@ export default function Personagens({ onNavigate }) {
                     }}
                 >
                     <div className="personagens-toolbar-text">
-                        <span>
-                            SEUS AVENTUREIROS
-                        </span>
+                        <span>SEUS AVENTUREIROS</span>
 
-                        <h2>
-                            Personagens salvos
-                        </h2>
+                        <h2>Personagens salvos</h2>
 
                         <p>
-                            Todas as suas fichas
-                            organizadas em um só
-                            lugar.
+                            Todas as suas fichas organizadas em um
+                            só lugar.
                         </p>
                     </div>
 
                     <button
                         type="button"
                         className="personagens-create-button"
-                        onClick={
-                            openCharacterCreator
-                        }
+                        onClick={openCharacterCreator}
                     >
                         <Plus size={18} />
-
                         Criar personagem
                     </button>
                 </motion.section>
 
                 <section className="personagens-filters">
-
                     <div className="personagens-search">
                         <Search size={17} />
 
@@ -454,9 +428,7 @@ export default function Personagens({ onNavigate }) {
                             type="text"
                             value={search}
                             onChange={(event) =>
-                                setSearch(
-                                    event.target.value
-                                )
+                                setSearch(event.target.value)
                             }
                             placeholder="Pesquisar personagem..."
                         />
@@ -465,9 +437,7 @@ export default function Personagens({ onNavigate }) {
                             <button
                                 type="button"
                                 className="personagens-search-clear"
-                                onClick={() =>
-                                    setSearch("")
-                                }
+                                onClick={() => setSearch("")}
                                 title="Limpar pesquisa"
                             >
                                 <X size={15} />
@@ -476,37 +446,18 @@ export default function Personagens({ onNavigate }) {
                     </div>
 
                     <div className="personagens-filter-buttons">
-
                         <button
                             type="button"
-                            className={
-                                filter ===
-                                "todos"
-                                    ? "active"
-                                    : ""
-                            }
-                            onClick={() =>
-                                setFilter(
-                                    "todos"
-                                )
-                            }
+                            className={filter === "todos" ? "active" : ""}
+                            onClick={() => setFilter("todos")}
                         >
                             Todos
                         </button>
 
                         <button
                             type="button"
-                            className={
-                                filter ===
-                                "dnd"
-                                    ? "active"
-                                    : ""
-                            }
-                            onClick={() =>
-                                setFilter(
-                                    "dnd"
-                                )
-                            }
+                            className={filter === "dnd" ? "active" : ""}
+                            onClick={() => setFilter("dnd")}
                         >
                             <Sword size={14} />
                             D&D
@@ -515,43 +466,27 @@ export default function Personagens({ onNavigate }) {
                         <button
                             type="button"
                             className={
-                                filter ===
-                                "ordem"
-                                    ? "active"
-                                    : ""
+                                filter === "ordem" ? "active" : ""
                             }
-                            onClick={() =>
-                                setFilter(
-                                    "ordem"
-                                )
-                            }
+                            onClick={() => setFilter("ordem")}
                         >
                             <Shield size={14} />
                             Ordem
                         </button>
-
                     </div>
                 </section>
 
-                {filteredCharacters.length >
-                0 ? (
+                {filteredCharacters.length > 0 ? (
                     <section className="personagens-grid">
-
                         {filteredCharacters.map(
-                            (
-                                character,
-                                index
-                            ) => {
+                            (character, index) => {
                                 const isDnd =
-                                    character.system ===
+                                    getCharacterSystem(character) ===
                                     "dnd";
 
                                 return (
                                     <motion.article
-                                        key={
-                                            character.id ||
-                                            `${character.name}-${index}`
-                                        }
+                                        key={character.id}
                                         className={`personagem-card ${
                                             isDnd
                                                 ? "personagem-card-dnd"
@@ -567,27 +502,15 @@ export default function Personagens({ onNavigate }) {
                                         }}
                                         transition={{
                                             duration: 0.45,
-                                            delay:
-                                                index *
-                                                0.05,
+                                            delay: index * 0.05,
                                         }}
                                     >
-
                                         <div className="personagem-card-top">
-
                                             <div className="personagem-system-icon">
                                                 {isDnd ? (
-                                                    <Sword
-                                                        size={
-                                                            20
-                                                        }
-                                                    />
+                                                    <Sword size={20} />
                                                 ) : (
-                                                    <Shield
-                                                        size={
-                                                            20
-                                                        }
-                                                    />
+                                                    <Shield size={20} />
                                                 )}
                                             </div>
 
@@ -599,58 +522,44 @@ export default function Personagens({ onNavigate }) {
                                                         character
                                                     )
                                                 }
-                                                title="Opções"
+                                                title="Editar personagem"
                                             >
-                                                <MoreVertical
-                                                    size={
-                                                        18
-                                                    }
-                                                />
+                                                <MoreVertical size={18} />
                                             </button>
-
                                         </div>
 
                                         <div className="personagem-card-content">
-
                                             <span className="personagem-system">
-                                                {character.systemName ||
-                                                    (isDnd
-                                                        ? "DUNGEONS & DRAGONS"
-                                                        : "ORDEM PARANORMAL")}
+                                                {character.systemName}
                                             </span>
 
-                                            <h3>
-                                                {character.name ||
-                                                    "Personagem sem nome"}
-                                            </h3>
+                                            <h3>{character.name}</h3>
 
                                             <p>
-                                                {character.race ||
-                                                    "Raça não definida"}
-                                                {" • "}
-                                                {character.class ||
-                                                    "Classe não definida"}
+                                                {getCharacterDescription(
+                                                    character
+                                                )}
                                             </p>
 
                                             <div className="personagem-level">
-
                                                 <span>
-                                                    Nível{" "}
-                                                    {character.level ||
-                                                        1}
+                                                    {getCharacterProgress(
+                                                        character
+                                                    )}
                                                 </span>
 
                                                 <span>
-                                                    {character.background ||
-                                                        "Aventureiro"}
+                                                    {isDnd
+                                                        ? character.background ||
+                                                          "Antecedente não definido"
+                                                        : character.trilha ||
+                                                          character.background ||
+                                                          "Trilha não definida"}
                                                 </span>
-
                                             </div>
-
                                         </div>
 
                                         <div className="personagem-card-actions">
-
                                             <button
                                                 type="button"
                                                 className="personagem-card-open"
@@ -660,12 +569,7 @@ export default function Personagens({ onNavigate }) {
                                                     )
                                                 }
                                             >
-                                                <BookOpen
-                                                    size={
-                                                        15
-                                                    }
-                                                />
-
+                                                <BookOpen size={15} />
                                                 Abrir ficha
                                             </button>
 
@@ -678,12 +582,7 @@ export default function Personagens({ onNavigate }) {
                                                     )
                                                 }
                                             >
-                                                <Edit3
-                                                    size={
-                                                        15
-                                                    }
-                                                />
-
+                                                <Edit3 size={15} />
                                                 Editar
                                             </button>
 
@@ -696,22 +595,14 @@ export default function Personagens({ onNavigate }) {
                                                     )
                                                 }
                                             >
-                                                <Trash2
-                                                    size={
-                                                        15
-                                                    }
-                                                />
-
+                                                <Trash2 size={15} />
                                                 Excluir
                                             </button>
-
                                         </div>
-
                                     </motion.article>
                                 );
                             }
                         )}
-
                     </section>
                 ) : (
                     <motion.section
@@ -726,9 +617,7 @@ export default function Personagens({ onNavigate }) {
                         }}
                     >
                         <div className="personagens-empty-icon">
-                            <UserRound
-                                size={34}
-                            />
+                            <UserRound size={34} />
                         </div>
 
                         <span className="personagens-empty-eyebrow">
@@ -736,106 +625,75 @@ export default function Personagens({ onNavigate }) {
                         </span>
 
                         <h2>
-                            {characters.length ===
-                            0
+                            {characters.length === 0
                                 ? "Sua aventura começa aqui."
                                 : "Nenhum personagem corresponde à pesquisa."}
                         </h2>
 
                         <p>
-                            {characters.length ===
-                            0
+                            {characters.length === 0
                                 ? "Escolha um sistema, construa seu aventureiro e prepare-se para entrar em uma nova história."
                                 : "Tente alterar a pesquisa ou o filtro selecionado para encontrar sua ficha."}
                         </p>
 
-                        {characters.length ===
-                            0 && (
+                        {characters.length === 0 && (
                             <button
                                 type="button"
                                 className="personagens-empty-button"
-                                onClick={
-                                    openCharacterCreator
-                                }
+                                onClick={openCharacterCreator}
                             >
-                                <Plus
-                                    size={18}
-                                />
-
-                                Criar meu primeiro
-                                personagem
+                                <Plus size={18} />
+                                Criar meu primeiro personagem
                             </button>
                         )}
                     </motion.section>
                 )}
 
                 <section className="personagens-info-grid">
-
                     <article className="personagens-info-card">
-
                         <div className="personagens-info-icon">
-                            <BookOpen
-                                size={20}
-                            />
+                            <BookOpen size={20} />
                         </div>
 
                         <div>
-                            <span>
-                                SISTEMAS
-                            </span>
+                            <span>SISTEMAS</span>
 
                             <strong>
-                                D&D e Ordem
-                                Paranormal
+                                D&D e Ordem Paranormal
                             </strong>
 
                             <p>
-                                Outros sistemas
-                                poderão ser
-                                adicionados
-                                futuramente.
+                                Fichas organizadas conforme o sistema
+                                de cada personagem.
                             </p>
                         </div>
-
                     </article>
 
                     <article className="personagens-info-card">
-
                         <div className="personagens-info-icon">
-                            <UserRound
-                                size={20}
-                            />
+                            <UserRound size={20} />
                         </div>
 
                         <div>
-                            <span>
-                                SUAS FICHAS
-                            </span>
+                            <span>SUAS FICHAS</span>
 
                             <strong>
-                                Tudo organizado em
-                                um só lugar
+                                Tudo organizado em um só lugar
                             </strong>
 
                             <p>
-                                Personagens,
-                                atributos,
-                                equipamentos e
-                                informações da
+                                Personagens, atributos,
+                                equipamentos e informações da
                                 aventura.
                             </p>
                         </div>
-
                     </article>
-
                 </section>
 
                 {showSystemSelector && (
                     <div
                         className="personagens-modal-overlay"
-                        onClick={
-                            closeSystemSelector
-                        }
+                        onClick={closeSystemSelector}
                     >
                         <motion.div
                             className="personagens-system-modal"
@@ -856,151 +714,92 @@ export default function Personagens({ onNavigate }) {
                                 event.stopPropagation()
                             }
                         >
-
                             <div className="personagens-modal-header">
-
                                 <div>
-                                    <span>
-                                        NOVA AVENTURA
-                                    </span>
+                                    <span>NOVA AVENTURA</span>
 
-                                    <h2>
-                                        Escolha o sistema
-                                    </h2>
+                                    <h2>Escolha o sistema</h2>
 
                                     <p>
-                                        Selecione o
-                                        sistema que
-                                        deseja usar
-                                        para criar
-                                        sua ficha.
+                                        Selecione o sistema que deseja
+                                        usar para criar sua ficha.
                                     </p>
                                 </div>
 
                                 <button
                                     type="button"
                                     className="personagens-modal-close"
-                                    onClick={
-                                        closeSystemSelector
-                                    }
+                                    onClick={closeSystemSelector}
                                     title="Fechar"
                                 >
                                     <X size={20} />
                                 </button>
-
                             </div>
 
                             <div className="personagens-system-options">
-
                                 <button
                                     type="button"
                                     className="personagens-system-choice personagens-system-choice-dnd"
                                     onClick={() =>
-                                        handleSelectSystem(
-                                            "dnd"
-                                        )
+                                        handleSelectSystem("dnd")
                                     }
                                 >
-
                                     <div className="personagens-system-choice-icon">
-                                        <Sword
-                                            size={
-                                                26
-                                            }
-                                        />
+                                        <Sword size={26} />
                                     </div>
 
                                     <div className="personagens-system-choice-content">
+                                        <span>DUNGEONS & DRAGONS</span>
 
-                                        <span>
-                                            DUNGEONS &
-                                            DRAGONS
-                                        </span>
-
-                                        <strong>
-                                            D&D 5e
-                                        </strong>
+                                        <strong>D&D 5e</strong>
 
                                         <p>
-                                            Crie um
-                                            aventureiro
-                                            para
-                                            explorar
-                                            reinos,
-                                            masmorras e
-                                            grandes
-                                            aventuras.
+                                            Crie um aventureiro para
+                                            explorar reinos, masmorras
+                                            e grandes aventuras.
                                         </p>
-
                                     </div>
-
                                 </button>
 
                                 <button
                                     type="button"
                                     className="personagens-system-choice personagens-system-choice-ordem"
                                     onClick={() =>
-                                        handleSelectSystem(
-                                            "ordem"
-                                        )
+                                        handleSelectSystem("ordem")
                                     }
                                 >
-
                                     <div className="personagens-system-choice-icon">
-                                        <Shield
-                                            size={
-                                                26
-                                            }
-                                        />
+                                        <Shield size={26} />
                                     </div>
 
                                     <div className="personagens-system-choice-content">
-
-                                        <span>
-                                            ORDEM
-                                            PARANORMAL
-                                        </span>
+                                        <span>ORDEM PARANORMAL</span>
 
                                         <strong>
-                                            Ordem
-                                            Paranormal
+                                            Ordem Paranormal RPG
                                         </strong>
 
                                         <p>
-                                            Enfrente o
-                                            paranormal
-                                            e descubra
-                                            o que se
-                                            esconde por
-                                            trás da
-                                            realidade.
+                                            Crie seu agente,
+                                            configure atributos,
+                                            perícias e NEX para
+                                            enfrentar o paranormal.
                                         </p>
-
                                     </div>
-
                                 </button>
-
                             </div>
 
                             <div className="personagens-modal-footer">
-
-                                <Sparkles
-                                    size={15}
-                                />
+                                <Sparkles size={15} />
 
                                 <span>
-                                    Mais sistemas
-                                    poderão ser
-                                    adicionados
-                                    futuramente.
+                                    Mais sistemas poderão ser
+                                    adicionados futuramente.
                                 </span>
-
                             </div>
-
                         </motion.div>
                     </div>
                 )}
-
             </div>
         </PageBase>
     );
