@@ -1,1 +1,353 @@
+.ordem-creator {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    color: #f2f2f2;
+}
 
+.ordem-creator-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.ordem-eyebrow {
+    color: #e34b4b;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+}
+
+.ordem-creator-heading h1 {
+    margin: 8px 0;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.ordem-creator-heading p,
+.ordem-section-title p {
+    color: #a8a8b3;
+    line-height: 1.6;
+}
+
+.ordem-panel {
+    margin-bottom: 22px;
+    padding: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+    background: rgba(20, 20, 27, 0.92);
+}
+
+.ordem-section-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    color: #ed5555;
+}
+
+.ordem-section-title h2 {
+    margin: 0 0 4px;
+    color: #fff;
+    font-size: 1.15rem;
+}
+
+.ordem-section-title p {
+    margin: 0;
+    font-size: 0.88rem;
+}
+
+.ordem-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.ordem-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 20px;
+}
+
+.ordem-field:last-child {
+    margin-bottom: 0;
+}
+
+.ordem-field-wide {
+    grid-column: 1 / -1;
+}
+
+.ordem-field > span {
+    color: #dedee6;
+    font-size: 0.88rem;
+    font-weight: 650;
+}
+
+.ordem-field input,
+.ordem-field select,
+.ordem-field textarea,
+.ordem-resource input {
+    width: 100%;
+    min-width: 0;
+    padding: 13px 14px;
+    border: 1px solid #383844;
+    border-radius: 9px;
+    outline: none;
+    background: #111117;
+    color: #f5f5f5;
+    font: inherit;
+}
+
+.ordem-field input:focus,
+.ordem-field select:focus,
+.ordem-field textarea:focus,
+.ordem-resource input:focus {
+    border-color: #d84646;
+}
+
+.ordem-field textarea {
+    resize: vertical;
+}
+
+.ordem-field select:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.ordem-field small {
+    color: #ff7777;
+}
+
+.ordem-attributes-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.ordem-attribute {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 12px;
+    border: 1px solid #363640;
+    border-radius: 12px;
+    background: #14141c;
+}
+
+.ordem-attribute > span {
+    text-align: center;
+    font-size: 0.88rem;
+}
+
+.ordem-attribute > strong {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    place-items: center;
+    border: 1px solid #e34b4b;
+    border-radius: 50%;
+    background: rgba(227, 75, 75, 0.1);
+    color: #ff7777;
+    font-size: 1.5rem;
+}
+
+.ordem-attribute input[type="range"] {
+    width: 100%;
+    accent-color: #e34b4b;
+}
+
+.ordem-attribute-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+}
+
+.ordem-attribute-controls button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #454550;
+    border-radius: 7px;
+    background: #24242e;
+    color: white;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.ordem-attribute-controls span {
+    color: #9999a7;
+    font-size: 0.65rem;
+    text-align: center;
+}
+
+.ordem-note {
+    margin: 18px 0 0;
+    color: #9999a7;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.ordem-resource-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.ordem-resource {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px;
+    border: 1px solid #383844;
+    border-radius: 12px;
+    background: #14141c;
+}
+
+.ordem-resource > span {
+    color: #d4d4dd;
+    font-size: 0.8rem;
+}
+
+.ordem-resource-pv > svg {
+    color: #f06464;
+}
+
+.ordem-resource-pe > svg {
+    color: #64a7ff;
+}
+
+.ordem-resource-san > svg {
+    color: #bd8aff;
+}
+
+.ordem-resource-defense > svg {
+    color: #f0bd64;
+}
+
+.ordem-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.ordem-skill {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 12px;
+    border: 1px solid #383844;
+    border-radius: 8px;
+    background: #14141c;
+    color: #c9c9d2;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.ordem-skill.selected {
+    border-color: #c84242;
+    background: rgba(200, 66, 66, 0.12);
+    color: #fff;
+}
+
+.ordem-skill input {
+    accent-color: #e34b4b;
+}
+
+.ordem-secondary-button,
+.ordem-save-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 12px 18px;
+    border-radius: 9px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.ordem-secondary-button {
+    border: 1px solid #41414c;
+    background: #1b1b24;
+    color: #f0f0f5;
+}
+
+.ordem-save-button {
+    border: 1px solid #e34b4b;
+    background: #c93636;
+    color: #fff;
+}
+
+.ordem-secondary-button:hover,
+.ordem-save-button:hover {
+    transform: translateY(-1px);
+}
+
+.ordem-save-button:hover {
+    background: #e04747;
+}
+
+.ordem-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-bottom: 28px;
+}
+
+@media (max-width: 900px) {
+    .ordem-attributes-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .ordem-resource-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ordem-skills-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .ordem-creator {
+        padding: 14px;
+    }
+
+    .ordem-creator-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .ordem-panel {
+        padding: 18px;
+    }
+
+    .ordem-form-grid,
+    .ordem-resource-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ordem-attributes-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ordem-skills-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ordem-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .ordem-form-actions button {
+        width: 100%;
+    }
+}
