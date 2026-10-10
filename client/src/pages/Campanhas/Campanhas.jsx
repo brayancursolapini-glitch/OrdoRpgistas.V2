@@ -30,25 +30,79 @@ const SISTEMAS = [
     "Outro",
 ];
 
-const STATUS = ["Planejamento", "Em andamento", "Concluída"];
+const STATUS = [
+    "Planejamento",
+    "Em andamento",
+    "Concluída",
+];
+
+const FORMULARIO_INICIAL = {
+    nome: "",
+    descricao: "",
+    sistema: "D&D 5ª Edição",
+    mestre: "",
+    status: "Planejamento",
+    jogadores: "",
+};
 
 function carregarCampanhas() {
     try {
         const dados = localStorage.getItem(STORAGE_KEY);
 
-        if (!dados) return [];
+        if (!dados) {
+            return [];
+        }
 
         const campanhas = JSON.parse(dados);
 
-        return Array.isArray(campanhas) ? campanhas : [];
+        if (!Array.isArray(campanhas)) {
+            return [];
+        }
+
+        return campanhas
+            .filter(
+                (campanha) =>
+                    campanha &&
+                    typeof campanha === "object"
+            )
+            .map((campanha, indice) => ({
+                ...campanha,
+                id: campanha.id ?? `campanha-antiga-${indice}`,
+                nome: String(campanha.nome ?? "Campanha sem nome"),
+                descricao: String(campanha.descricao ?? ""),
+                sistema: String(
+                    campanha.sistema ?? "Sistema próprio"
+                ),
+                mestre: String(
+                    campanha.mestre ?? "Mestre não definido"
+                ),
+                status: STATUS.includes(campanha.status)
+                    ? campanha.status
+                    : "Planejamento",
+                jogadores: Array.isArray(campanha.jogadores)
+                    ? campanha.jogadores.filter(
+                          (jogador) =>
+                              typeof jogador === "string"
+                      )
+                    : [],
+                criadaEm:
+                    campanha.criadaEm ??
+                    new Date().toISOString(),
+            }));
     } catch (erro) {
-        console.error("Erro ao carregar campanhas:", erro);
+        console.error(
+            "Erro ao carregar campanhas do navegador:",
+            erro
+        );
+
         return [];
     }
 }
 
 function formatarData(data) {
-    if (!data) return "Data não definida";
+    if (!data) {
+        return "Data não definida";
+    }
 
     const dataValida = new Date(data);
 
@@ -59,20 +113,36 @@ function formatarData(data) {
     return dataValida.toLocaleDateString("pt-BR");
 }
 
+function criarId() {
+    return `${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2, 9)}`;
+}
+
+function classeStatus(status) {
+    const classes = {
+        Planejamento: "status-planejamento",
+        "Em andamento": "status-em-andamento",
+        Concluída: "status-concluída",
+    };
+
+    return classes[status] ?? "status-planejamento";
+}
+
 export default function Campanhas({ onNavigate }) {
-    const [campanhas, setCampanhas] = useState(carregarCampanhas);
+    const [campanhas, setCampanhas] = useState(
+        carregarCampanhas
+    );
+
     const [busca, setBusca] = useState("");
     const [modalCriacao, setModalCriacao] = useState(false);
     const [campanhaAberta, setCampanhaAberta] = useState(null);
     const [erro, setErro] = useState("");
+    const [erroArmazenamento, setErroArmazenamento] =
+        useState("");
 
     const [formulario, setFormulario] = useState({
-        nome: "",
-        descricao: "",
-        sistema: "D&D 5ª Edição",
-        mestre: "",
-        status: "Planejamento",
-        jogadores: "",
+        ...FORMULARIO_INICIAL,
     });
 
     useEffect(() => {
@@ -81,9 +151,15 @@ export default function Campanhas({ onNavigate }) {
                 STORAGE_KEY,
                 JSON.stringify(campanhas)
             );
+
+            setErroArmazenamento("");
         } catch (erroStorage) {
-            console.error("Erro ao salvar campanhas:", erroStorage);
-            setErro(
+            console.error(
+                "Erro ao salvar campanhas:",
+                erroStorage
+            );
+
+            setErroArmazenamento(
                 "Não foi possível salvar as campanhas neste navegador."
             );
         }
@@ -94,6 +170,19 @@ export default function Campanhas({ onNavigate }) {
             ...atual,
             [campo]: valor,
         }));
+    }
+
+    function abrirFormulario() {
+        setErro("");
+        setFormulario({
+            ...FORMULARIO_INICIAL,
+        });
+        setModalCriacao(true);
+    }
+
+    function fecharFormulario() {
+        setModalCriacao(false);
+        setErro("");
     }
 
     function criarCampanha(evento) {
@@ -107,34 +196,36 @@ export default function Campanhas({ onNavigate }) {
             return;
         }
 
+        const jogadores = formulario.jogadores
+            .split(",")
+            .map((jogador) => jogador.trim())
+            .filter(Boolean);
+
         const novaCampanha = {
-            id: `${Date.now()}-${Math.random()
-                .toString(36)
-                .slice(2, 9)}`,
+            id: criarId(),
             nome,
             descricao: formulario.descricao.trim(),
             sistema: formulario.sistema,
-            mestre: formulario.mestre.trim() || "Mestre não definido",
+            mestre:
+                formulario.mestre.trim() ||
+                "Mestre não definido",
             status: formulario.status,
-            jogadores: formulario.jogadores
-                .split(",")
-                .map((jogador) => jogador.trim())
-                .filter(Boolean),
+            jogadores,
             criadaEm: new Date().toISOString(),
         };
 
-        setCampanhas((atuais) => [novaCampanha, ...atuais]);
+        setCampanhas((atuais) => [
+            novaCampanha,
+            ...atuais,
+        ]);
 
         setFormulario({
-            nome: "",
-            descricao: "",
-            sistema: "D&D 5ª Edição",
-            mestre: "",
-            status: "Planejamento",
-            jogadores: "",
+            ...FORMULARIO_INICIAL,
         });
 
         setModalCriacao(false);
+        setBusca("");
+        setCampanhaAberta(novaCampanha);
     }
 
     function excluirCampanha(id) {
@@ -142,32 +233,58 @@ export default function Campanhas({ onNavigate }) {
             "Tem certeza de que deseja excluir esta campanha? Essa ação não pode ser desfeita."
         );
 
-        if (!confirmar) return;
+        if (!confirmar) {
+            return;
+        }
 
         setCampanhas((atuais) =>
-            atuais.filter((campanha) => campanha.id !== id)
+            atuais.filter(
+                (campanha) => campanha.id !== id
+            )
         );
 
-        if (campanhaAberta?.id === id) {
-            setCampanhaAberta(null);
-        }
+        setCampanhaAberta((atual) =>
+            atual?.id === id ? null : atual
+        );
     }
 
-    const campanhasFiltradas = campanhas.filter((campanha) => {
-        const termo = busca.toLowerCase().trim();
+    const campanhasFiltradas = campanhas.filter(
+        (campanha) => {
+            const termo = busca.toLowerCase().trim();
 
-        if (!termo) return true;
+            if (!termo) {
+                return true;
+            }
 
-        return [
-            campanha.nome,
-            campanha.sistema,
-            campanha.mestre,
-            campanha.descricao,
-            campanha.status,
-        ].some((valor) =>
-            String(valor || "").toLowerCase().includes(termo)
-        );
-    });
+            const campos = [
+                campanha.nome,
+                campanha.sistema,
+                campanha.mestre,
+                campanha.descricao,
+                campanha.status,
+                ...campanha.jogadores,
+            ];
+
+            return campos.some((valor) =>
+                String(valor ?? "")
+                    .toLowerCase()
+                    .includes(termo)
+            );
+        }
+    );
+
+    const totalEmAndamento = campanhas.filter(
+        (campanha) =>
+            campanha.status === "Em andamento"
+    ).length;
+
+    const totalJogadores = new Set(
+        campanhas.flatMap((campanha) =>
+            Array.isArray(campanha.jogadores)
+                ? campanha.jogadores
+                : []
+        )
+    ).size;
 
     return (
         <PageBase
@@ -182,7 +299,9 @@ export default function Campanhas({ onNavigate }) {
                         <button
                             type="button"
                             className="campanha-botao campanha-botao-secundario"
-                            onClick={() => setCampanhaAberta(null)}
+                            onClick={() =>
+                                setCampanhaAberta(null)
+                            }
                         >
                             <ArrowLeft size={17} />
                             Voltar às campanhas
@@ -200,9 +319,9 @@ export default function Campanhas({ onNavigate }) {
                             <h2>{campanhaAberta.nome}</h2>
 
                             <span
-                                className={`campanha-status status-${campanhaAberta.status
-                                    .toLowerCase()
-                                    .replaceAll(" ", "-")}`}
+                                className={`campanha-status ${classeStatus(
+                                    campanhaAberta.status
+                                )}`}
                             >
                                 {campanhaAberta.status}
                             </span>
@@ -228,7 +347,9 @@ export default function Campanhas({ onNavigate }) {
                                         Mestre
                                     </h3>
 
-                                    <p>{campanhaAberta.mestre}</p>
+                                    <p>
+                                        {campanhaAberta.mestre}
+                                    </p>
                                 </section>
 
                                 <section className="campanha-bloco">
@@ -251,7 +372,8 @@ export default function Campanhas({ onNavigate }) {
                                     Grupo de jogadores
                                 </h3>
 
-                                {campanhaAberta.jogadores?.length > 0 ? (
+                                {campanhaAberta.jogadores.length >
+                                0 ? (
                                     <div className="campanha-jogadores">
                                         {campanhaAberta.jogadores.map(
                                             (jogador, indice) => (
@@ -260,28 +382,34 @@ export default function Campanhas({ onNavigate }) {
                                                     key={`${jogador}-${indice}`}
                                                 >
                                                     <Users size={17} />
-                                                    <span>{jogador}</span>
+                                                    <span>
+                                                        {jogador}
+                                                    </span>
                                                 </div>
                                             )
                                         )}
                                     </div>
                                 ) : (
                                     <p>
-                                        Nenhum jogador foi cadastrado ainda.
+                                        Nenhum jogador foi cadastrado
+                                        ainda.
                                     </p>
                                 )}
                             </section>
 
                             <div className="campanha-aviso">
                                 <BookOpen size={20} />
+
                                 <div>
                                     <strong>
-                                        Próximo passo: organizar a aventura
+                                        Organize sua próxima aventura
                                     </strong>
+
                                     <p>
-                                        A área de sessões, missões e
-                                        personagens vinculados poderá ser
-                                        adicionada em uma próxima etapa.
+                                        Esta é a área inicial da
+                                        campanha. Sessões, missões e
+                                        personagens vinculados poderão
+                                        ser adicionados posteriormente.
                                     </p>
                                 </div>
                             </div>
@@ -290,7 +418,9 @@ export default function Campanhas({ onNavigate }) {
                                 type="button"
                                 className="campanha-botao campanha-botao-perigo"
                                 onClick={() =>
-                                    excluirCampanha(campanhaAberta.id)
+                                    excluirCampanha(
+                                        campanhaAberta.id
+                                    )
                                 }
                             >
                                 <Trash2 size={17} />
@@ -310,23 +440,30 @@ export default function Campanhas({ onNavigate }) {
                                 <h2>Suas campanhas</h2>
 
                                 <p>
-                                    Reúna seu grupo, prepare suas histórias
-                                    e embarque em novas aventuras.
+                                    Reúna seu grupo, prepare suas
+                                    histórias e embarque em novas
+                                    aventuras.
                                 </p>
                             </div>
 
                             <button
                                 type="button"
                                 className="campanha-botao campanha-botao-principal"
-                                onClick={() => {
-                                    setErro("");
-                                    setModalCriacao(true);
-                                }}
+                                onClick={abrirFormulario}
                             >
                                 <Plus size={19} />
                                 Nova campanha
                             </button>
                         </header>
+
+                        {erroArmazenamento && (
+                            <div
+                                className="campanha-formulario-erro"
+                                role="alert"
+                            >
+                                {erroArmazenamento}
+                            </div>
+                        )}
 
                         <div className="campanhas-estatisticas">
                             <div className="campanha-estatistica">
@@ -335,8 +472,13 @@ export default function Campanhas({ onNavigate }) {
                                 </div>
 
                                 <div>
-                                    <span>Total de campanhas</span>
-                                    <strong>{campanhas.length}</strong>
+                                    <span>
+                                        Total de campanhas
+                                    </span>
+
+                                    <strong>
+                                        {campanhas.length}
+                                    </strong>
                                 </div>
                             </div>
 
@@ -347,14 +489,9 @@ export default function Campanhas({ onNavigate }) {
 
                                 <div>
                                     <span>Em andamento</span>
+
                                     <strong>
-                                        {
-                                            campanhas.filter(
-                                                (campanha) =>
-                                                    campanha.status ===
-                                                    "Em andamento"
-                                            ).length
-                                        }
+                                        {totalEmAndamento}
                                     </strong>
                                 </div>
                             </div>
@@ -365,17 +502,12 @@ export default function Campanhas({ onNavigate }) {
                                 </div>
 
                                 <div>
-                                    <span>Jogadores cadastrados</span>
+                                    <span>
+                                        Jogadores cadastrados
+                                    </span>
+
                                     <strong>
-                                        {new Set(
-                                            campanhas.flatMap((campanha) =>
-                                                Array.isArray(
-                                                    campanha.jogadores
-                                                )
-                                                    ? campanha.jogadores
-                                                    : []
-                                            )
-                                        ).size}
+                                        {totalJogadores}
                                     </strong>
                                 </div>
                             </div>
@@ -393,100 +525,117 @@ export default function Campanhas({ onNavigate }) {
                                     type="search"
                                     value={busca}
                                     onChange={(evento) =>
-                                        setBusca(evento.target.value)
+                                        setBusca(
+                                            evento.target.value
+                                        )
                                     }
-                                    placeholder="Buscar campanha, sistema ou mestre..."
+                                    placeholder="Buscar campanha, sistema, mestre ou jogador..."
                                 />
                             </label>
                         </div>
 
                         {campanhasFiltradas.length > 0 ? (
                             <div className="campanhas-lista">
-                                {campanhasFiltradas.map((campanha) => (
-                                    <article
-                                        className="campanha-card"
-                                        key={campanha.id}
-                                    >
-                                        <div className="campanha-card-capa">
-                                            <div className="campanha-card-simbolo">
-                                                <Crown size={30} />
-                                            </div>
+                                {campanhasFiltradas.map(
+                                    (campanha) => (
+                                        <article
+                                            className="campanha-card"
+                                            key={campanha.id}
+                                        >
+                                            <div className="campanha-card-capa">
+                                                <div className="campanha-card-simbolo">
+                                                    <Crown size={30} />
+                                                </div>
 
-                                            <span className="campanha-card-sistema">
-                                                {campanha.sistema}
-                                            </span>
-                                        </div>
-
-                                        <div className="campanha-card-conteudo">
-                                            <div className="campanha-card-topo">
-                                                <span
-                                                    className={`campanha-status status-${campanha.status
-                                                        .toLowerCase()
-                                                        .replaceAll(" ", "-")}`}
-                                                >
-                                                    {campanha.status}
-                                                </span>
-
-                                                <button
-                                                    type="button"
-                                                    className="campanha-icone-botao"
-                                                    title="Excluir campanha"
-                                                    aria-label={`Excluir ${campanha.nome}`}
-                                                    onClick={() =>
-                                                        excluirCampanha(
-                                                            campanha.id
-                                                        )
-                                                    }
-                                                >
-                                                    <Trash2 size={17} />
-                                                </button>
-                                            </div>
-
-                                            <h3>{campanha.nome}</h3>
-
-                                            <p className="campanha-card-descricao">
-                                                {campanha.descricao ||
-                                                    "Esta campanha ainda não possui uma descrição."}
-                                            </p>
-
-                                            <div className="campanha-card-info">
-                                                <span>
-                                                    <Crown size={15} />
-                                                    {campanha.mestre}
-                                                </span>
-
-                                                <span>
-                                                    <Users size={15} />
-                                                    {campanha.jogadores?.length ||
-                                                        0}{" "}
-                                                    jogador(es)
+                                                <span className="campanha-card-sistema">
+                                                    {campanha.sistema}
                                                 </span>
                                             </div>
 
-                                            <div className="campanha-card-rodape">
-                                                <small>
-                                                    Criada em{" "}
-                                                    {formatarData(
-                                                        campanha.criadaEm
-                                                    )}
-                                                </small>
+                                            <div className="campanha-card-conteudo">
+                                                <div className="campanha-card-topo">
+                                                    <span
+                                                        className={`campanha-status ${classeStatus(
+                                                            campanha.status
+                                                        )}`}
+                                                    >
+                                                        {campanha.status}
+                                                    </span>
 
-                                                <button
-                                                    type="button"
-                                                    className="campanha-abrir"
-                                                    onClick={() =>
-                                                        setCampanhaAberta(
+                                                    <button
+                                                        type="button"
+                                                        className="campanha-icone-botao"
+                                                        title="Excluir campanha"
+                                                        aria-label={`Excluir ${campanha.nome}`}
+                                                        onClick={() =>
+                                                            excluirCampanha(
+                                                                campanha.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <Trash2
+                                                            size={17}
+                                                        />
+                                                    </button>
+                                                </div>
+
+                                                <h3>
+                                                    {campanha.nome}
+                                                </h3>
+
+                                                <p className="campanha-card-descricao">
+                                                    {campanha.descricao ||
+                                                        "Esta campanha ainda não possui uma descrição."}
+                                                </p>
+
+                                                <div className="campanha-card-info">
+                                                    <span>
+                                                        <Crown
+                                                            size={15}
+                                                        />
+                                                        {campanha.mestre}
+                                                    </span>
+
+                                                    <span>
+                                                        <Users
+                                                            size={15}
+                                                        />
+                                                        {
                                                             campanha
-                                                        )
-                                                    }
-                                                >
-                                                    Abrir campanha
-                                                    <ChevronRight size={17} />
-                                                </button>
+                                                                .jogadores
+                                                                .length
+                                                        }{" "}
+                                                        jogador(es)
+                                                    </span>
+                                                </div>
+
+                                                <div className="campanha-card-rodape">
+                                                    <small>
+                                                        Criada em{" "}
+                                                        {formatarData(
+                                                            campanha.criadaEm
+                                                        )}
+                                                    </small>
+
+                                                    <button
+                                                        type="button"
+                                                        className="campanha-abrir"
+                                                        onClick={() =>
+                                                            setCampanhaAberta(
+                                                                campanha
+                                                            )
+                                                        }
+                                                    >
+                                                        Abrir campanha
+                                                        <ChevronRight
+                                                            size={17}
+                                                        />
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </article>
-                                ))}
+                                        </article>
+                                    )
+                                )}
                             </div>
                         ) : (
                             <div className="campanhas-vazio">
@@ -507,16 +656,14 @@ export default function Campanhas({ onNavigate }) {
                                 <p>
                                     {busca
                                         ? "Tente buscar por outro nome, sistema ou mestre."
-                                        : "Crie sua primeira campanha e comece a montar seu grupo de aventureiros."}
+                                        : "Crie sua primeira campanha e comece a organizar seu grupo de aventureiros."}
                                 </p>
 
                                 {!busca && (
                                     <button
                                         type="button"
                                         className="campanha-botao campanha-botao-principal"
-                                        onClick={() =>
-                                            setModalCriacao(true)
-                                        }
+                                        onClick={abrirFormulario}
                                     >
                                         <Plus size={18} />
                                         Criar primeira campanha
@@ -531,9 +678,11 @@ export default function Campanhas({ onNavigate }) {
                     <div
                         className="campanha-modal-fundo"
                         onMouseDown={(evento) => {
-                            if (evento.target === evento.currentTarget) {
-                                setModalCriacao(false);
-                                setErro("");
+                            if (
+                                evento.target ===
+                                evento.currentTarget
+                            ) {
+                                fecharFormulario();
                             }
                         }}
                     >
@@ -555,8 +704,8 @@ export default function Campanhas({ onNavigate }) {
                                     </h2>
 
                                     <p>
-                                        Defina os detalhes iniciais da sua
-                                        aventura.
+                                        Defina os detalhes iniciais da
+                                        sua aventura.
                                     </p>
                                 </div>
 
@@ -564,10 +713,7 @@ export default function Campanhas({ onNavigate }) {
                                     type="button"
                                     className="campanha-icone-botao"
                                     aria-label="Fechar formulário"
-                                    onClick={() => {
-                                        setModalCriacao(false);
-                                        setErro("");
-                                    }}
+                                    onClick={fecharFormulario}
                                 >
                                     <X size={20} />
                                 </button>
@@ -635,14 +781,16 @@ export default function Campanhas({ onNavigate }) {
                                                 )
                                             }
                                         >
-                                            {SISTEMAS.map((sistema) => (
-                                                <option
-                                                    key={sistema}
-                                                    value={sistema}
-                                                >
-                                                    {sistema}
-                                                </option>
-                                            ))}
+                                            {SISTEMAS.map(
+                                                (sistema) => (
+                                                    <option
+                                                        key={sistema}
+                                                        value={sistema}
+                                                    >
+                                                        {sistema}
+                                                    </option>
+                                                )
+                                            )}
                                         </select>
                                     </div>
 
@@ -712,8 +860,7 @@ export default function Campanhas({ onNavigate }) {
                                     />
 
                                     <small>
-                                        Separe os nomes por vírgulas. Você
-                                        poderá organizar o grupo depois.
+                                        Separe os nomes por vírgulas.
                                     </small>
                                 </div>
 
@@ -730,10 +877,7 @@ export default function Campanhas({ onNavigate }) {
                                     <button
                                         type="button"
                                         className="campanha-botao campanha-botao-secundario"
-                                        onClick={() => {
-                                            setModalCriacao(false);
-                                            setErro("");
-                                        }}
+                                        onClick={fecharFormulario}
                                     >
                                         Cancelar
                                     </button>
