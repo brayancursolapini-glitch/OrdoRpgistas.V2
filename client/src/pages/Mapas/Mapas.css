@@ -1,1 +1,246 @@
+.mapas-app {
+    display: grid;
+    grid-template-columns: 245px minmax(0, 1fr);
+    gap: 20px;
+    min-width: 0;
+    color: var(--text-primary, #f2f2f2);
+}
 
+.mapas-app * {
+    box-sizing: border-box;
+}
+
+.mapas-sidebar,
+.mapas-editor {
+    min-width: 0;
+}
+
+.mapas-sidebar {
+    padding: 18px;
+    border: 1px solid var(--border-color, #34343d);
+    border-radius: 14px;
+    background: var(--card-bg, #19191f);
+    align-self: start;
+}
+
+.mapas-sidebar-titulo,
+.mapas-editor-topo,
+.mapas-acoes-topo,
+.mapas-ferramentas,
+.mapas-ferramenta-grupo,
+.mapas-painel-titulo,
+.mapas-audio-controles,
+.mapas-token-acoes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mapas-sidebar-titulo,
+.mapas-editor-topo {
+    justify-content: space-between;
+}
+
+.mapas-sidebar-titulo {
+    margin-bottom: 18px;
+}
+
+.mapas-etiqueta,
+.mapas-ferramenta-titulo {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-secondary, #a1a1aa);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.mapas-sidebar h2,
+.mapas-vazio h2 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.mapas-icone-botao,
+.mapas-botao-principal,
+.mapas-botao-secundario,
+.mapas-token-ferramenta,
+.mapas-botao-play,
+.mapas-botao-perigo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 9px 12px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.mapas-icone-botao {
+    width: 38px;
+    padding: 0;
+    color: #fff;
+    background: #292932;
+    border-color: #3c3c48;
+}
+
+.mapas-botao-principal {
+    color: #fff;
+    background: #7c3aed;
+}
+
+.mapas-botao-principal:hover {
+    background: #6d28d9;
+}
+
+.mapas-botao-secundario,
+.mapas-token-ferramenta {
+    color: var(--text-primary, #f2f2f2);
+    background: var(--button-bg, #24242d);
+    border-color: var(--border-color, #3a3a45);
+}
+
+.mapas-botao-secundario:hover,
+.mapas-token-ferramenta:hover,
+.mapas-icone-botao:hover {
+    background: #333340;
+    border-color: #626275;
+}
+
+.mapas-botao-principal:disabled,
+.mapas-botao-play:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.mapas-sidebar > .mapas-botao-principal {
+    width: 100%;
+}
+
+.mapas-lista-cenarios {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.mapas-cenario-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    padding: 10px;
+    color: inherit;
+    text-align: left;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.mapas-cenario-item:hover {
+    background: #24242d;
+}
+
+.mapas-cenario-item.ativo {
+    background: rgba(124, 58, 237, 0.13);
+    border-color: #7c3aed;
+}
+
+.mapas-miniatura {
+    display: grid;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    color: #c4b5fd;
+    background: #292532;
+    border-radius: 7px;
+}
+
+.mapas-cenario-info {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.mapas-cenario-info strong {
+    overflow: hidden;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mapas-cenario-info small {
+    color: var(--text-secondary, #a1a1aa);
+    font-size: 11px;
+}
+
+.mapas-aviso {
+    margin-top: 22px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid var(--border-color, #34343d);
+    border-radius: 9px;
+}
+
+.mapas-aviso strong {
+    font-size: 12px;
+}
+
+.mapas-aviso p,
+.mapas-nota {
+    color: var(--text-secondary, #a1a1aa);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.mapas-aviso p {
+    margin: 7px 0 0;
+}
+
+.mapas-editor {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+}
+
+.mapas-editor-topo {
+    flex-wrap: wrap;
+    padding: 15px;
+    background: var(--card-bg, #19191f);
+    border: 1px solid var(--border-color, #34343d);
+    border-radius: 12px;
+}
+
+.mapas-nome-cenario {
+    display: grid;
+    flex: 1 1 200px;
+    gap: 6px;
+    min-width: 150px;
+}
+
+.mapas-nome-cenario label,
+.mapas-painel-card label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: var(--text-secondary, #b0b0ba);
+    font-size: 11px;
+}
+
+.mapas-nome-cenario input,
+.mapas-painel-card input[type="number"],
+.mapas-painel-card select {
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    padding: 9px 10px;
+    color
