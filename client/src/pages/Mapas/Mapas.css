@@ -354,9 +354,14 @@
     overflow: hidden;
     isolation: isolate;
     background-color: #17171e;
-    background-image: none;
     border-radius: 7px;
-    touch-action: pan-y;
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+}
+
+.mapas-canvas:active {
+    cursor: grabbing;
 }
 
 .mapas-canvas.com-grade {
@@ -385,6 +390,7 @@
     inset: 0;
     transform-origin: top left;
     overflow: visible;
+    pointer-events: none;
 }
 
 .mapas-imagem-fundo {
@@ -407,6 +413,7 @@
     gap: 12px;
     padding: 20px;
     text-align: center;
+    pointer-events: auto;
 }
 
 .mapas-vazio-icone {
@@ -447,6 +454,7 @@
     cursor: grab;
     touch-action: none;
     user-select: none;
+    pointer-events: auto;
 }
 
 .mapas-token:active {
@@ -556,10 +564,6 @@
 
 .mapas-botao-play:hover:not(:disabled) {
     background: #6d28d9;
-}
-
-.mapas-token-nome {
-    font-size: 13px;
 }
 
 .mapas-token-acoes {
