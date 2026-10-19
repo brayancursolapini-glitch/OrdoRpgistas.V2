@@ -2,8 +2,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
     Map, Plus, Upload, Save, Trash2, Trees, Building2, Users, Skull,
-    Ruler, Grid3X3, Volume2, Play, Pause, RotateCcw, ZoomIn,
-    ZoomOut, Maximize, MousePointer2, ImagePlus, X
+    Ruler, Grid3X3, Volume2, Play, Pause, RotateCcw, ZoomIn, ZoomOut,
+    Maximize, MousePointer2, ImagePlus, X
 } from "lucide-react";
 
 import PageBase from "../PageBase";
@@ -12,7 +12,6 @@ import {
     salvarCenario,
     excluirCenario,
 } from "../../services/mapasStorage";
-
 import "./Mapas.css";
 
 const TOKENS_PADRAO = [
@@ -69,14 +68,15 @@ export default function Mapas({ onNavigate }) {
     const [zoom, setZoom] = useState(1);
     const [deslocamento, setDeslocamento] = useState({ x: 0, y: 0 });
     const [medicao, setMedicao] = useState(null);
-    const [tokenEmEdicao, setTokenEmEdicao] = useState(null);
 
     const imagemInputRef = useRef(null);
     const audioInputRef = useRef(null);
     const tokenInputRef = useRef(null);
     const audioRef = useRef(null);
     const areaMapaRef = useRef(null);
-    const arrastandoRef = useRef(null);
+
+    const arrastandoTokenRef = useRef(null);
+    const arrastandoMapaRef = useRef(null);
     const medicaoRef = useRef(null);
     const urlsRef = useRef(new Set());
 
@@ -133,7 +133,7 @@ export default function Mapas({ onNavigate }) {
                 }
             } catch (error) {
                 console.error(error);
-                if (ativo) setMensagem("Não foi possível carregar os cenários salvos.");
+                if (ativo) setMensagem("Não foi possível carregar os cenários.");
             } finally {
                 if (ativo) setCarregando(false);
             }
@@ -148,7 +148,8 @@ export default function Mapas({ onNavigate }) {
         setDeslocamento({ x: 0, y: 0 });
         setMedicao(null);
         medicaoRef.current = null;
-        arrastandoRef.current = null;
+        arrastandoMapaRef.current = null;
+        arrastandoTokenRef.current = null;
         setReproduzindo(false);
 
         if (audioRef.current) {
@@ -160,7 +161,8 @@ export default function Mapas({ onNavigate }) {
     useEffect(() => {
         if (audioRef.current && cenarioAtual) {
             audioRef.current.volume = Math.max(
-                0, Math.min(1, (cenarioAtual.volume ?? 50) / 100)
+                0,
+                Math.min(1, (cenarioAtual.volume ?? 50) / 100)
             );
         }
     }, [cenarioAtual?.volume, cenarioAtualId, audioUrl]);
@@ -175,17 +177,19 @@ export default function Mapas({ onNavigate }) {
 
     async function salvarAtual() {
         if (!cenarioAtual) return;
+
         try {
             await salvarCenario(cenarioAtual);
             setMensagem("Cenário salvo com sucesso!");
         } catch (error) {
             console.error(error);
-            setMensagem("Não foi possível salvar. Verifique o espaço disponível no navegador.");
+            setMensagem("Não foi possível salvar. Verifique o armazenamento do navegador.");
         }
     }
 
     async function novoCenario() {
         const novo = criarCenario(`Cenário ${cenarios.length + 1}`);
+
         try {
             await salvarCenario(novo);
             setCenarios((atuais) => [novo, ...atuais]);
@@ -255,8 +259,7 @@ export default function Mapas({ onNavigate }) {
             return;
         }
 
-        if (audioRef.current) audioRef.current.pause();
-
+        audioRef.current?.pause();
         atualizarCenario({
             audioPersonalizado: arquivo,
             somAmbiente: "personalizado",
@@ -278,8 +281,8 @@ export default function Mapas({ onNavigate }) {
             nome: tokenBase.nome,
             emoji: tokenBase.emoji || "🧩",
             imagem: tokenBase.imagem || null,
-            x: largura / 2,
-            y: altura / 2,
+            x: (largura / 2 - deslocamento.x) / zoom,
+            y: (altura / 2 - deslocamento.y) / zoom,
             tamanho: 48,
             rotacao: 0,
         };
@@ -301,16 +304,12 @@ export default function Mapas({ onNavigate }) {
             return;
         }
 
-        const nome = arquivo.name.replace(/\.[^/.]+$/, "") || "Token personalizado";
-
         adicionarToken({
             tipo: "personalizado",
-            nome,
+            nome: arquivo.name.replace(/\.[^/.]+$/, "") || "Token personalizado",
             emoji: "🧩",
             imagem: arquivo,
         });
-
-        setMensagem("Token personalizado adicionado. Você pode editá-lo e salvar o cenário.");
     }
 
     function atualizarToken(id, alteracoes) {
@@ -330,18 +329,17 @@ export default function Mapas({ onNavigate }) {
             tokens: cenarioAtual.tokens.filter((t) => t.id !== tokenSelecionado),
         });
         setTokenSelecionado(null);
-        setTokenEmEdicao(null);
     }
 
+    // Arrastar um token: movimenta somente o token selecionado.
     function iniciarArrasteToken(event, token) {
-        if (ferramenta === "regua") return;
+        if (ferramenta === "regua" || event.button !== 0) return;
+
         event.preventDefault();
         event.stopPropagation();
 
-        const area = areaMapaRef.current;
-        if (!area) return;
-
-        arrastandoRef.current = {
+        arrastandoMapaRef.current = null;
+        arrastandoTokenRef.current = {
             id: token.id,
             inicioX: event.clientX,
             inicioY: event.clientY,
@@ -354,16 +352,13 @@ export default function Mapas({ onNavigate }) {
         try {
             event.currentTarget.setPointerCapture(event.pointerId);
         } catch {
-            // Alguns navegadores não suportam a captura do ponteiro.
+            // Compatibilidade com navegadores sem captura de ponteiro.
         }
     }
 
     function moverToken(event) {
-        const arraste = arrastandoRef.current;
+        const arraste = arrastandoTokenRef.current;
         if (!arraste) return;
-
-        const area = areaMapaRef.current;
-        if (!area) return;
 
         const dx = (event.clientX - arraste.inicioX) / zoom;
         const dy = (event.clientY - arraste.inicioY) / zoom;
@@ -374,11 +369,48 @@ export default function Mapas({ onNavigate }) {
         });
     }
 
-    function pontoNoMapa(event) {
-        const area = areaMapaRef.current;
-        if (!area) return { x: 0, y: 0 };
+    function finalizarArrasteToken() {
+        arrastandoTokenRef.current = null;
+    }
 
-        const rect = area.getBoundingClientRect();
+    // Arrastar uma área vazia: movimenta o mapa inteiro.
+    function iniciarArrasteMapa(event) {
+        if (ferramenta !== "selecionar" || event.button !== 0) return;
+        if (event.target.closest(".mapas-token")) return;
+
+        event.preventDefault();
+
+        arrastandoMapaRef.current = {
+            inicioX: event.clientX,
+            inicioY: event.clientY,
+            deslocamentoX: deslocamento.x,
+            deslocamentoY: deslocamento.y,
+        };
+
+        try {
+            event.currentTarget.setPointerCapture(event.pointerId);
+        } catch {
+            // O movimento também funciona sem captura de ponteiro.
+        }
+    }
+
+    function moverMapa(event) {
+        const inicio = arrastandoMapaRef.current;
+        if (!inicio) return;
+
+        setDeslocamento({
+            x: inicio.deslocamentoX + event.clientX - inicio.inicioX,
+            y: inicio.deslocamentoY + event.clientY - inicio.inicioY,
+        });
+    }
+
+    function finalizarArrasteMapa() {
+        arrastandoMapaRef.current = null;
+    }
+
+    function pontoNoMapa(event) {
+        const rect = areaMapaRef.current?.getBoundingClientRect();
+        if (!rect) return { x: 0, y: 0 };
 
         return {
             x: (event.clientX - rect.left - deslocamento.x) / zoom,
@@ -390,28 +422,29 @@ export default function Mapas({ onNavigate }) {
         if (ferramenta !== "regua" || event.button !== 0) return;
 
         event.preventDefault();
+
         const ponto = pontoNoMapa(event);
         const inicial = { inicio: ponto, fim: ponto };
-
         medicaoRef.current = inicial;
         setMedicao(inicial);
 
         try {
             event.currentTarget.setPointerCapture(event.pointerId);
         } catch {
-            // Continua funcionando com o movimento normal do ponteiro.
+            // Compatibilidade com navegadores sem captura de ponteiro.
         }
     }
 
     function atualizarMedicao(event) {
-        if (ferramenta === "regua" && medicaoRef.current) {
-            const atualizada = {
-                ...medicaoRef.current,
-                fim: pontoNoMapa(event),
-            };
-            medicaoRef.current = atualizada;
-            setMedicao(atualizada);
-        }
+        if (ferramenta !== "regua" || !medicaoRef.current) return;
+
+        const atualizada = {
+            ...medicaoRef.current,
+            fim: pontoNoMapa(event),
+        };
+
+        medicaoRef.current = atualizada;
+        setMedicao(atualizada);
     }
 
     function finalizarMedicao(event) {
@@ -432,6 +465,7 @@ export default function Mapas({ onNavigate }) {
 
     function zoomComRoda(event) {
         if (!event.ctrlKey && !event.metaKey) return;
+
         event.preventDefault();
         alterarZoom(zoom + (event.deltaY < 0 ? 0.1 : -0.1));
     }
@@ -462,23 +496,22 @@ export default function Mapas({ onNavigate }) {
 
     function limparTokens() {
         if (!cenarioAtual?.tokens?.length) return;
-        if (window.confirm("Remover todos os tokens deste cenário?")) {
-            atualizarCenario({ tokens: [] });
-            setTokenSelecionado(null);
-            setTokenEmEdicao(null);
-        }
+        if (!window.confirm("Remover todos os tokens deste cenário?")) return;
+
+        atualizarCenario({ tokens: [] });
+        setTokenSelecionado(null);
     }
 
     const tokenAtual = cenarioAtual?.tokens?.find(
         (token) => token.id === tokenSelecionado
     );
 
-    const tamanhoQuadrado = cenarioAtual?.tamanhoGrade || 50;
+    const tamanhoGrade = cenarioAtual?.tamanhoGrade || 50;
     const distanciaPorQuadrado = cenarioAtual?.distanciaPorQuadrado || 1.5;
 
     const distanciaMedida = medicao
         ? distanciaEntre(medicao.inicio, medicao.fim) /
-            tamanhoQuadrado * distanciaPorQuadrado
+            tamanhoGrade * distanciaPorQuadrado
         : 0;
 
     if (carregando) {
@@ -520,7 +553,7 @@ export default function Mapas({ onNavigate }) {
                                 onClick={() => {
                                     setCenarioAtualId(cenario.id);
                                     setTokenSelecionado(null);
-                                    setTokenEmEdicao(null);
+                                    setMedicao(null);
                                     setMensagem("");
                                 }}
                             >
@@ -594,7 +627,7 @@ export default function Mapas({ onNavigate }) {
                                         className={`mapas-token-ferramenta ${ferramenta === "selecionar" ? "ativo" : ""}`}
                                         onClick={() => setFerramenta("selecionar")}
                                     >
-                                        <MousePointer2 size={16} /> Selecionar
+                                        <MousePointer2 size={16} /> Selecionar / mover
                                     </button>
                                     <button
                                         className={`mapas-token-ferramenta ${ferramenta === "regua" ? "ativo" : ""}`}
@@ -625,29 +658,40 @@ export default function Mapas({ onNavigate }) {
                                 <button className="mapas-botao-secundario" onClick={() => alterarZoom(zoom + 0.1)} disabled={zoom >= 3} title="Aumentar zoom">
                                     <ZoomIn size={16} />
                                 </button>
-                                <button className="mapas-botao-secundario" onClick={centralizarMapa} title="Restaurar zoom">
-                                    <Maximize size={16} /> Ajustar
+                                <button className="mapas-botao-secundario" onClick={centralizarMapa} title="Restaurar zoom e posição">
+                                    <Maximize size={16} /> Centralizar
                                 </button>
-                                <span className="mapas-dica-zoom">Use Ctrl + roda do mouse para zoom.</span>
+                                <span className="mapas-dica-zoom">Ctrl + roda do mouse: zoom. Arraste uma área vazia: mover mapa.</span>
                             </div>
 
                             <div className="mapas-area-trabalho">
                                 <div
                                     ref={areaMapaRef}
                                     className={`mapas-canvas ${cenarioAtual.gradeAtiva ? "com-grade" : ""} ${ferramenta === "regua" ? "modo-regua" : ""}`}
+                                    onPointerDown={(event) => {
+                                        if (ferramenta === "regua") {
+                                            iniciarMedicao(event);
+                                        } else {
+                                            iniciarArrasteMapa(event);
+                                        }
+                                    }}
                                     onPointerMove={(event) => {
+                                        moverMapa(event);
                                         moverToken(event);
                                         atualizarMedicao(event);
                                     }}
                                     onPointerUp={(event) => {
+                                        finalizarArrasteMapa();
+                                        finalizarArrasteToken();
                                         if (ferramenta === "regua") finalizarMedicao(event);
-                                        arrastandoRef.current = null;
                                     }}
-                                    onPointerCancel={() => { arrastandoRef.current = null; }}
-                                    onPointerDown={iniciarMedicao}
+                                    onPointerCancel={() => {
+                                        finalizarArrasteMapa();
+                                        finalizarArrasteToken();
+                                    }}
                                     onWheel={zoomComRoda}
                                     style={{
-                                        "--tamanho-grade": `${tamanhoQuadrado * zoom}px`,
+                                        "--tamanho-grade": `${tamanhoGrade * zoom}px`,
                                     }}
                                 >
                                     <div
@@ -670,7 +714,9 @@ export default function Mapas({ onNavigate }) {
                                         )}
 
                                         {(cenarioAtual.tokens || []).map((token) => {
-                                            const urlToken = token.imagem instanceof Blob ? criarUrl(token.imagem) : null;
+                                            const urlToken = token.imagem instanceof Blob
+                                                ? criarUrl(token.imagem)
+                                                : null;
 
                                             return (
                                                 <button
@@ -688,8 +734,8 @@ export default function Mapas({ onNavigate }) {
                                                         event.stopPropagation();
                                                         setTokenSelecionado(token.id);
                                                     }}
-                                                    onDoubleClick={() => setTokenEmEdicao(token.id)}
-                                                    title={`${token.nome} — arraste para mover; duplo clique para editar`}
+                                                    onDoubleClick={() => setTokenSelecionado(token.id)}
+                                                    title={`${token.nome} — arraste para mover`}
                                                 >
                                                     {urlToken ? (
                                                         <img src={urlToken} alt={token.nome} draggable="false" />
@@ -739,7 +785,7 @@ export default function Mapas({ onNavigate }) {
                                             <option value="ft">Pés</option>
                                         </select>
                                     </div>
-                                    <p className="mapas-nota">Selecione Régua e clique, segure e arraste no mapa para medir. A escala depende do tamanho configurado para os quadrados.</p>
+                                    <p className="mapas-nota">Selecione Régua e arraste no mapa para medir. A escala depende da distância configurada para cada quadrado.</p>
                                 </section>
 
                                 <section className="mapas-painel-card">
@@ -763,7 +809,7 @@ export default function Mapas({ onNavigate }) {
                                     <label>Volume <span>{cenarioAtual.volume}%</span></label>
                                     <input type="range" min="0" max="100" value={cenarioAtual.volume} onChange={(e) => atualizarCenario({ volume: Number(e.target.value) })} />
                                     <audio ref={audioRef} src={cenarioAtual.somAmbiente === "personalizado" ? audioUrl || undefined : undefined} loop onPause={() => setReproduzindo(false)} onPlay={() => setReproduzindo(true)} />
-                                    <p className="mapas-nota">A reprodução está disponível para áudios enviados. Os sons predefinidos ainda precisam de arquivos de áudio.</p>
+                                    <p className="mapas-nota">A reprodução funciona com áudios enviados. Os sons predefinidos ainda precisam de arquivos de áudio associados.</p>
                                 </section>
 
                                 <section className="mapas-painel-card">
@@ -771,11 +817,7 @@ export default function Mapas({ onNavigate }) {
                                     {tokenAtual ? (
                                         <>
                                             <label>Nome do token</label>
-                                            <input
-                                                className="mapas-campo-token"
-                                                value={tokenAtual.nome}
-                                                onChange={(e) => atualizarToken(tokenAtual.id, { nome: e.target.value })}
-                                            />
+                                            <input className="mapas-campo-token" value={tokenAtual.nome} onChange={(e) => atualizarToken(tokenAtual.id, { nome: e.target.value })} />
                                             <label>Tamanho <span>{tokenAtual.tamanho}px</span></label>
                                             <input type="range" min="20" max="140" step="2" value={tokenAtual.tamanho} onChange={(e) => atualizarToken(tokenAtual.id, { tamanho: Number(e.target.value) })} />
                                             <label>Rotação <span>{tokenAtual.rotacao}°</span></label>
@@ -784,10 +826,9 @@ export default function Mapas({ onNavigate }) {
                                                 <button className="mapas-botao-secundario" onClick={() => atualizarToken(tokenAtual.id, { rotacao: (tokenAtual.rotacao + 90) % 360 })}><RotateCcw size={15} /> Girar 90°</button>
                                                 <button className="mapas-botao-perigo" onClick={excluirToken}><Trash2 size={15} /> Remover</button>
                                             </div>
-                                            <p className="mapas-nota">Dê duplo clique em um token para selecioná-lo para edição. As alterações são salvas ao clicar em Salvar cenário.</p>
                                         </>
                                     ) : (
-                                        <p className="mapas-nota">Selecione um token no mapa para editar o nome, tamanho e rotação. Você também pode enviar suas próprias imagens como tokens.</p>
+                                        <p className="mapas-nota">Selecione um token no mapa para editar nome, tamanho e rotação. Também é possível enviar imagens próprias.</p>
                                     )}
                                     {cenarioAtual.tokens.length > 0 && <button className="mapas-limpar-tokens" onClick={limparTokens}><Trash2 size={14} /> Limpar todos os tokens</button>}
                                 </section>
