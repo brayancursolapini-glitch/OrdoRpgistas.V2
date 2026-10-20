@@ -369,6 +369,7 @@
     touch-action: none;
 }
 
+/* A imagem, a grade e os tokens acompanham o mesmo movimento e zoom. */
 .mapas-conteudo-transformado {
     position: absolute;
     inset: 0;
@@ -377,6 +378,7 @@
     pointer-events: none;
 }
 
+/* A imagem fica abaixo da camada da grade. */
 .mapas-imagem-fundo {
     position: absolute;
     inset: 0;
@@ -387,35 +389,38 @@
     object-position: center;
     pointer-events: none;
     user-select: none;
+    z-index: 0;
 }
 
 /*
- * A grade ocupa somente o retângulo da imagem que está visível.
- * Ela é filha do conteúdo transformado, então acompanha o zoom e o arraste.
+ * CORREÇÃO PRINCIPAL:
+ * A grade é um elemento separado, acima da imagem.
+ * Não use background-image na camada da imagem, pois ela cobre o fundo.
  */
 .mapas-grade-overlay {
     position: absolute;
+    inset: 0;
     z-index: 2;
+    pointer-events: none;
     background-image:
         linear-gradient(
             to right,
-            rgba(220, 220, 245, 0.38) 1px,
+            rgba(220, 220, 245, 0.48) 1px,
             transparent 1px
         ),
         linear-gradient(
             to bottom,
-            rgba(220, 220, 245, 0.38) 1px,
+            rgba(220, 220, 245, 0.48) 1px,
             transparent 1px
         );
     background-size: var(--tamanho-grade) var(--tamanho-grade);
     background-position: 0 0;
-    background-repeat: repeat;
-    pointer-events: none;
 }
 
 .mapas-vazio {
     position: absolute;
     inset: 0;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
