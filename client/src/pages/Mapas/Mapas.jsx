@@ -69,6 +69,16 @@ export default function Mapas({ onNavigate }) {
     const [deslocamento, setDeslocamento] = useState({ x: 0, y: 0 });
     const [medicao, setMedicao] = useState(null);
 
+    // Dimensões usadas para posicionar a grade sobre a imagem real.
+    const [dimensoesImagem, setDimensoesImagem] = useState({
+        largura: 0,
+        altura: 0,
+    });
+    const [dimensoesCanvas, setDimensoesCanvas] = useState({
+        largura: 0,
+        altura: 0,
+    });
+
     const imagemInputRef = useRef(null);
     const audioInputRef = useRef(null);
     const tokenInputRef = useRef(null);
@@ -106,6 +116,44 @@ export default function Mapas({ onNavigate }) {
             urlsRef.current.clear();
         };
     }, []);
+
+    // Detecta alterações no tamanho do canvas para manter a grade alinhada.
+    useEffect(() => {
+        const canvas = areaMapaRef.current;
+        if (!canvas) return;
+
+        function medirCanvas() {
+            const largura = canvas.clientWidth;
+            const altura = canvas.clientHeight;
+
+            setDimensoesCanvas((anterior) => {
+                if (
+                    anterior.largura === largura &&
+                    anterior.altura === altura
+                ) {
+                    return anterior;
+                }
+
+                return { largura, altura };
+            });
+        }
+
+        medirCanvas();
+
+        if (typeof ResizeObserver !== "undefined") {
+            const observador = new ResizeObserver(medirCanvas);
+            observador.observe(canvas);
+            return () => observador.disconnect();
+        }
+
+        window.addEventListener("resize", medirCanvas);
+        return () => window.removeEventListener("resize", medirCanvas);
+    }, []);
+
+    // Recalcula as dimensões quando a imagem ou o canvas mudam.
+    useEffect(() => {
+        setDimensoesImagem({ largura: 0, altura: 0 });
+    }, [imagemUrl]);
 
     useEffect(() => {
         let ativo = true;
@@ -244,6 +292,8 @@ export default function Mapas({ onNavigate }) {
                 ? arquivo.name.replace(/\.[^/.]+$/, "")
                 : cenarioAtual.nome,
         });
+
+        setDimensoesImagem({ largura: 0, altura: 0 });
         setZoom(1);
         setDeslocamento({ x: 0, y: 0 });
         setMensagem("Mapa importado. Clique em Salvar cenário.");
@@ -271,9 +321,8 @@ export default function Mapas({ onNavigate }) {
     function adicionarToken(tokenBase) {
         if (!cenarioAtual) return;
 
-        const area = areaMapaRef.current;
-        const largura = area?.clientWidth || 800;
-        const altura = area?.clientHeight || 500;
+        const largura = dimensoesCanvas.largura || 800;
+        const altura = dimensoesCanvas.altura || 500;
 
         const token = {
             id: criarId(),
@@ -316,7 +365,7 @@ export default function Mapas({ onNavigate }) {
         if (!cenarioAtual) return;
 
         atualizarCenario({
-            tokens: cenarioAtual.tokens.map((token) =>
+            tokens: (cenarioAtual.tokens || []).map((token) =>
                 token.id === id ? { ...token, ...alteracoes } : token
             ),
         });
@@ -326,7 +375,7 @@ export default function Mapas({ onNavigate }) {
         if (!cenarioAtual || !tokenSelecionado) return;
 
         atualizarCenario({
-            tokens: cenarioAtual.tokens.filter((t) => t.id !== tokenSelecionado),
+            tokens: (cenarioAtual.tokens || []).filter((t) => t.id !== tokenSelecionado),
         });
         setTokenSelecionado(null);
     }
@@ -512,6 +561,39 @@ export default function Mapas({ onNavigate }) {
             tamanhoGrade * distanciaPorQuadrado
         : 0;
 
+    /*
+     * Calcula o retângulo ocupado pela imagem quando ela usa object-fit: contain.
+     * A grade usa exatamente esse retângulo, e não o canvas inteiro.
+     */
+    let limitesImagem = {
+        esquerda: 0,
+        topo: 0,
+        largura: dimensoesCanvas.largura,
+        altura: dimensoesCanvas.altura,
+    };
+
+    if (
+        dimensoesImagem.largura > 0 &&
+        dimensoesImagem.altura > 0 &&
+        dimensoesCanvas.largura > 0 &&
+        dimensoesCanvas.altura > 0
+    ) {
+        const escala = Math.min(
+            dimensoesCanvas.largura / dimensoesImagem.largura,
+            dimensoesCanvas.altura / dimensoesImagem.altura
+        );
+
+        const largura = dimensoesImagem.largura * escala;
+        const altura = dimensoesImagem.altura * escala;
+
+        limitesImagem = {
+            esquerda: (dimensoesCanvas.largura - largura) / 2,
+            topo: (dimensoesCanvas.altura - altura) / 2,
+            largura,
+            altura,
+        };
+    }
+
     if (carregando) {
         return (
             <PageBase title="Mapas" subtitle="Prepare os cenários das suas aventuras." icon={Map} onNavigate={onNavigate}>
@@ -690,14 +772,40 @@ export default function Mapas({ onNavigate }) {
                                     onWheel={zoomComRoda}
                                 >
                                     <div
-                                        className={`mapas-conteudo-transformado ${cenarioAtual.gradeAtiva ? "com-grade" : ""}`}
+                                        className="mapas-conteudo-transformado"
                                         style={{
                                             transform: `translate(${deslocamento.x}px, ${deslocamento.y}px) scale(${zoom})`,
-                                            "--tamanho-grade": `${tamanhoGrade}px`,
                                         }}
                                     >
                                         {imagemUrl ? (
-                                            <img className="mapas-imagem-fundo" src={imagemUrl} alt="Mapa do cenário" draggable="false" />
+                                            <>
+                                                <img
+                                                    className="mapas-imagem-fundo"
+                                                    src={imagemUrl}
+                                                    alt="Mapa do cenário"
+                                                    draggable="false"
+                                                    onLoad={(event) => {
+                                                        setDimensoesImagem({
+                                                            largura: event.currentTarget.naturalWidth,
+                                                            altura: event.currentTarget.naturalHeight,
+                                                        });
+                                                    }}
+                                                />
+
+                                                {cenarioAtual.gradeAtiva && (
+                                                    <div
+                                                        className="mapas-grade-overlay"
+                                                        aria-hidden="true"
+                                                        style={{
+                                                            left: limitesImagem.esquerda,
+                                                            top: limitesImagem.topo,
+                                                            width: limitesImagem.largura,
+                                                            height: limitesImagem.altura,
+                                                            "--tamanho-grade": `${tamanhoGrade}px`,
+                                                        }}
+                                                    />
+                                                )}
+                                            </>
                                         ) : (
                                             <div className="mapas-vazio">
                                                 <div className="mapas-vazio-icone"><Map size={34} /></div>
@@ -826,7 +934,7 @@ export default function Mapas({ onNavigate }) {
                                     ) : (
                                         <p className="mapas-nota">Selecione um token no mapa para editar nome, tamanho e rotação. Também é possível enviar imagens próprias.</p>
                                     )}
-                                    {cenarioAtual.tokens.length > 0 && <button className="mapas-limpar-tokens" onClick={limparTokens}><Trash2 size={14} /> Limpar todos os tokens</button>}
+                                    {(cenarioAtual.tokens || []).length > 0 && <button className="mapas-limpar-tokens" onClick={limparTokens}><Trash2 size={14} /> Limpar todos os tokens</button>}
                                 </section>
                             </div>
 
