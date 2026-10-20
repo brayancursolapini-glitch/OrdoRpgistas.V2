@@ -364,33 +364,43 @@
     cursor: grabbing;
 }
 
-.mapas-canvas.com-grade {
-    background-image:
-        linear-gradient(
-            to right,
-            rgba(180, 180, 205, 0.2) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            to bottom,
-            rgba(180, 180, 205, 0.2) 1px,
-            transparent 1px
-        );
-    background-size: var(--tamanho-grade) var(--tamanho-grade);
-    background-position: 0 0;
-}
-
 .mapas-canvas.modo-regua {
     cursor: crosshair;
     touch-action: none;
 }
 
+/* A grade não fica mais presa ao canvas. */
+.mapas-canvas.com-grade {
+    background-image: none;
+}
+
+/*
+ * A imagem, os tokens e a grade estão no mesmo elemento transformado.
+ * Portanto, a grade acompanha o mapa quando ele é ampliado ou arrastado.
+ */
 .mapas-conteudo-transformado {
     position: absolute;
     inset: 0;
     transform-origin: top left;
     overflow: visible;
     pointer-events: none;
+}
+
+/* Grade sobre o mapa */
+.mapas-conteudo-transformado.com-grade {
+    background-image:
+        linear-gradient(
+            to right,
+            rgba(220, 220, 245, 0.38) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(220, 220, 245, 0.38) 1px,
+            transparent 1px
+        );
+    background-size: var(--tamanho-grade) var(--tamanho-grade);
+    background-position: 0 0;
 }
 
 .mapas-imagem-fundo {
