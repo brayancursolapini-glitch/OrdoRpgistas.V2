@@ -331,7 +331,6 @@ export default function Mapas({ onNavigate }) {
         setTokenSelecionado(null);
     }
 
-    // Arrastar um token: movimenta somente o token selecionado.
     function iniciarArrasteToken(event, token) {
         if (ferramenta === "regua" || event.button !== 0) return;
 
@@ -373,7 +372,6 @@ export default function Mapas({ onNavigate }) {
         arrastandoTokenRef.current = null;
     }
 
-    // Arrastar uma área vazia: movimenta o mapa inteiro.
     function iniciarArrasteMapa(event) {
         if (ferramenta !== "selecionar" || event.button !== 0) return;
         if (event.target.closest(".mapas-token")) return;
@@ -390,7 +388,7 @@ export default function Mapas({ onNavigate }) {
         try {
             event.currentTarget.setPointerCapture(event.pointerId);
         } catch {
-            // O movimento também funciona sem captura de ponteiro.
+            // Compatibilidade com navegadores sem captura de ponteiro.
         }
     }
 
@@ -667,7 +665,7 @@ export default function Mapas({ onNavigate }) {
                             <div className="mapas-area-trabalho">
                                 <div
                                     ref={areaMapaRef}
-                                    className={`mapas-canvas ${cenarioAtual.gradeAtiva ? "com-grade" : ""} ${ferramenta === "regua" ? "modo-regua" : ""}`}
+                                    className={`mapas-canvas ${ferramenta === "regua" ? "modo-regua" : ""}`}
                                     onPointerDown={(event) => {
                                         if (ferramenta === "regua") {
                                             iniciarMedicao(event);
@@ -690,14 +688,12 @@ export default function Mapas({ onNavigate }) {
                                         finalizarArrasteToken();
                                     }}
                                     onWheel={zoomComRoda}
-                                    style={{
-                                        "--tamanho-grade": `${tamanhoGrade * zoom}px`,
-                                    }}
                                 >
                                     <div
-                                        className="mapas-conteudo-transformado"
+                                        className={`mapas-conteudo-transformado ${cenarioAtual.gradeAtiva ? "com-grade" : ""}`}
                                         style={{
                                             transform: `translate(${deslocamento.x}px, ${deslocamento.y}px) scale(${zoom})`,
+                                            "--tamanho-grade": `${tamanhoGrade}px`,
                                         }}
                                     >
                                         {imagemUrl ? (
