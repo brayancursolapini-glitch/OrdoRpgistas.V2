@@ -30,6 +30,35 @@ const CATEGORIAS = [
     { value: "outros", label: "Outros" },
 ];
 
+/*
+|--------------------------------------------------------------------------
+| LIVROS FIXOS DO SITE
+|--------------------------------------------------------------------------
+|
+| Coloque os arquivos na pasta:
+| client/public/pdfs/
+|
+| Exemplo:
+| client/public/pdfs/livro-exemplo.pdf
+|
+| Os livros abaixo aparecem para todos os visitantes.
+| Altere titulo, categoria e arquivo conforme necessário.
+|
+*/
+
+const LIVROS_FIXOS = [
+    {
+        id: "livro-fixo-1",
+        titulo: "Livro de RPG",
+        categoria: "ordem",
+        nomeArquivo: "livro-exemplo.pdf",
+        tamanho: 0,
+        criadoEm: "",
+        url: `${import.meta.env.BASE_URL}pdfs/livro-exemplo.pdf`,
+        fixo: true,
+    },
+];
+
 function abrirBanco() {
     return new Promise((resolve, reject) => {
         if (!("indexedDB" in window)) {
@@ -214,10 +243,21 @@ export default function Livros({ onNavigate }) {
         };
     }, []);
 
+    /*
+    |--------------------------------------------------------------------------
+    | JUNTAR LIVROS FIXOS E LIVROS LOCAIS
+    |--------------------------------------------------------------------------
+    */
+
+    const todosOsLivros = useMemo(
+        () => [...LIVROS_FIXOS, ...livros],
+        [livros]
+    );
+
     const livrosFiltrados = useMemo(() => {
         const termo = pesquisa.trim().toLocaleLowerCase("pt-BR");
 
-        return livros.filter((livro) => {
+        return todosOsLivros.filter((livro) => {
             const correspondeTitulo =
                 !termo ||
                 livro.titulo.toLocaleLowerCase("pt-BR").includes(termo) ||
@@ -228,7 +268,7 @@ export default function Livros({ onNavigate }) {
 
             return correspondeTitulo && correspondeCategoria;
         });
-    }, [livros, pesquisa, categoria]);
+    }, [todosOsLivros, pesquisa, categoria]);
 
     function limparFormulario() {
         setTitulo("");
@@ -296,6 +336,7 @@ export default function Livros({ onNavigate }) {
                 tipo: "application/pdf",
                 criadoEm: new Date().toISOString(),
                 arquivo: arquivoSelecionado,
+                fixo: false,
             };
 
             await salvarLivro(novoLivro);
@@ -319,6 +360,16 @@ export default function Livros({ onNavigate }) {
     async function abrirLivro(livro) {
         setErro("");
         setAviso("");
+
+        /*
+        | PDFs fixos: abrem pelo endereço público do site.
+        | PDFs locais: abrem pelo arquivo guardado no navegador.
+        */
+
+        if (livro.fixo && livro.url) {
+            setLivroAberto(livro);
+            return;
+        }
 
         try {
             if (pdfUrlRef.current) {
@@ -365,6 +416,13 @@ export default function Livros({ onNavigate }) {
     }
 
     async function removerLivro(livro) {
+        if (livro.fixo) {
+            setAviso(
+                "Este é um livro fixo do site. Para removê-lo, altere a lista LIVROS_FIXOS no código."
+            );
+            return;
+        }
+
         const confirmar = window.confirm(
             `Deseja excluir "${livro.titulo}" da biblioteca? Esta ação não pode ser desfeita.`
         );
@@ -485,11 +543,11 @@ export default function Livros({ onNavigate }) {
                                 <BookOpen size={20} />
 
                                 <div>
-                                    <strong>{livros.length}</strong>
+                                    <strong>{todosOsLivros.length}</strong>
                                     <span>
-                                        {livros.length === 1
-                                            ? "PDF salvo"
-                                            : "PDFs salvos"}
+                                        {todosOsLivros.length === 1
+                                            ? "PDF na biblioteca"
+                                            : "PDFs na biblioteca"}
                                     </span>
                                 </div>
                             </div>
@@ -733,18 +791,18 @@ export default function Livros({ onNavigate }) {
                                     </div>
 
                                     <h3>
-                                        {livros.length === 0
+                                        {todosOsLivros.length === 0
                                             ? "Sua biblioteca está vazia"
                                             : "Nenhum livro encontrado"}
                                     </h3>
 
                                     <p>
-                                        {livros.length === 0
+                                        {todosOsLivros.length === 0
                                             ? "Adicione seu primeiro PDF para começar a organizar suas aventuras."
                                             : "Tente outro título ou escolha uma categoria diferente."}
                                     </p>
 
-                                    {livros.length === 0 && (
+                                    {todosOsLivros.length === 0 && (
                                         <button
                                             type="button"
                                             className="livros-botao livros-botao-principal"
@@ -801,9 +859,11 @@ export default function Livros({ onNavigate }) {
 
                                                 <div className="livros-card-meta">
                                                     <span>
-                                                        {formatarTamanho(
-                                                            livro.tamanho || 0
-                                                        )}
+                                                        {livro.fixo
+                                                            ? "Disponível no site"
+                                                            : formatarTamanho(
+                                                                  livro.tamanho || 0
+                                                              )}
                                                     </span>
 
                                                     <span>
@@ -813,7 +873,9 @@ export default function Livros({ onNavigate }) {
                                                               ).toLocaleDateString(
                                                                   "pt-BR"
                                                               )
-                                                            : ""}
+                                                            : livro.fixo
+                                                              ? "Livro do site"
+                                                              : ""}
                                                     </span>
                                                 </div>
 
@@ -829,17 +891,19 @@ export default function Livros({ onNavigate }) {
                                                         Ler PDF
                                                     </button>
 
-                                                    <button
-                                                        type="button"
-                                                        className="livros-icone-botao livros-excluir"
-                                                        title="Excluir PDF"
-                                                        aria-label={`Excluir ${livro.titulo}`}
-                                                        onClick={() =>
-                                                            removerLivro(livro)
-                                                        }
-                                                    >
-                                                        <Trash2 size={18} />
-                                                    </button>
+                                                    {!livro.fixo && (
+                                                        <button
+                                                            type="button"
+                                                            className="livros-icone-botao livros-excluir"
+                                                            title="Excluir PDF"
+                                                            aria-label={`Excluir ${livro.titulo}`}
+                                                            onClick={() =>
+                                                                removerLivro(livro)
+                                                            }
+                                                        >
+                                                            <Trash2 size={18} />
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </div>
                                         </motion.article>
@@ -850,9 +914,9 @@ export default function Livros({ onNavigate }) {
 
                         <p className="livros-nota-local">
                             <HardDrive size={15} />
-                            Os PDFs ficam armazenados neste navegador. Eles não
-                            são enviados para um servidor nem sincronizados
-                            automaticamente entre dispositivos.
+                            Os livros fixos ficam disponíveis para todos os
+                            visitantes. Os PDFs adicionados pelo formulário
+                            continuam armazenados somente neste navegador.
                         </p>
                     </>
                 )}
