@@ -35,26 +35,24 @@ const CATEGORIAS = [
 | LIVROS FIXOS DO SITE
 |--------------------------------------------------------------------------
 |
-| Coloque os arquivos na pasta:
+| Coloque os arquivos PDF na pasta:
 | client/public/pdfs/
 |
-| Exemplo:
-| client/public/pdfs/livro-exemplo.pdf
-|
-| Os livros abaixo aparecem para todos os visitantes.
-| Altere titulo, categoria e arquivo conforme necessário.
+| Os livros fixos aparecem para todos os visitantes.
+| O título exibido é independente do nome real do arquivo.
 |
 */
 
 const LIVROS_FIXOS = [
     {
-        id: "livro-fixo-1",
-        titulo: "Livro de RPG",
-        categoria: "ordem",
-        nomeArquivo: "livro-exemplo.pdf",
+        id: "dnd-5e-livro-do-jogador",
+        titulo: "Dungeons & Dragons 5e — Livro do Jogador",
+        categoria: "dnd",
+        nomeArquivo:
+            "dd-5e-livro-do-jogador-fundo-branco-biblioteca-elfica.pdf",
         tamanho: 0,
         criadoEm: "",
-        url: `${import.meta.env.BASE_URL}pdfs/livro-exemplo.pdf`,
+        url: `${import.meta.env.BASE_URL}pdfs/dd-5e-livro-do-jogador-fundo-branco-biblioteca-elfica.pdf`,
         fixo: true,
     },
 ];
