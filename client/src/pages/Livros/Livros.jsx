@@ -74,15 +74,17 @@ async function listarLivros() {
         const request = transaction.objectStore(STORE_NAME).getAll();
 
         request.onsuccess = () => {
-            resolve(
-                request.result.sort((a, b) =>
-                    a.titulo.localeCompare(b.titulo, "pt-BR")
-                )
+            const resultado = request.result.sort((a, b) =>
+                a.titulo.localeCompare(b.titulo, "pt-BR")
             );
+
+            resolve(resultado);
         };
 
         request.onerror = () => reject(request.error);
+
         transaction.oncomplete = () => db.close();
+
         transaction.onerror = () => {
             db.close();
             reject(transaction.error);
@@ -156,6 +158,14 @@ function nomeSemExtensao(nome) {
     return nome.replace(/\.pdf$/i, "");
 }
 
+function gerarId() {
+    if (globalThis.crypto?.randomUUID) {
+        return globalThis.crypto.randomUUID();
+    }
+
+    return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 export default function Livros({ onNavigate }) {
     const inputRef = useRef(null);
     const pdfUrlRef = useRef(null);
@@ -177,13 +187,13 @@ export default function Livros({ onNavigate }) {
 
     async function atualizarLivros() {
         setCarregando(true);
-        setErro("");
 
         try {
             const lista = await listarLivros();
             setLivros(lista);
         } catch (error) {
             console.error("Erro ao carregar a biblioteca:", error);
+
             setErro(
                 "Não foi possível acessar a biblioteca. Verifique se o navegador permite armazenamento local."
             );
@@ -278,9 +288,7 @@ export default function Livros({ onNavigate }) {
 
         try {
             const novoLivro = {
-                id: crypto.randomUUID
-                    ? crypto.randomUUID()
-                    : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                id: gerarId(),
                 titulo: titulo.trim(),
                 categoria: categoriaNova,
                 nomeArquivo: arquivoSelecionado.name,
@@ -291,7 +299,9 @@ export default function Livros({ onNavigate }) {
             };
 
             await salvarLivro(novoLivro);
-            await atualizarLivros();
+
+            const lista = await listarLivros();
+            setLivros(lista);
 
             limparFormulario();
             setAviso("PDF adicionado à biblioteca com sucesso.");
@@ -320,6 +330,7 @@ export default function Livros({ onNavigate }) {
 
             if (!(arquivo instanceof Blob)) {
                 const listaAtualizada = await listarLivros();
+
                 const registro = listaAtualizada.find(
                     (item) => item.id === livro.id
                 );
@@ -369,7 +380,9 @@ export default function Livros({ onNavigate }) {
             }
 
             await excluirLivro(livro.id);
-            await atualizarLivros();
+
+            const lista = await listarLivros();
+            setLivros(lista);
 
             setAviso("PDF removido da biblioteca.");
         } catch (error) {
@@ -407,6 +420,7 @@ export default function Livros({ onNavigate }) {
 
                             <div className="livros-leitor-info">
                                 <FileText size={18} />
+
                                 <div>
                                     <strong>{livroAberto.titulo}</strong>
                                     <span>
@@ -443,7 +457,9 @@ export default function Livros({ onNavigate }) {
                                 <span className="livros-eyebrow">
                                     ARQUIVO DO AVENTUREIRO
                                 </span>
+
                                 <h2>Sua biblioteca de aventuras</h2>
+
                                 <p>
                                     Guarde seus PDFs, organize seus materiais
                                     e abra seus livros sem sair do Ordo RPGistas.
@@ -467,6 +483,7 @@ export default function Livros({ onNavigate }) {
                         <div className="livros-resumo">
                             <div className="livros-resumo-item">
                                 <BookOpen size={20} />
+
                                 <div>
                                     <strong>{livros.length}</strong>
                                     <span>
@@ -479,6 +496,7 @@ export default function Livros({ onNavigate }) {
 
                             <div className="livros-resumo-item">
                                 <HardDrive size={20} />
+
                                 <div>
                                     <strong>Local</strong>
                                     <span>Armazenamento no navegador</span>
@@ -516,6 +534,7 @@ export default function Livros({ onNavigate }) {
                                 >
                                     <label className="livros-campo">
                                         <span>Título do livro</span>
+
                                         <input
                                             type="text"
                                             value={titulo}
@@ -530,10 +549,13 @@ export default function Livros({ onNavigate }) {
 
                                     <label className="livros-campo">
                                         <span>Categoria</span>
+
                                         <select
                                             value={categoriaNova}
                                             onChange={(event) =>
-                                                setCategoriaNova(event.target.value)
+                                                setCategoriaNova(
+                                                    event.target.value
+                                                )
                                             }
                                         >
                                             {CATEGORIAS.filter(
@@ -554,11 +576,13 @@ export default function Livros({ onNavigate }) {
 
                                         <label className="livros-upload">
                                             <Upload size={22} />
+
                                             <strong>
                                                 {arquivoSelecionado
                                                     ? arquivoSelecionado.name
                                                     : "Escolher arquivo PDF"}
                                             </strong>
+
                                             <small>
                                                 {arquivoSelecionado
                                                     ? formatarTamanho(
@@ -602,9 +626,13 @@ export default function Livros({ onNavigate }) {
                         )}
 
                         {erro && (
-                            <div className="livros-mensagem livros-mensagem-erro" role="alert">
+                            <div
+                                className="livros-mensagem livros-mensagem-erro"
+                                role="alert"
+                            >
                                 <AlertCircle size={18} />
                                 <span>{erro}</span>
+
                                 <button
                                     type="button"
                                     aria-label="Fechar mensagem"
@@ -616,8 +644,12 @@ export default function Livros({ onNavigate }) {
                         )}
 
                         {aviso && (
-                            <div className="livros-mensagem livros-mensagem-sucesso" role="status">
+                            <div
+                                className="livros-mensagem livros-mensagem-sucesso"
+                                role="status"
+                            >
                                 <span>{aviso}</span>
+
                                 <button
                                     type="button"
                                     aria-label="Fechar mensagem"
@@ -634,6 +666,7 @@ export default function Livros({ onNavigate }) {
                                     <span className="livros-eyebrow">
                                         COLEÇÃO PESSOAL
                                     </span>
+
                                     <h2>Todos os seus livros</h2>
                                 </div>
 
@@ -645,6 +678,7 @@ export default function Livros({ onNavigate }) {
                             <div className="livros-filtros">
                                 <label className="livros-pesquisa">
                                     <Search size={19} />
+
                                     <input
                                         type="search"
                                         value={pesquisa}
@@ -654,6 +688,7 @@ export default function Livros({ onNavigate }) {
                                         placeholder="Pesquisar por título..."
                                         aria-label="Pesquisar livros"
                                     />
+
                                     {pesquisa && (
                                         <button
                                             type="button"
@@ -667,6 +702,7 @@ export default function Livros({ onNavigate }) {
 
                                 <label className="livros-filtro-categoria">
                                     <span>Categoria</span>
+
                                     <select
                                         value={categoria}
                                         onChange={(event) =>
@@ -747,7 +783,9 @@ export default function Livros({ onNavigate }) {
                                                 <span
                                                     className={`livros-categoria-tag livros-categoria-${livro.categoria}`}
                                                 >
-                                                    {nomeCategoria(livro.categoria)}
+                                                    {nomeCategoria(
+                                                        livro.categoria
+                                                    )}
                                                 </span>
 
                                                 <h3 title={livro.titulo}>
@@ -767,6 +805,7 @@ export default function Livros({ onNavigate }) {
                                                             livro.tamanho || 0
                                                         )}
                                                     </span>
+
                                                     <span>
                                                         {livro.criadoEm
                                                             ? new Date(
