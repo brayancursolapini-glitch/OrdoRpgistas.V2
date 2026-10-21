@@ -1,4 +1,3 @@
-
 .mapas-app {
     display: grid;
     grid-template-columns: 245px minmax(0, 1fr);
@@ -392,27 +391,35 @@
     z-index: 0;
 }
 
-/*
- * CORREÇÃO PRINCIPAL:
- * A grade é um elemento separado, acima da imagem.
- * Não use background-image na camada da imagem, pois ela cobre o fundo.
- */
+/* Grade com transparência ajustável pelo controle do painel. */
 .mapas-grade-overlay {
     position: absolute;
     inset: 0;
     z-index: 2;
     pointer-events: none;
+
     background-image:
         linear-gradient(
             to right,
-            rgba(220, 220, 245, 0.48) 1px,
+            rgba(
+                220,
+                220,
+                245,
+                var(--opacidade-grade, 0.48)
+            ) 1px,
             transparent 1px
         ),
         linear-gradient(
             to bottom,
-            rgba(220, 220, 245, 0.48) 1px,
+            rgba(
+                220,
+                220,
+                245,
+                var(--opacidade-grade, 0.48)
+            ) 1px,
             transparent 1px
         );
+
     background-size: var(--tamanho-grade) var(--tamanho-grade);
     background-position: 0 0;
 }
