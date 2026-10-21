@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
     Map, Plus, Upload, Save, Trash2, Trees, Building2, Users, Skull,
@@ -68,6 +67,9 @@ export default function Mapas({ onNavigate }) {
     const [zoom, setZoom] = useState(1);
     const [deslocamento, setDeslocamento] = useState({ x: 0, y: 0 });
     const [medicao, setMedicao] = useState(null);
+
+    // Transparência visual da grade: 0% a 100%.
+    const [transparenciaGrade, setTransparenciaGrade] = useState(48);
 
     const imagemInputRef = useRef(null);
     const audioInputRef = useRef(null);
@@ -925,11 +927,14 @@ export default function Mapas({ onNavigate }) {
                                             </div>
                                         )}
 
-                                        {/* A GRADE AGORA FICA ACIMA DA IMAGEM */}
                                         {cenarioAtual.gradeAtiva && (
                                             <div
                                                 className="mapas-grade-overlay"
                                                 aria-hidden="true"
+                                                style={{
+                                                    "--opacidade-grade":
+                                                        transparenciaGrade / 100,
+                                                }}
                                             />
                                         )}
 
@@ -1046,6 +1051,26 @@ export default function Mapas({ onNavigate }) {
                                                 tamanhoGrade: Number(e.target.value),
                                             })
                                         }
+                                    />
+
+                                    {/* NOVO CONTROLE DE TRANSPARÊNCIA */}
+                                    <label>
+                                        Transparência da grade
+                                        <span>{transparenciaGrade}%</span>
+                                    </label>
+
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        step="5"
+                                        value={transparenciaGrade}
+                                        onChange={(e) =>
+                                            setTransparenciaGrade(
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                        aria-label="Regular transparência da grade"
                                     />
 
                                     <label>Distância por quadrado</label>
