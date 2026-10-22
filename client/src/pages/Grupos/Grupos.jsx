@@ -1,29 +1,34 @@
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     Users,
     Plus,
     Search,
     Crown,
-    MessageCircle,
+    ShieldCheck,
     CalendarDays,
-    UserPlus,
-    LogOut,
-    Trash2,
+    MessageCircle,
     Send,
     Copy,
-    RefreshCw,
-    ShieldCheck,
-    Swords,
+    ArrowLeft,
     X,
+    RefreshCw,
+    Swords,
     Clock,
-    LoaderCircle,
+    UserPlus,
+    Check,
+    Ban,
+    Trash2,
+    BookOpen,
     Hash,
+    AlertCircle,
+    LoaderCircle,
+    Globe,
 } from "lucide-react";
 
 import PageBase from "../PageBase";
+import { supabase } from "../../lib/supabase";
 import { useUser } from "../../context/UserContext";
-import { supabase, supabaseConfigured } from "../../lib/supabase";
 import "./Grupos.css";
 
 const SISTEMAS = [
@@ -35,20 +40,19 @@ const SISTEMAS = [
     "Outro",
 ];
 
+const ABAS = [
+    { id: "meus", label: "Meus grupos", icon: Users },
+    { id: "explorar", label: "Explorar", icon: Search },
+];
+
 function nomeDoUsuario(user) {
     return (
-        user?.name?.trim() ||
-        user?.username?.trim() ||
+        user?.user_metadata?.username ||
+        user?.user_metadata?.name ||
+        user?.user_metadata?.full_name ||
         user?.email?.split("@")[0] ||
         "RPGista"
     );
-}
-
-function gerarCodigoConvite() {
-    return (
-        Math.random().toString(36).slice(2, 6) +
-        Math.random().toString(36).slice(2, 6)
-    ).toUpperCase();
 }
 
 function formatarData(data) {
@@ -85,211 +89,296 @@ function formatarDataHora(data) {
     });
 }
 
+function inicial(nome) {
+    return String(nome || "R")
+        .trim()
+        .charAt(0)
+        .toUpperCase() || "R";
+}
+
+function mensagemErro(erro) {
+    if (!erro) return "Ocorreu um erro inesperado.";
+
+    if (
+        erro.message?.includes("Failed to fetch") ||
+        erro.message?.includes("NetworkError")
+    ) {
+        return "Não foi possível conectar ao Supabase. Confira sua conexão e as variáveis do arquivo .env.local.";
+    }
+
+    if (erro.code === "23505") {
+        return "Você já enviou uma solicitação ou já faz parte deste grupo.";
+    }
+
+    if (erro.code === "42501") {
+        return "Você não tem permissão para realizar esta ação.";
+    }
+
+    return erro.message || "Ocorreu um erro inesperado.";
+}
+
 export default function Grupos({ onNavigate }) {
-    const { user } = useUser();
-    const displayName = nomeDoUsuario(user);
+    const { user: usuarioLocal } = useUser();
 
-    const [uid, setUid] = useState(null);
-    const [inicializando, setInicializando] = useState(true);
-    const [carregando, setCarregando] = useState(false);
-    const [erro, setErro] = useState("");
-    const [aviso, setAviso] = useState("");
-
+    const [usuario, setUsuario] = useState(null);
+    const [carregando, setCarregando] = useState(true);
+    const [atualizando, setAtualizando] = useState(false);
     const [grupos, setGrupos] = useState([]);
+    const [aba, setAba] = useState("meus");
     const [busca, setBusca] = useState("");
-    const [aba, setAba] = useState("descobrir");
-    const [grupoSelecionado, setGrupoSelecionado] = useState(null);
+    const [grupoAberto, setGrupoAberto] = useState(null);
+    const [abaDetalhe, setAbaDetalhe] = useState("chat");
 
     const [membros, setMembros] = useState([]);
+    const [solicitacoes, setSolicitacoes] = useState([]);
     const [mensagens, setMensagens] = useState([]);
     const [sessoes, setSessoes] = useState([]);
-    const [mensagem, setMensagem] = useState("");
+
+    const [modalCriacao, setModalCriacao] = useState(false);
+    const [nomeGrupo, setNomeGrupo] = useState("");
+    const [descricaoGrupo, setDescricaoGrupo] = useState("");
+    const [sistemaGrupo, setSistemaGrupo] = useState(SISTEMAS[0]);
+
+    const [novaMensagem, setNovaMensagem] = useState("");
     const [enviandoMensagem, setEnviandoMensagem] = useState(false);
 
-    const [mostrarCriacao, setMostrarCriacao] = useState(false);
-    const [nomeGrupo, setNomeGrupo] = useState("");
-    const [descricao, setDescricao] = useState("");
-    const [sistema, setSistema] = useState("D&D 5ª Edição");
-    const [criandoGrupo, setCriandoGrupo] = useState(false);
-
-    const [codigoConvite, setCodigoConvite] = useState("");
-
+    const [mostrarFormularioSessao, setMostrarFormularioSessao] =
+        useState(false);
     const [tituloSessao, setTituloSessao] = useState("");
     const [descricaoSessao, setDescricaoSessao] = useState("");
     const [dataSessao, setDataSessao] = useState("");
-    const [mostraFormularioSessao, setMostraFormularioSessao] =
-        useState(false);
 
-    const [abaDetalhes, setAbaDetalhes] = useState("chat");
+    const [erro, setErro] = useState("");
+    const [sucesso, setSucesso] = useState("");
 
-    // Inicializa uma identidade do Supabase neste navegador.
+    const mensagensRef = useRef(null);
+    const canalRef = useRef(null);
+
+    const nomeAtual = nomeDoUsuario(usuario);
+
+    const mostrarErro = useCallback((erroRecebido) => {
+        console.error("Erro na página Grupos:", erroRecebido);
+        setErro(mensagemErro(erroRecebido));
+        setSucesso("");
+    }, []);
+
+    const limparAvisos = () => {
+        setErro("");
+        setSucesso("");
+    };
+
+    const carregarGrupos = useCallback(
+        async (idUsuario, silencioso = false) => {
+            if (!idUsuario) return;
+
+            if (silencioso) {
+                setAtualizando(true);
+            } else {
+                setCarregando(true);
+            }
+
+            try {
+                const { data: lista, error: erroGrupos } =
+                    await supabase
+                        .from("rpg_groups")
+                        .select("*")
+                        .order("criado_em", { ascending: false });
+
+                if (erroGrupos) throw erroGrupos;
+
+                const { data: minhasAssociacoes, error: erroMembros } =
+                    await supabase
+                        .from("group_members")
+                        .select("grupo_id, papel, status")
+                        .eq("usuario_id", idUsuario);
+
+                if (erroMembros) throw erroMembros;
+
+                const associacoes = minhasAssociacoes || [];
+                const gruposComSituacao = (lista || []).map((grupo) => {
+                    const associacao = associacoes.find(
+                        (item) => item.grupo_id === grupo.id
+                    );
+
+                    return {
+                        ...grupo,
+                        minha_situacao: associacao?.status || null,
+                        meu_papel: associacao?.papel || null,
+                    };
+                });
+
+                setGrupos(gruposComSituacao);
+
+                setGrupoAberto((atual) => {
+                    if (!atual) return null;
+
+                    return (
+                        gruposComSituacao.find(
+                            (grupo) => grupo.id === atual.id
+                        ) || null
+                    );
+                });
+            } catch (erroRecebido) {
+                mostrarErro(erroRecebido);
+            } finally {
+                setCarregando(false);
+                setAtualizando(false);
+            }
+        },
+        [mostrarErro]
+    );
+
     useEffect(() => {
         let ativo = true;
 
-        async function inicializar() {
-            if (!supabaseConfigured || !supabase) {
-                setErro(
-                    "Supabase não configurado. Confira o arquivo .env.local e reinicie o Vite."
-                );
-                setInicializando(false);
-                return;
-            }
-
+        async function iniciarAutenticacao() {
             try {
                 const { data, error: erroSessao } =
                     await supabase.auth.getSession();
 
                 if (erroSessao) throw erroSessao;
 
-                let sessao = data.session;
+                let usuarioSupabase = data.session?.user || null;
 
-                if (!sessao) {
-                    const { data: anonData, error: anonError } =
-                        await supabase.auth.signInAnonymously();
+                if (!usuarioSupabase) {
+                    const { data: anonimo, error: erroAnonimo } =
+                        await supabase.auth.signInAnonymously({
+                            options: {
+                                data: {
+                                    name:
+                                        usuarioLocal?.name ||
+                                        usuarioLocal?.username ||
+                                        "RPGista",
+                                    username:
+                                        usuarioLocal?.username ||
+                                        usuarioLocal?.name ||
+                                        "RPGista",
+                                },
+                            },
+                        });
 
-                    if (anonError) throw anonError;
-
-                    sessao = anonData.session;
+                    if (erroAnonimo) throw erroAnonimo;
+                    usuarioSupabase = anonimo.user;
                 }
 
-                if (!sessao?.user?.id) {
-                    throw new Error(
-                        "Não foi possível iniciar sua sessão no Supabase."
-                    );
-                }
+                if (!ativo) return;
 
+                setUsuario(usuarioSupabase);
+                await carregarGrupos(usuarioSupabase.id);
+            } catch (erroRecebido) {
                 if (ativo) {
-                    setUid(sessao.user.id);
-                    setErro("");
+                    mostrarErro(erroRecebido);
+                    setCarregando(false);
                 }
-            } catch (error) {
-                if (ativo) {
-                    setErro(
-                        error.message ||
-                        "Não foi possível conectar ao Supabase. Verifique a configuração de autenticação anônima."
-                    );
-                }
-            } finally {
-                if (ativo) setInicializando(false);
             }
         }
 
-        inicializar();
+        iniciarAutenticacao();
+
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_evento, sessao) => {
+            if (sessao?.user && ativo) {
+                setUsuario(sessao.user);
+            }
+        });
 
         return () => {
             ativo = false;
+            subscription.unsubscribe();
         };
-    }, []);
+    }, [carregarGrupos, mostrarErro, usuarioLocal]);
 
-    const carregarGrupos = useCallback(async () => {
-        if (!supabase || !uid) return;
+    const carregarDetalhes = useCallback(
+        async (grupo) => {
+            if (!grupo?.id || !usuario?.id) return;
 
-        setCarregando(true);
+            try {
+                const [
+                    respostaMembros,
+                    respostaMensagens,
+                    respostaSessoes,
+                ] = await Promise.all([
+                    supabase
+                        .from("group_members")
+                        .select("*")
+                        .eq("grupo_id", grupo.id)
+                        .eq("status", "ativo")
+                        .order("criado_em", { ascending: true }),
 
-        try {
-            const [
-                { data: gruposData, error: gruposError },
-                { data: membrosProprios, error: membrosError },
-            ] = await Promise.all([
-                supabase
-                    .from("rpg_groups")
-                    .select("*")
-                    .order("created_at", { ascending: false }),
-                supabase
-                    .from("group_members")
-                    .select("group_id, status, role")
-                    .eq("user_id", uid),
-            ]);
+                    supabase
+                        .from("group_messages")
+                        .select("*")
+                        .eq("grupo_id", grupo.id)
+                        .order("criado_em", { ascending: true })
+                        .limit(200),
 
-            if (gruposError) throw gruposError;
-            if (membrosError) throw membrosError;
+                    supabase
+                        .from("group_sessions")
+                        .select("*")
+                        .eq("grupo_id", grupo.id)
+                        .order("data_sessao", { ascending: true }),
+                ]);
 
-            const participacoes = new Map(
-                (membrosProprios || []).map((item) => [
-                    item.group_id,
-                    item,
-                ])
-            );
+                if (respostaMembros.error) {
+                    throw respostaMembros.error;
+                }
 
-            setGrupos(
-                (gruposData || []).map((grupo) => ({
-                    ...grupo,
-                    minhaParticipacao:
-                        participacoes.get(grupo.id) || null,
-                }))
-            );
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível carregar os grupos."
-            );
-        } finally {
-            setCarregando(false);
-        }
-    }, [uid]);
+                if (respostaMensagens.error) {
+                    throw respostaMensagens.error;
+                }
 
-    useEffect(() => {
-        if (uid) carregarGrupos();
-    }, [uid, carregarGrupos]);
+                if (respostaSessoes.error) {
+                    throw respostaSessoes.error;
+                }
 
-    const carregarDetalhes = useCallback(async (grupoId) => {
-        if (!supabase || !grupoId) return;
+                setMembros(respostaMembros.data || []);
+                setMensagens(respostaMensagens.data || []);
+                setSessoes(respostaSessoes.data || []);
 
-        try {
-            const [
-                { data: membrosData, error: membrosError },
-                { data: mensagensData, error: mensagensError },
-                { data: sessoesData, error: sessoesError },
-            ] = await Promise.all([
-                supabase
-                    .from("group_members")
-                    .select("*")
-                    .eq("group_id", grupoId)
-                    .order("created_at", { ascending: true }),
-                supabase
-                    .from("group_messages")
-                    .select("*")
-                    .eq("group_id", grupoId)
-                    .order("created_at", { ascending: true })
-                    .limit(200),
-                supabase
-                    .from("group_sessions")
-                    .select("*")
-                    .eq("group_id", grupoId)
-                    .order("starts_at", { ascending: true }),
-            ]);
+                if (grupo.responsavel_id === usuario.id) {
+                    const { data, error: erroSolicitacoes } =
+                        await supabase
+                            .from("group_members")
+                            .select("*")
+                            .eq("grupo_id", grupo.id)
+                            .eq("status", "pendente")
+                            .order("criado_em", { ascending: true });
 
-            if (membrosError) throw membrosError;
-            if (mensagensError) throw mensagensError;
-            if (sessoesError) throw sessoesError;
+                    if (erroSolicitacoes) throw erroSolicitacoes;
 
-            setMembros(membrosData || []);
-            setMensagens(mensagensData || []);
-            setSessoes(sessoesData || []);
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível carregar os detalhes do grupo."
-            );
-        }
-    }, []);
+                    setSolicitacoes(data || []);
+                } else {
+                    setSolicitacoes([]);
+                }
+            } catch (erroRecebido) {
+                mostrarErro(erroRecebido);
+            }
+        },
+        [usuario?.id, mostrarErro]
+    );
 
     useEffect(() => {
-        if (!grupoSelecionado?.id || !uid) return;
+        if (!grupoAberto || !usuario?.id) return;
 
-        carregarDetalhes(grupoSelecionado.id);
+        carregarDetalhes(grupoAberto);
+
+        if (canalRef.current) {
+            supabase.removeChannel(canalRef.current);
+            canalRef.current = null;
+        }
 
         const canal = supabase
-            .channel(`grupo-${grupoSelecionado.id}`)
+            .channel(`grupo-${grupoAberto.id}`)
             .on(
                 "postgres_changes",
                 {
                     event: "*",
                     schema: "public",
                     table: "group_messages",
-                    filter: `group_id=eq.${grupoSelecionado.id}`,
+                    filter: `grupo_id=eq.${grupoAberto.id}`,
                 },
-                () => carregarDetalhes(grupoSelecionado.id)
+                () => carregarDetalhes(grupoAberto)
             )
             .on(
                 "postgres_changes",
@@ -297,285 +386,199 @@ export default function Grupos({ onNavigate }) {
                     event: "*",
                     schema: "public",
                     table: "group_members",
-                    filter: `group_id=eq.${grupoSelecionado.id}`,
+                    filter: `grupo_id=eq.${grupoAberto.id}`,
                 },
                 () => {
-                    carregarDetalhes(grupoSelecionado.id);
-                    carregarGrupos();
+                    carregarDetalhes(grupoAberto);
+                    carregarGrupos(usuario.id, true);
                 }
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "group_sessions",
+                    filter: `grupo_id=eq.${grupoAberto.id}`,
+                },
+                () => carregarDetalhes(grupoAberto)
             )
             .subscribe();
 
+        canalRef.current = canal;
+
         return () => {
             supabase.removeChannel(canal);
+            if (canalRef.current === canal) {
+                canalRef.current = null;
+            }
         };
     }, [
-        grupoSelecionado?.id,
-        uid,
+        grupoAberto?.id,
+        usuario?.id,
         carregarDetalhes,
         carregarGrupos,
     ]);
 
-    function limparFeedback() {
-        setErro("");
-        setAviso("");
-    }
+    useEffect(() => {
+        if (mensagensRef.current) {
+            mensagensRef.current.scrollTop =
+                mensagensRef.current.scrollHeight;
+        }
+    }, [mensagens]);
 
     async function criarGrupo(evento) {
         evento.preventDefault();
-        limparFeedback();
-
-        if (!uid || !supabase) return;
+        limparAvisos();
 
         const nome = nomeGrupo.trim();
 
-        if (nome.length < 3) {
-            setErro("O nome do grupo precisa ter pelo menos 3 caracteres.");
+        if (nome.length < 2) {
+            setErro("O nome do grupo precisa ter pelo menos 2 caracteres.");
             return;
         }
 
-        setCriandoGrupo(true);
+        if (!usuario?.id) {
+            setErro("Sua sessão ainda não está pronta. Tente novamente.");
+            return;
+        }
+
+        setAtualizando(true);
 
         try {
-            const { data: novoGrupo, error: grupoError } = await supabase
+            const { data: grupo, error: erroCriacao } = await supabase
                 .from("rpg_groups")
                 .insert({
-                    name: nome,
-                    description: descricao.trim(),
-                    system_name: sistema,
-                    owner_id: uid,
-                    owner_name: displayName,
-                    invite_code: gerarCodigoConvite(),
-                    is_public: true,
+                    nome,
+                    descricao: descricaoGrupo.trim(),
+                    sistema: sistemaGrupo,
+                    responsavel_id: usuario.id,
+                    publico: true,
                 })
                 .select()
                 .single();
 
-            if (grupoError) throw grupoError;
+            if (erroCriacao) throw erroCriacao;
 
-            const { error: membroError } = await supabase
+            const { error: erroAssociacao } = await supabase
                 .from("group_members")
                 .insert({
-                    group_id: novoGrupo.id,
-                    user_id: uid,
-                    display_name: displayName,
-                    role: "owner",
-                    status: "active",
+                    grupo_id: grupo.id,
+                    usuario_id: usuario.id,
+                    apelido: nomeAtual,
+                    papel: "responsavel",
+                    status: "ativo",
                 });
 
-            if (membroError) {
-                // O grupo já foi criado. Excluí-lo aqui evita um grupo
-                // sem a associação de seu responsável.
+            if (erroAssociacao) {
                 await supabase
                     .from("rpg_groups")
                     .delete()
-                    .eq("id", novoGrupo.id);
+                    .eq("id", grupo.id);
 
-                throw membroError;
+                throw erroAssociacao;
             }
 
+            setModalCriacao(false);
             setNomeGrupo("");
-            setDescricao("");
-            setSistema("D&D 5ª Edição");
-            setMostrarCriacao(false);
+            setDescricaoGrupo("");
+            setSistemaGrupo(SISTEMAS[0]);
             setAba("meus");
-            setAviso("Grupo criado com sucesso!");
+            setBusca("");
+            setSucesso("Grupo criado com sucesso!");
 
-            await carregarGrupos();
-
-            setGrupoSelecionado({
-                ...novoGrupo,
-                minhaParticipacao: {
-                    status: "active",
-                    role: "owner",
-                },
-            });
-            setAbaDetalhes("chat");
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível criar o grupo."
-            );
+            await carregarGrupos(usuario.id);
+            setGrupoAberto(grupo);
+            setAbaDetalhe("membros");
+        } catch (erroRecebido) {
+            mostrarErro(erroRecebido);
         } finally {
-            setCriandoGrupo(false);
+            setAtualizando(false);
         }
     }
 
     async function solicitarEntrada(grupo) {
-        limparFeedback();
+        limparAvisos();
 
-        if (!supabase || !uid) return;
-
-        if (grupo.owner_id === uid) {
-            setAviso("Você já é o responsável por este grupo.");
-            return;
-        }
-
-        if (grupo.minhaParticipacao) {
-            setAviso(
-                grupo.minhaParticipacao.status === "active"
-                    ? "Você já participa deste grupo."
-                    : "Sua solicitação já está pendente."
-            );
-            return;
-        }
+        if (!usuario?.id) return;
 
         try {
-            const { error } = await supabase
+            const { error: erroSolicitacao } = await supabase
                 .from("group_members")
                 .insert({
-                    group_id: grupo.id,
-                    user_id: uid,
-                    display_name: displayName,
-                    role: "member",
-                    status: "pending",
+                    grupo_id: grupo.id,
+                    usuario_id: usuario.id,
+                    apelido: nomeAtual,
+                    papel: "membro",
+                    status: "pendente",
                 });
 
-            if (error) throw error;
+            if (erroSolicitacao) throw erroSolicitacao;
 
-            setAviso("Solicitação enviada ao responsável do grupo.");
-            await carregarGrupos();
-        } catch (error) {
-            setErro(
-                error.code === "23505"
-                    ? "Você já solicitou ou já participa deste grupo."
-                    : error.message ||
-                      "Não foi possível solicitar entrada."
-            );
-        }
-    }
-
-    async function entrarPorCodigo(evento) {
-        evento.preventDefault();
-        limparFeedback();
-
-        const codigo = codigoConvite.trim().toUpperCase();
-
-        if (!codigo || !supabase) {
-            setErro("Digite o código de convite.");
-            return;
-        }
-
-        try {
-            const { data: grupo, error } = await supabase
-                .from("rpg_groups")
-                .select("*")
-                .eq("invite_code", codigo)
-                .eq("is_public", true)
-                .maybeSingle();
-
-            if (error) throw error;
-
-            if (!grupo) {
-                setErro("Não encontramos um grupo com esse código.");
-                return;
+            setSucesso(`Solicitação enviada para "${grupo.nome}".`);
+            await carregarGrupos(usuario.id, true);
+        } catch (erroRecebido) {
+            if (erroRecebido.code === "23505") {
+                setErro("Você já solicitou entrada ou já participa desse grupo.");
+            } else {
+                mostrarErro(erroRecebido);
             }
-
-            setCodigoConvite("");
-            await solicitarEntrada({
-                ...grupo,
-                minhaParticipacao: null,
-            });
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível validar o convite."
-            );
         }
     }
 
-    async function aprovarMembro(membro) {
-        limparFeedback();
-
-        if (!supabase || !grupoSelecionado) return;
+    async function decidirSolicitacao(solicitacao, aprovar) {
+        limparAvisos();
 
         try {
-            const { error } = await supabase
+            const { error: erroDecisao } = await supabase
                 .from("group_members")
-                .update({ status: "active" })
-                .eq("id", membro.id)
-                .eq("group_id", grupoSelecionado.id);
+                .update({
+                    status: aprovar ? "ativo" : "recusado",
+                })
+                .eq("id", solicitacao.id)
+                .eq("grupo_id", grupoAberto.id);
 
-            if (error) throw error;
+            if (erroDecisao) throw erroDecisao;
 
-            setAviso(`${membro.display_name} agora participa do grupo.`);
-            await carregarDetalhes(grupoSelecionado.id);
-            await carregarGrupos();
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível aprovar a solicitação."
+            setSucesso(
+                aprovar
+                    ? "Jogador aprovado no grupo."
+                    : "Solicitação recusada."
             );
-        }
-    }
 
-    async function recusarMembro(membro) {
-        if (!supabase || !grupoSelecionado) return;
-
-        const confirmar = window.confirm(
-            `Deseja recusar a solicitação de ${membro.display_name}?`
-        );
-
-        if (!confirmar) return;
-
-        limparFeedback();
-
-        try {
-            const { error } = await supabase
-                .from("group_members")
-                .delete()
-                .eq("id", membro.id)
-                .eq("group_id", grupoSelecionado.id);
-
-            if (error) throw error;
-
-            await carregarDetalhes(grupoSelecionado.id);
-            await carregarGrupos();
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível remover a solicitação."
-            );
+            await carregarDetalhes(grupoAberto);
+            await carregarGrupos(usuario.id, true);
+        } catch (erroRecebido) {
+            mostrarErro(erroRecebido);
         }
     }
 
     async function enviarMensagem(evento) {
         evento.preventDefault();
 
-        const conteudo = mensagem.trim();
+        const texto = novaMensagem.trim();
 
-        if (
-            !conteudo ||
-            !uid ||
-            !supabase ||
-            !grupoSelecionado ||
-            enviandoMensagem
-        ) {
-            return;
-        }
+        if (!texto || !grupoAberto || !usuario?.id) return;
 
+        limparAvisos();
         setEnviandoMensagem(true);
-        limparFeedback();
 
         try {
-            const { error } = await supabase
+            const { error: erroEnvio } = await supabase
                 .from("group_messages")
                 .insert({
-                    group_id: grupoSelecionado.id,
-                    user_id: uid,
-                    display_name: displayName,
-                    content: conteudo,
+                    grupo_id: grupoAberto.id,
+                    usuario_id: usuario.id,
+                    autor_nome: nomeAtual,
+                    mensagem: texto,
                 });
 
-            if (error) throw error;
+            if (erroEnvio) throw erroEnvio;
 
-            setMensagem("");
-            await carregarDetalhes(grupoSelecionado.id);
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível enviar a mensagem."
-            );
+            setNovaMensagem("");
+            await carregarDetalhes(grupoAberto);
+        } catch (erroRecebido) {
+            mostrarErro(erroRecebido);
         } finally {
             setEnviandoMensagem(false);
         }
@@ -583,320 +586,267 @@ export default function Grupos({ onNavigate }) {
 
     async function criarSessao(evento) {
         evento.preventDefault();
-        limparFeedback();
-
-        if (!supabase || !uid || !grupoSelecionado) return;
+        limparAvisos();
 
         if (!tituloSessao.trim() || !dataSessao) {
             setErro("Informe o título e a data da sessão.");
             return;
         }
 
-        const inicio = new Date(dataSessao);
+        const data = new Date(dataSessao);
 
-        if (Number.isNaN(inicio.getTime()) || inicio <= new Date()) {
-            setErro("Escolha uma data e um horário futuros.");
+        if (Number.isNaN(data.getTime()) || data <= new Date()) {
+            setErro("Escolha uma data futura válida para a sessão.");
             return;
         }
 
         try {
-            const { error } = await supabase
+            const { error: erroSessao } = await supabase
                 .from("group_sessions")
                 .insert({
-                    group_id: grupoSelecionado.id,
-                    created_by: uid,
-                    title: tituloSessao.trim(),
-                    description: descricaoSessao.trim(),
-                    starts_at: inicio.toISOString(),
+                    grupo_id: grupoAberto.id,
+                    titulo: tituloSessao.trim(),
+                    descricao: descricaoSessao.trim(),
+                    data_sessao: data.toISOString(),
+                    criado_por: usuario.id,
                 });
 
-            if (error) throw error;
+            if (erroSessao) throw erroSessao;
 
             setTituloSessao("");
             setDescricaoSessao("");
             setDataSessao("");
-            setMostraFormularioSessao(false);
-
-            await carregarDetalhes(grupoSelecionado.id);
-            setAviso("Sessão agendada com sucesso!");
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível agendar a sessão."
-            );
+            setMostrarFormularioSessao(false);
+            setSucesso("Sessão agendada com sucesso.");
+            await carregarDetalhes(grupoAberto);
+        } catch (erroRecebido) {
+            mostrarErro(erroRecebido);
         }
     }
 
     async function excluirSessao(sessao) {
-        if (!supabase || !grupoSelecionado) return;
+        if (!window.confirm(`Excluir a sessão "${sessao.titulo}"?`)) {
+            return;
+        }
 
-        const confirmar = window.confirm(
-            `Excluir a sessão "${sessao.title}"?`
-        );
-
-        if (!confirmar) return;
+        limparAvisos();
 
         try {
-            const { error } = await supabase
+            const { error: erroExclusao } = await supabase
                 .from("group_sessions")
                 .delete()
-                .eq("id", sessao.id);
+                .eq("id", sessao.id)
+                .eq("grupo_id", grupoAberto.id);
 
-            if (error) throw error;
+            if (erroExclusao) throw erroExclusao;
 
-            await carregarDetalhes(grupoSelecionado.id);
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível excluir a sessão."
-            );
-        }
-    }
-
-    async function sairDoGrupo() {
-        if (!supabase || !uid || !grupoSelecionado) return;
-
-        if (grupoSelecionado.owner_id === uid) {
-            setErro(
-                "O responsável não pode sair do próprio grupo. Exclua o grupo se realmente desejar encerrá-lo."
-            );
-            return;
-        }
-
-        if (
-            !window.confirm(
-                `Deseja sair do grupo "${grupoSelecionado.name}"?`
-            )
-        ) {
-            return;
-        }
-
-        try {
-            const { error } = await supabase
-                .from("group_members")
-                .delete()
-                .eq("group_id", grupoSelecionado.id)
-                .eq("user_id", uid);
-
-            if (error) throw error;
-
-            setGrupoSelecionado(null);
-            setMembros([]);
-            setMensagens([]);
-            setSessoes([]);
-            setAviso("Você saiu do grupo.");
-            await carregarGrupos();
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível sair do grupo."
-            );
-        }
-    }
-
-    async function excluirGrupo() {
-        if (!supabase || !grupoSelecionado) return;
-
-        if (
-            !window.confirm(
-                `Excluir permanentemente o grupo "${grupoSelecionado.name}" e seus dados?`
-            )
-        ) {
-            return;
-        }
-
-        try {
-            const { error } = await supabase
-                .from("rpg_groups")
-                .delete()
-                .eq("id", grupoSelecionado.id);
-
-            if (error) throw error;
-
-            setGrupoSelecionado(null);
-            setMembros([]);
-            setMensagens([]);
-            setSessoes([]);
-            setAviso("Grupo excluído.");
-            await carregarGrupos();
-        } catch (error) {
-            setErro(
-                error.message ||
-                "Não foi possível excluir o grupo."
-            );
+            setSucesso("Sessão excluída.");
+            await carregarDetalhes(grupoAberto);
+        } catch (erroRecebido) {
+            mostrarErro(erroRecebido);
         }
     }
 
     async function copiarConvite() {
-        if (!grupoSelecionado) return;
+        if (!grupoAberto?.codigo_convite) return;
 
         try {
             await navigator.clipboard.writeText(
-                grupoSelecionado.invite_code
+                grupoAberto.codigo_convite
             );
-            setAviso("Código de convite copiado!");
+            setSucesso("Código do convite copiado.");
+            setErro("");
         } catch {
-            setAviso(
-                `Código de convite: ${grupoSelecionado.invite_code}`
+            setErro(
+                `Não foi possível copiar automaticamente. Código: ${grupoAberto.codigo_convite}`
             );
         }
     }
 
-    const meusGrupos = grupos.filter(
-        (grupo) =>
-            grupo.owner_id === uid ||
-            grupo.minhaParticipacao?.status === "active"
-    );
+    async function entrarPorCodigo(evento) {
+        evento.preventDefault();
+        limparAvisos();
 
-    const gruposFiltrados = (
-        aba === "meus" ? meusGrupos : grupos
-    ).filter((grupo) => {
+        const codigo = busca.trim().toUpperCase();
+
+        if (!codigo) {
+            setErro("Digite o código do convite no campo de busca.");
+            return;
+        }
+
+        try {
+            const { data: grupo, error: erroBusca } = await supabase
+                .from("rpg_groups")
+                .select("*")
+                .eq("codigo_convite", codigo)
+                .maybeSingle();
+
+            if (erroBusca) throw erroBusca;
+
+            if (!grupo) {
+                setErro("Nenhum grupo foi encontrado com esse código.");
+                return;
+            }
+
+            await solicitarEntrada(grupo);
+        } catch (erroRecebido) {
+            mostrarErro(erroRecebido);
+        }
+    }
+
+    async function excluirGrupo() {
+        if (!grupoAberto) return;
+
+        const confirmar = window.confirm(
+            `Tem certeza de que deseja excluir "${grupoAberto.nome}"? As mensagens e sessões também serão excluídas.`
+        );
+
+        if (!confirmar) return;
+
+        limparAvisos();
+
+        try {
+            const { error: erroExclusao } = await supabase
+                .from("rpg_groups")
+                .delete()
+                .eq("id", grupoAberto.id)
+                .eq("responsavel_id", usuario.id);
+
+            if (erroExclusao) throw erroExclusao;
+
+            setGrupoAberto(null);
+            setSucesso("Grupo excluído.");
+            await carregarGrupos(usuario.id);
+        } catch (erroRecebido) {
+            mostrarErro(erroRecebido);
+        }
+    }
+
+    const gruposVisiveis = grupos.filter((grupo) => {
         const termo = busca.trim().toLowerCase();
 
-        if (!termo) return true;
+        const combinaBusca =
+            !termo ||
+            [
+                grupo.nome,
+                grupo.descricao,
+                grupo.sistema,
+                grupo.codigo_convite,
+            ].some((valor) =>
+                String(valor || "").toLowerCase().includes(termo)
+            );
 
-        return [
-            grupo.name,
-            grupo.description,
-            grupo.system_name,
-            grupo.owner_name,
-        ].some((valor) =>
-            String(valor || "").toLowerCase().includes(termo)
+        if (!combinaBusca) return false;
+
+        if (aba === "meus") {
+            return (
+                grupo.responsavel_id === usuario?.id ||
+                grupo.minha_situacao === "ativo" ||
+                grupo.minha_situacao === "pendente"
+            );
+        }
+
+        return (
+            grupo.publico &&
+            grupo.responsavel_id !== usuario?.id &&
+            grupo.minha_situacao !== "ativo"
         );
     });
 
+    const totalMeusGrupos = grupos.filter(
+        (grupo) =>
+            grupo.responsavel_id === usuario?.id ||
+            grupo.minha_situacao === "ativo"
+    ).length;
+
+    const totalSolicitacoes = grupos.filter(
+        (grupo) => grupo.minha_situacao === "pendente"
+    ).length;
+
     const souResponsavel =
-        Boolean(grupoSelecionado && grupoSelecionado.owner_id === uid);
+        grupoAberto?.responsavel_id === usuario?.id;
 
-    const minhasSolicitacoes = membros.filter(
-        (membro) => membro.status === "pending"
-    );
-
-    if (inicializando) {
-        return (
-            <PageBase
-                title="Grupos"
-                subtitle="Encontre jogadores e organize aventuras."
-                icon={Users}
-                onNavigate={onNavigate}
-            >
-                <div className="grupos-estado">
-                    <LoaderCircle className="grupos-girando" size={28} />
-                    <p>Conectando aos grupos...</p>
-                </div>
-            </PageBase>
-        );
-    }
-
-    if (!supabaseConfigured || !uid) {
-        return (
-            <PageBase
-                title="Grupos"
-                subtitle="Encontre jogadores e organize aventuras."
-                icon={Users}
-                onNavigate={onNavigate}
-            >
-                <div className="grupos-estado grupos-estado-erro">
-                    <Users size={38} />
-                    <h2>Não foi possível conectar</h2>
-                    <p>{erro || "Verifique as configurações do Supabase."}</p>
-                    <button
-                        className="grupos-botao grupos-botao-principal"
-                        onClick={() => window.location.reload()}
-                        type="button"
-                    >
-                        <RefreshCw size={17} />
-                        Tentar novamente
-                    </button>
-                </div>
-            </PageBase>
-        );
-    }
+    const souMembro =
+        grupoAberto?.minha_situacao === "ativo" ||
+        grupoAberto?.responsavel_id === usuario?.id;
 
     return (
         <PageBase
             title="Grupos"
-            subtitle="Encontre jogadores, reúna sua equipe e organize aventuras."
+            subtitle="Encontre jogadores, organize campanhas e compartilhe aventuras."
             icon={Users}
             onNavigate={onNavigate}
         >
             <div className="grupos-pagina">
                 {erro && (
                     <div className="grupos-alerta grupos-alerta-erro" role="alert">
-                        <span>{erro}</span>
-                        <button
-                            type="button"
-                            onClick={() => setErro("")}
-                            aria-label="Fechar aviso"
-                        >
+                        <span><AlertCircle size={17} /> {erro}</span>
+                        <button type="button" onClick={() => setErro("")} aria-label="Fechar erro">
                             <X size={17} />
                         </button>
                     </div>
                 )}
 
-                {aviso && (
+                {sucesso && (
                     <div className="grupos-alerta grupos-alerta-sucesso" role="status">
-                        <span>{aviso}</span>
-                        <button
-                            type="button"
-                            onClick={() => setAviso("")}
-                            aria-label="Fechar aviso"
-                        >
+                        <span><Check size={17} /> {sucesso}</span>
+                        <button type="button" onClick={() => setSucesso("")} aria-label="Fechar aviso">
                             <X size={17} />
                         </button>
                     </div>
                 )}
 
-                {grupoSelecionado ? (
+                {grupoAberto ? (
                     <section className="grupos-detalhes">
                         <button
                             type="button"
                             className="grupos-botao grupos-botao-secundario"
                             onClick={() => {
-                                setGrupoSelecionado(null);
-                                setMembros([]);
-                                setMensagens([]);
-                                setSessoes([]);
-                                limparFeedback();
+                                setGrupoAberto(null);
+                                setAbaDetalhe("chat");
+                                limparAvisos();
+                                carregarGrupos(usuario.id, true);
                             }}
                         >
-                            ← Voltar aos grupos
+                            <ArrowLeft size={17} />
+                            Voltar aos grupos
                         </button>
 
                         <header className="grupos-detalhe-cabecalho">
                             <div className="grupos-emblema">
-                                <Swords size={32} />
+                                <Swords size={30} />
                             </div>
 
                             <div className="grupos-detalhe-titulo">
                                 <span className="grupos-etiqueta">
-                                    {grupoSelecionado.system_name}
+                                    <Hash size={13} />
+                                    {grupoAberto.sistema}
                                 </span>
-                                <h2>{grupoSelecionado.name}</h2>
+                                <h2>{grupoAberto.nome}</h2>
                                 <p>
-                                    {grupoSelecionado.description ||
+                                    {grupoAberto.descricao ||
                                         "Este grupo ainda não possui uma descrição."}
                                 </p>
                                 <small>
                                     <Crown size={14} />
-                                    Responsável: {grupoSelecionado.owner_name}
+                                    {souResponsavel
+                                        ? "Você é o responsável"
+                                        : "Grupo de jogadores"}
                                 </small>
                             </div>
                         </header>
 
                         <div className="grupos-convite">
                             <div>
-                                <Hash size={19} />
+                                <UserPlus size={20} />
                                 <div>
-                                    <strong>Código de convite</strong>
+                                    <strong>Convide jogadores</strong>
                                     <span>
-                                        Compartilhe com jogadores que desejam solicitar entrada.
+                                        Compartilhe este código para que outros jogadores solicitem entrada.
                                     </span>
                                 </div>
                             </div>
-
-                            <code>{grupoSelecionado.invite_code}</code>
-
+                            <code>{grupoAberto.codigo_convite}</code>
                             <button
                                 type="button"
                                 className="grupos-botao grupos-botao-secundario"
@@ -907,142 +857,139 @@ export default function Grupos({ onNavigate }) {
                             </button>
                         </div>
 
-                        <nav className="grupos-abas-detalhe">
-                            <button
-                                type="button"
-                                className={abaDetalhes === "chat" ? "ativa" : ""}
-                                onClick={() => setAbaDetalhes("chat")}
-                            >
-                                <MessageCircle size={17} />
-                                Chat
-                            </button>
-                            <button
-                                type="button"
-                                className={abaDetalhes === "membros" ? "ativa" : ""}
-                                onClick={() => setAbaDetalhes("membros")}
-                            >
-                                <Users size={17} />
-                                Membros ({membros.filter((m) => m.status === "active").length})
-                            </button>
-                            <button
-                                type="button"
-                                className={abaDetalhes === "sessoes" ? "ativa" : ""}
-                                onClick={() => setAbaDetalhes("sessoes")}
-                            >
-                                <CalendarDays size={17} />
-                                Sessões
-                            </button>
+                        <nav className="grupos-abas-detalhe" aria-label="Seções do grupo">
+                            {[
+                                { id: "chat", label: "Chat", icon: MessageCircle },
+                                { id: "membros", label: "Membros", icon: Users },
+                                { id: "sessoes", label: "Sessões", icon: CalendarDays },
+                            ].map((item) => {
+                                const Icone = item.icon;
+
+                                return (
+                                    <button
+                                        type="button"
+                                        key={item.id}
+                                        className={abaDetalhe === item.id ? "ativa" : ""}
+                                        onClick={() => setAbaDetalhe(item.id)}
+                                    >
+                                        <Icone size={17} />
+                                        {item.label}
+                                    </button>
+                                );
+                            })}
                         </nav>
 
-                        {abaDetalhes === "chat" && (
-                            <section className="grupos-painel grupos-chat">
-                                <div className="grupos-painel-titulo">
-                                    <div>
-                                        <h3>
-                                            <MessageCircle size={19} />
-                                            Conversa do grupo
-                                        </h3>
-                                        <p>Mensagens compartilhadas entre os membros.</p>
-                                    </div>
-                                </div>
-
-                                <div className="grupos-mensagens" aria-live="polite">
-                                    {mensagens.length ? (
-                                        mensagens.map((item) => (
-                                            <article
-                                                className={`grupos-mensagem ${
-                                                    item.user_id === uid ? "minha" : ""
-                                                }`}
-                                                key={item.id}
-                                            >
-                                                <div className="grupos-mensagem-topo">
-                                                    <strong>
-                                                        {item.display_name}
-                                                        {item.user_id === grupoSelecionado.owner_id && (
-                                                            <Crown size={13} />
-                                                        )}
-                                                    </strong>
-                                                    <time>
-                                                        {new Date(item.created_at).toLocaleString(
-                                                            "pt-BR",
-                                                            {
-                                                                day: "2-digit",
-                                                                month: "2-digit",
-                                                                hour: "2-digit",
-                                                                minute: "2-digit",
-                                                            }
-                                                        )}
-                                                    </time>
-                                                </div>
-                                                <p>{item.content}</p>
-                                            </article>
-                                        ))
-                                    ) : (
-                                        <div className="grupos-vazio compacto">
-                                            <MessageCircle size={29} />
-                                            <p>O chat está vazio. Envie a primeira mensagem!</p>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <form
-                                    className="grupos-chat-formulario"
-                                    onSubmit={enviarMensagem}
-                                >
-                                    <input
-                                        type="text"
-                                        value={mensagem}
-                                        onChange={(evento) => setMensagem(evento.target.value)}
-                                        placeholder="Escreva uma mensagem..."
-                                        maxLength={2000}
-                                        aria-label="Mensagem"
-                                        required
-                                    />
-                                    <button
-                                        type="submit"
-                                        disabled={!mensagem.trim() || enviandoMensagem}
-                                        aria-label="Enviar mensagem"
-                                        className="grupos-botao grupos-botao-principal"
-                                    >
-                                        <Send size={17} />
-                                    </button>
-                                </form>
-                            </section>
-                        )}
-
-                        {abaDetalhes === "membros" && (
+                        {abaDetalhe === "chat" && (
                             <section className="grupos-painel">
                                 <div className="grupos-painel-titulo">
                                     <div>
-                                        <h3>
-                                            <Users size={19} />
-                                            Equipe de aventureiros
-                                        </h3>
-                                        <p>Jogadores que fazem parte deste grupo.</p>
+                                        <h3><MessageCircle size={19} /> Chat do grupo</h3>
+                                        <p>Converse com os membros da sua aventura.</p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="grupos-botao grupos-botao-secundario"
+                                        onClick={() => carregarDetalhes(grupoAberto)}
+                                    >
+                                        <RefreshCw size={15} />
+                                        Atualizar
+                                    </button>
+                                </div>
+
+                                {!souMembro ? (
+                                    <div className="grupos-vazio compacto">
+                                        <ShieldCheck size={28} />
+                                        <p>Você precisa ser aprovado como membro para acessar o chat.</p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="grupos-mensagens" ref={mensagensRef}>
+                                            {mensagens.length === 0 ? (
+                                                <div className="grupos-vazio compacto">
+                                                    <MessageCircle size={29} />
+                                                    <p>Nenhuma mensagem ainda. Comece a conversa!</p>
+                                                </div>
+                                            ) : (
+                                                mensagens.map((mensagem) => (
+                                                    <article
+                                                        key={mensagem.id}
+                                                        className={`grupos-mensagem ${
+                                                            mensagem.usuario_id === usuario?.id ? "minha" : ""
+                                                        }`}
+                                                    >
+                                                        <div className="grupos-mensagem-topo">
+                                                            <strong>
+                                                                {mensagem.usuario_id === usuario?.id
+                                                                    ? "Você"
+                                                                    : mensagem.autor_nome}
+                                                            </strong>
+                                                            <time>{formatarDataHora(mensagem.criado_em)}</time>
+                                                        </div>
+                                                        <p>{mensagem.mensagem}</p>
+                                                    </article>
+                                                ))
+                                            )}
+                                        </div>
+
+                                        <form className="grupos-chat-formulario" onSubmit={enviarMensagem}>
+                                            <input
+                                                value={novaMensagem}
+                                                onChange={(evento) => setNovaMensagem(evento.target.value)}
+                                                maxLength={2000}
+                                                placeholder="Escreva uma mensagem..."
+                                                aria-label="Mensagem"
+                                                required
+                                            />
+                                            <button
+                                                type="submit"
+                                                className="grupos-botao grupos-botao-principal"
+                                                disabled={enviandoMensagem || !novaMensagem.trim()}
+                                                aria-label="Enviar mensagem"
+                                            >
+                                                {enviandoMensagem ? (
+                                                    <LoaderCircle size={18} className="grupos-girando" />
+                                                ) : (
+                                                    <Send size={18} />
+                                                )}
+                                            </button>
+                                        </form>
+                                    </>
+                                )}
+                            </section>
+                        )}
+
+                        {abaDetalhe === "membros" && (
+                            <section className="grupos-painel">
+                                <div className="grupos-painel-titulo">
+                                    <div>
+                                        <h3><Users size={19} /> Membros do grupo</h3>
+                                        <p>{membros.length} participante(s) ativo(s).</p>
                                     </div>
                                 </div>
 
                                 <div className="grupos-lista-membros">
-                                    {membros
-                                        .filter((membro) => membro.status === "active")
-                                        .map((membro) => (
-                                            <article className="grupos-membro" key={membro.id}>
-                                                <div className="grupos-avatar">
-                                                    {membro.display_name.charAt(0).toUpperCase()}
-                                                </div>
-                                                <div className="grupos-membro-info">
-                                                    <strong>{membro.display_name}</strong>
-                                                    <span>
-                                                        {membro.role === "owner"
-                                                            ? "Responsável pelo grupo"
-                                                            : "Membro"}
-                                                    </span>
-                                                </div>
-                                                {membro.role === "owner" && (
-                                                    <Crown className="grupos-coroa" size={18} />
-                                                )}
-                                            </article>
-                                        ))}
+                                    {membros.map((membro) => (
+                                        <article className="grupos-membro" key={membro.id}>
+                                            <div className="grupos-avatar">
+                                                {inicial(membro.apelido)}
+                                            </div>
+                                            <div className="grupos-membro-info">
+                                                <strong>
+                                                    {membro.usuario_id === usuario?.id
+                                                        ? `${membro.apelido} (você)`
+                                                        : membro.apelido}
+                                                </strong>
+                                                <span>
+                                                    {membro.papel === "responsavel"
+                                                        ? "Responsável pelo grupo"
+                                                        : "Membro"}
+                                                </span>
+                                            </div>
+                                            {membro.papel === "responsavel" && (
+                                                <Crown className="grupos-coroa" size={19} />
+                                            )}
+                                        </article>
+                                    ))}
                                 </div>
 
                                 {souResponsavel && (
@@ -1050,148 +997,142 @@ export default function Grupos({ onNavigate }) {
                                         <h3>
                                             <UserPlus size={18} />
                                             Solicitações de entrada
-                                            <span>{minhasSolicitacoes.length}</span>
+                                            <span>{solicitacoes.length}</span>
                                         </h3>
 
-                                        {minhasSolicitacoes.length ? (
-                                            minhasSolicitacoes.map((membro) => (
+                                        {solicitacoes.length === 0 ? (
+                                            <p className="grupos-texto-secundario">
+                                                Não há solicitações pendentes.
+                                            </p>
+                                        ) : (
+                                            solicitacoes.map((solicitacao) => (
                                                 <article
                                                     className="grupos-solicitacao"
-                                                    key={membro.id}
+                                                    key={solicitacao.id}
                                                 >
                                                     <div>
-                                                        <strong>{membro.display_name}</strong>
+                                                        <strong>{solicitacao.apelido}</strong>
                                                         <small>
-                                                            Solicitou entrada em{" "}
-                                                            {formatarData(membro.created_at)}
+                                                            Solicitou em {formatarData(solicitacao.criado_em)}
                                                         </small>
                                                     </div>
                                                     <div className="grupos-solicitacao-acoes">
                                                         <button
                                                             type="button"
                                                             className="grupos-botao grupos-botao-principal"
-                                                            onClick={() => aprovarMembro(membro)}
+                                                            onClick={() => decidirSolicitacao(solicitacao, true)}
                                                         >
+                                                            <Check size={15} />
                                                             Aprovar
                                                         </button>
                                                         <button
                                                             type="button"
-                                                            className="grupos-botao grupos-botao-secundario"
-                                                            onClick={() => recusarMembro(membro)}
+                                                            className="grupos-botao grupos-botao-perigo"
+                                                            onClick={() => decidirSolicitacao(solicitacao, false)}
                                                         >
+                                                            <Ban size={15} />
                                                             Recusar
                                                         </button>
                                                     </div>
                                                 </article>
                                             ))
-                                        ) : (
-                                            <p className="grupos-texto-secundario">
-                                                Nenhuma solicitação pendente.
-                                            </p>
                                         )}
                                     </div>
                                 )}
                             </section>
                         )}
 
-                        {abaDetalhes === "sessoes" && (
+                        {abaDetalhe === "sessoes" && (
                             <section className="grupos-painel">
                                 <div className="grupos-painel-titulo">
                                     <div>
-                                        <h3>
-                                            <CalendarDays size={19} />
-                                            Sessões da campanha
-                                        </h3>
-                                        <p>Planeje os próximos encontros do grupo.</p>
+                                        <h3><CalendarDays size={19} /> Sessões do grupo</h3>
+                                        <p>Planeje os próximos encontros da campanha.</p>
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        className="grupos-botao grupos-botao-principal"
-                                        onClick={() =>
-                                            setMostraFormularioSessao((valor) => !valor)
-                                        }
-                                    >
-                                        <Plus size={17} />
-                                        Agendar sessão
-                                    </button>
+                                    {souResponsavel && (
+                                        <button
+                                            type="button"
+                                            className="grupos-botao grupos-botao-principal"
+                                            onClick={() => setMostrarFormularioSessao((atual) => !atual)}
+                                        >
+                                            {mostrarFormularioSessao ? <X size={17} /> : <Plus size={17} />}
+                                            {mostrarFormularioSessao ? "Cancelar" : "Agendar sessão"}
+                                        </button>
+                                    )}
                                 </div>
 
-                                {mostraFormularioSessao && (
-                                    <form
-                                        className="grupos-formulario-sessao"
-                                        onSubmit={criarSessao}
-                                    >
+                                {mostrarFormularioSessao && souResponsavel && (
+                                    <form className="grupos-formulario-sessao" onSubmit={criarSessao}>
                                         <label>
-                                            Título da sessão
+                                            Título da sessão *
                                             <input
                                                 value={tituloSessao}
-                                                onChange={(e) => setTituloSessao(e.target.value)}
+                                                onChange={(evento) => setTituloSessao(evento.target.value)}
                                                 maxLength={100}
-                                                placeholder="Ex.: O templo perdido"
+                                                placeholder="Ex.: O templo esquecido"
                                                 required
                                             />
                                         </label>
+
                                         <label>
-                                            Data e horário
+                                            Data e horário *
                                             <input
                                                 type="datetime-local"
                                                 value={dataSessao}
-                                                onChange={(e) => setDataSessao(e.target.value)}
+                                                onChange={(evento) => setDataSessao(evento.target.value)}
+                                                min={new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+                                                    .toISOString().slice(0, 16)}
                                                 required
                                             />
                                         </label>
+
                                         <label>
-                                            Descrição (opcional)
+                                            Descrição
                                             <textarea
-                                                rows={3}
                                                 value={descricaoSessao}
-                                                onChange={(e) =>
-                                                    setDescricaoSessao(e.target.value)
-                                                }
-                                                placeholder="Prepare os detalhes do encontro..."
+                                                onChange={(evento) => setDescricaoSessao(evento.target.value)}
+                                                rows={3}
+                                                maxLength={1500}
+                                                placeholder="Preparativos, local, missão..."
                                             />
                                         </label>
-                                        <div className="grupos-acoes-formulario">
-                                            <button
-                                                type="button"
-                                                className="grupos-botao grupos-botao-secundario"
-                                                onClick={() => setMostraFormularioSessao(false)}
-                                            >
-                                                Cancelar
-                                            </button>
-                                            <button
-                                                type="submit"
-                                                className="grupos-botao grupos-botao-principal"
-                                            >
+
+                                        <div>
+                                            <button type="submit" className="grupos-botao grupos-botao-principal">
+                                                <CalendarDays size={17} />
                                                 Salvar sessão
                                             </button>
                                         </div>
                                     </form>
                                 )}
 
-                                {sessoes.length ? (
+                                {sessoes.length === 0 ? (
+                                    <div className="grupos-vazio compacto">
+                                        <CalendarDays size={30} />
+                                        <p>Nenhuma sessão agendada.</p>
+                                    </div>
+                                ) : (
                                     <div className="grupos-lista-sessoes">
                                         {sessoes.map((sessao) => (
                                             <article className="grupos-sessao" key={sessao.id}>
                                                 <div className="grupos-sessao-icone">
-                                                    <CalendarDays size={21} />
+                                                    <BookOpen size={21} />
                                                 </div>
                                                 <div className="grupos-sessao-info">
-                                                    <h4>{sessao.title}</h4>
+                                                    <h4>{sessao.titulo}</h4>
                                                     <span>
                                                         <Clock size={14} />
-                                                        {formatarDataHora(sessao.starts_at)}
+                                                        {formatarDataHora(sessao.data_sessao)}
                                                     </span>
-                                                    {sessao.description && (
-                                                        <p>{sessao.description}</p>
-                                                    )}
+                                                    {sessao.descricao && <p>{sessao.descricao}</p>}
                                                 </div>
-                                                {(sessao.created_by === uid || souResponsavel) && (
+                                                {souResponsavel && (
                                                     <button
                                                         type="button"
                                                         className="grupos-icone-botao"
-                                                        aria-label={`Excluir sessão ${sessao.title}`}
+                                                        title="Excluir sessão"
+                                                        aria-label={`Excluir sessão ${sessao.titulo}`}
                                                         onClick={() => excluirSessao(sessao)}
                                                     >
                                                         <Trash2 size={17} />
@@ -1200,17 +1141,12 @@ export default function Grupos({ onNavigate }) {
                                             </article>
                                         ))}
                                     </div>
-                                ) : (
-                                    <div className="grupos-vazio compacto">
-                                        <CalendarDays size={29} />
-                                        <p>Nenhuma sessão agendada ainda.</p>
-                                    </div>
                                 )}
                             </section>
                         )}
 
-                        <footer className="grupos-acoes-perigo">
-                            {souResponsavel ? (
+                        {souResponsavel && (
+                            <div className="grupos-acoes-perigo">
                                 <button
                                     type="button"
                                     className="grupos-botao grupos-botao-perigo"
@@ -1219,30 +1155,20 @@ export default function Grupos({ onNavigate }) {
                                     <Trash2 size={17} />
                                     Excluir grupo
                                 </button>
-                            ) : (
-                                <button
-                                    type="button"
-                                    className="grupos-botao grupos-botao-secundario"
-                                    onClick={sairDoGrupo}
-                                >
-                                    <LogOut size={17} />
-                                    Sair do grupo
-                                </button>
-                            )}
-                        </footer>
+                            </div>
+                        )}
                     </section>
                 ) : (
                     <>
                         <header className="grupos-cabecalho">
                             <div>
                                 <span className="grupos-etiqueta">
-                                    <Swords size={14} />
-                                    CENTRAL DE AVENTURAS
+                                    <Globe size={14} />
+                                    CENTRAL DE JOGADORES
                                 </span>
-                                <h2>Encontre sua próxima party</h2>
+                                <h2>Encontre seu próximo grupo</h2>
                                 <p>
-                                    Crie uma equipe, conheça outros jogadores e
-                                    prepare sua próxima aventura.
+                                    Reúna aventureiros, compartilhe ideias e organize suas sessões de RPG.
                                 </p>
                             </div>
 
@@ -1250,8 +1176,8 @@ export default function Grupos({ onNavigate }) {
                                 type="button"
                                 className="grupos-botao grupos-botao-principal"
                                 onClick={() => {
-                                    limparFeedback();
-                                    setMostrarCriacao(true);
+                                    limparAvisos();
+                                    setModalCriacao(true);
                                 }}
                             >
                                 <Plus size={18} />
@@ -1263,197 +1189,182 @@ export default function Grupos({ onNavigate }) {
                             <article>
                                 <Users size={22} />
                                 <div>
-                                    <span>Grupos encontrados</span>
-                                    <strong>{grupos.length}</strong>
-                                </div>
-                            </article>
-                            <article>
-                                <ShieldCheck size={22} />
-                                <div>
                                     <span>Meus grupos</span>
-                                    <strong>{meusGrupos.length}</strong>
+                                    <strong>{totalMeusGrupos}</strong>
                                 </div>
                             </article>
                             <article>
-                                <CalendarDays size={22} />
+                                <UserPlus size={22} />
                                 <div>
-                                    <span>Minha identidade</span>
+                                    <span>Solicitações enviadas</span>
+                                    <strong>{totalSolicitacoes}</strong>
+                                </div>
+                            </article>
+                            <article>
+                                <Crown size={22} />
+                                <div>
+                                    <span>Minha conta</span>
                                     <strong className="grupos-estatistica-nome">
-                                        {displayName}
+                                        {nomeAtual}
                                     </strong>
                                 </div>
                             </article>
                         </div>
 
-                        <form
-                            className="grupos-convite-busca"
-                            onSubmit={entrarPorCodigo}
-                        >
+                        <form className="grupos-convite-busca" onSubmit={entrarPorCodigo}>
                             <label>
                                 <Hash size={18} />
                                 <input
-                                    value={codigoConvite}
-                                    onChange={(evento) =>
-                                        setCodigoConvite(evento.target.value)
-                                    }
-                                    placeholder="Digite um código de convite"
-                                    maxLength={32}
+                                    value={busca}
+                                    onChange={(evento) => setBusca(evento.target.value)}
+                                    placeholder="Busque grupos ou digite um código de convite..."
+                                    aria-label="Buscar grupos ou código de convite"
                                 />
                             </label>
-                            <button
-                                type="submit"
-                                className="grupos-botao grupos-botao-secundario"
-                            >
-                                Usar convite
+                            <button type="submit" className="grupos-botao grupos-botao-secundario">
+                                <UserPlus size={17} />
+                                Usar código
                             </button>
                         </form>
 
                         <div className="grupos-ferramentas">
-                            <div className="grupos-abas">
-                                <button
-                                    type="button"
-                                    className={aba === "descobrir" ? "ativa" : ""}
-                                    onClick={() => setAba("descobrir")}
-                                >
-                                    <Search size={17} />
-                                    Descobrir grupos
-                                </button>
-                                <button
-                                    type="button"
-                                    className={aba === "meus" ? "ativa" : ""}
-                                    onClick={() => setAba("meus")}
-                                >
-                                    <Users size={17} />
-                                    Meus grupos
-                                </button>
-                            </div>
+                            <nav className="grupos-abas" aria-label="Categorias de grupos">
+                                {ABAS.map((item) => {
+                                    const Icone = item.icon;
 
-                            <label className="grupos-busca">
-                                <Search size={18} />
+                                    return (
+                                        <button
+                                            type="button"
+                                            key={item.id}
+                                            className={aba === item.id ? "ativa" : ""}
+                                            onClick={() => setAba(item.id)}
+                                        >
+                                            <Icone size={16} />
+                                            {item.label}
+                                        </button>
+                                    );
+                                })}
+                            </nav>
+
+                            <div className="grupos-busca">
+                                <Search size={17} />
                                 <input
                                     value={busca}
                                     onChange={(evento) => setBusca(evento.target.value)}
-                                    placeholder="Buscar por nome, sistema ou responsável..."
+                                    placeholder="Filtrar grupos..."
+                                    aria-label="Filtrar grupos"
                                 />
-                            </label>
+                            </div>
                         </div>
 
                         {carregando ? (
                             <div className="grupos-estado">
-                                <LoaderCircle className="grupos-girando" size={27} />
+                                <LoaderCircle size={32} className="grupos-girando" />
                                 <p>Carregando grupos...</p>
                             </div>
-                        ) : gruposFiltrados.length ? (
+                        ) : gruposVisiveis.length > 0 ? (
                             <div className="grupos-grade">
-                                {gruposFiltrados.map((grupo) => {
-                                    const participacao = grupo.minhaParticipacao;
-                                    const souDono = grupo.owner_id === uid;
+                                {gruposVisiveis.map((grupo) => (
+                                    <article className="grupos-card" key={grupo.id}>
+                                        <div className="grupos-card-capa">
+                                            <div className="grupos-emblema">
+                                                <Swords size={29} />
+                                            </div>
+                                            <span>{grupo.sistema}</span>
+                                        </div>
 
-                                    return (
-                                        <article className="grupos-card" key={grupo.id}>
-                                            <div className="grupos-card-capa">
-                                                <div className="grupos-emblema">
-                                                    <Swords size={28} />
-                                                </div>
-                                                <span>{grupo.system_name}</span>
+                                        <div className="grupos-card-conteudo">
+                                            <div className="grupos-card-responsavel">
+                                                <Crown size={14} />
+                                                {grupo.responsavel_id === usuario?.id
+                                                    ? "Você é o responsável"
+                                                    : "Grupo de RPG"}
                                             </div>
 
-                                            <div className="grupos-card-conteudo">
-                                                <div className="grupos-card-responsavel">
-                                                    <Crown size={14} />
-                                                    {grupo.owner_name}
-                                                </div>
-                                                <h3>{grupo.name}</h3>
-                                                <p>
-                                                    {grupo.description ||
-                                                        "Um grupo de RPG pronto para novas aventuras."}
-                                                </p>
+                                            <h3>{grupo.nome}</h3>
+                                            <p>
+                                                {grupo.descricao ||
+                                                    "Este grupo ainda não possui uma descrição."}
+                                            </p>
 
-                                                <div className="grupos-card-data">
-                                                    <CalendarDays size={14} />
-                                                    Criado em {formatarData(grupo.created_at)}
-                                                </div>
-
-                                                <div className="grupos-card-rodape">
-                                                    {souDono ? (
-                                                        <button
-                                                            type="button"
-                                                            className="grupos-botao grupos-botao-principal"
-                                                            onClick={() => {
-                                                                setGrupoSelecionado(grupo);
-                                                                setAbaDetalhes("chat");
-                                                                limparFeedback();
-                                                            }}
-                                                        >
-                                                            <Crown size={16} />
-                                                            Administrar
-                                                        </button>
-                                                    ) : participacao?.status === "active" ? (
-                                                        <button
-                                                            type="button"
-                                                            className="grupos-botao grupos-botao-principal"
-                                                            onClick={() => {
-                                                                setGrupoSelecionado(grupo);
-                                                                setAbaDetalhes("chat");
-                                                                limparFeedback();
-                                                            }}
-                                                        >
-                                                            <MessageCircle size={16} />
-                                                            Abrir grupo
-                                                        </button>
-                                                    ) : participacao?.status === "pending" ? (
-                                                        <button
-                                                            type="button"
-                                                            className="grupos-botao grupos-botao-secundario"
-                                                            disabled
-                                                        >
-                                                            Solicitação pendente
-                                                        </button>
-                                                    ) : (
-                                                        <button
-                                                            type="button"
-                                                            className="grupos-botao grupos-botao-principal"
-                                                            onClick={() => solicitarEntrada(grupo)}
-                                                        >
-                                                            <UserPlus size={16} />
-                                                            Solicitar entrada
-                                                        </button>
-                                                    )}
-                                                </div>
+                                            <div className="grupos-card-data">
+                                                <CalendarDays size={14} />
+                                                Criado em {formatarData(grupo.criado_em)}
                                             </div>
-                                        </article>
-                                    );
-                                })}
+
+                                            <div className="grupos-card-rodape">
+                                                {grupo.responsavel_id === usuario?.id ||
+                                                grupo.minha_situacao === "ativo" ? (
+                                                    <button
+                                                        type="button"
+                                                        className="grupos-botao grupos-botao-principal"
+                                                        onClick={() => {
+                                                            limparAvisos();
+                                                            setGrupoAberto(grupo);
+                                                            setAbaDetalhe("chat");
+                                                        }}
+                                                    >
+                                                        Abrir grupo
+                                                        <ArrowLeft size={16} style={{ transform: "rotate(180deg)" }} />
+                                                    </button>
+                                                ) : grupo.minha_situacao === "pendente" ? (
+                                                    <button
+                                                        type="button"
+                                                        className="grupos-botao"
+                                                        disabled
+                                                    >
+                                                        <Clock size={16} />
+                                                        Solicitação pendente
+                                                    </button>
+                                                ) : grupo.minha_situacao === "recusado" ? (
+                                                    <button
+                                                        type="button"
+                                                        className="grupos-botao grupos-botao-secundario"
+                                                        onClick={() => solicitarEntrada(grupo)}
+                                                    >
+                                                        Solicitar novamente
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        className="grupos-botao grupos-botao-principal"
+                                                        onClick={() => solicitarEntrada(grupo)}
+                                                    >
+                                                        <UserPlus size={16} />
+                                                        Solicitar entrada
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </article>
+                                ))}
                             </div>
                         ) : (
                             <div className="grupos-vazio">
                                 <div className="grupos-vazio-icone">
-                                    {busca ? <Search size={32} /> : <Users size={35} />}
+                                    {aba === "meus" ? <Users size={33} /> : <Search size={33} />}
                                 </div>
                                 <h3>
-                                    {busca
-                                        ? "Nenhum grupo encontrado"
-                                        : aba === "meus"
-                                          ? "Você ainda não participa de grupos"
-                                          : "Seja o primeiro a reunir a party"}
+                                    {aba === "meus"
+                                        ? "Você ainda não tem grupos"
+                                        : "Nenhum grupo encontrado"}
                                 </h3>
                                 <p>
-                                    {busca
-                                        ? "Tente buscar por outro nome ou sistema."
-                                        : aba === "meus"
-                                          ? "Crie um grupo ou encontre uma equipe na aba Descobrir grupos."
-                                          : "Crie um grupo e convide outros jogadores para sua aventura."}
+                                    {aba === "meus"
+                                        ? "Crie seu primeiro grupo ou explore os grupos disponíveis para encontrar jogadores."
+                                        : "Tente outro termo de busca ou crie um grupo novo."}
                                 </p>
-                                {!busca && aba === "meus" && (
-                                    <button
-                                        type="button"
-                                        className="grupos-botao grupos-botao-principal"
-                                        onClick={() => setMostrarCriacao(true)}
-                                    >
-                                        <Plus size={17} />
-                                        Criar grupo
-                                    </button>
-                                )}
+                                <button
+                                    type="button"
+                                    className="grupos-botao grupos-botao-principal"
+                                    onClick={() => {
+                                        setAba("explorar");
+                                        setBusca("");
+                                    }}
+                                >
+                                    <Search size={17} />
+                                    Explorar grupos
+                                </button>
                             </div>
                         )}
 
@@ -1461,22 +1372,25 @@ export default function Grupos({ onNavigate }) {
                             <button
                                 type="button"
                                 className="grupos-botao grupos-botao-secundario"
-                                onClick={carregarGrupos}
-                                disabled={carregando}
+                                disabled={atualizando || !usuario?.id}
+                                onClick={() => carregarGrupos(usuario.id, true)}
                             >
-                                <RefreshCw size={16} />
-                                Atualizar grupos
+                                <RefreshCw
+                                    size={16}
+                                    className={atualizando ? "grupos-girando" : ""}
+                                />
+                                Atualizar lista
                             </button>
                         </div>
                     </>
                 )}
 
-                {mostrarCriacao && (
+                {modalCriacao && (
                     <div
                         className="grupos-modal-fundo"
                         onMouseDown={(evento) => {
                             if (evento.target === evento.currentTarget) {
-                                setMostrarCriacao(false);
+                                setModalCriacao(false);
                             }
                         }}
                     >
@@ -1489,52 +1403,47 @@ export default function Grupos({ onNavigate }) {
                             <header className="grupos-modal-cabecalho">
                                 <div>
                                     <span className="grupos-etiqueta">
-                                        <Users size={13} />
-                                        MONTE SUA EQUIPE
+                                        <Swords size={14} />
+                                        CRIE SUA MESA
                                     </span>
-                                    <h2 id="grupos-modal-titulo">Criar novo grupo</h2>
+                                    <h2 id="grupos-modal-titulo">Novo grupo</h2>
                                     <p>
-                                        Defina os detalhes iniciais da sua equipe de RPG.
+                                        Configure o grupo e convide seus amigos para a aventura.
                                     </p>
                                 </div>
                                 <button
                                     type="button"
                                     className="grupos-icone-botao"
-                                    aria-label="Fechar formulário"
-                                    onClick={() => setMostrarCriacao(false)}
+                                    aria-label="Fechar"
+                                    onClick={() => setModalCriacao(false)}
                                 >
                                     <X size={20} />
                                 </button>
                             </header>
 
-                            <form
-                                className="grupos-formulario"
-                                onSubmit={criarGrupo}
-                            >
+                            <form className="grupos-formulario" onSubmit={criarGrupo}>
                                 <label>
                                     Nome do grupo *
                                     <input
                                         value={nomeGrupo}
-                                        onChange={(evento) =>
-                                            setNomeGrupo(evento.target.value)
-                                        }
+                                        onChange={(evento) => setNomeGrupo(evento.target.value)}
                                         maxLength={80}
-                                        minLength={3}
-                                        placeholder="Ex.: Companhia do Corvo"
-                                        required
+                                        minLength={2}
+                                        placeholder="Ex.: A Ordem dos Corvos"
                                         autoFocus
+                                        required
                                     />
                                 </label>
 
                                 <label>
                                     Sistema de RPG
                                     <select
-                                        value={sistema}
-                                        onChange={(evento) => setSistema(evento.target.value)}
+                                        value={sistemaGrupo}
+                                        onChange={(evento) => setSistemaGrupo(evento.target.value)}
                                     >
-                                        {SISTEMAS.map((item) => (
-                                            <option key={item} value={item}>
-                                                {item}
+                                        {SISTEMAS.map((sistema) => (
+                                            <option key={sistema} value={sistema}>
+                                                {sistema}
                                             </option>
                                         ))}
                                     </select>
@@ -1543,42 +1452,38 @@ export default function Grupos({ onNavigate }) {
                                 <label>
                                     Descrição
                                     <textarea
-                                        value={descricao}
-                                        onChange={(evento) =>
-                                            setDescricao(evento.target.value)
-                                        }
+                                        value={descricaoGrupo}
+                                        onChange={(evento) => setDescricaoGrupo(evento.target.value)}
+                                        maxLength={1500}
                                         rows={4}
-                                        maxLength={1000}
-                                        placeholder="Conte qual é o estilo da campanha e que jogadores você procura..."
+                                        placeholder="Conte sobre a proposta do grupo, o estilo de jogo e os jogadores que procura..."
                                     />
                                 </label>
 
                                 <div className="grupos-formulario-nota">
-                                    <ShieldCheck size={17} />
-                                    Você será o responsável pelo grupo e poderá aprovar
-                                    solicitações de entrada.
+                                    <ShieldCheck size={18} />
+                                    <span>
+                                        Você será o responsável pelo grupo. Os jogadores poderão encontrá-lo e solicitar entrada. Somente membros aprovados poderão acessar o chat e as sessões.
+                                    </span>
                                 </div>
 
                                 <footer className="grupos-acoes-formulario">
                                     <button
                                         type="button"
                                         className="grupos-botao grupos-botao-secundario"
-                                        onClick={() => setMostrarCriacao(false)}
+                                        onClick={() => setModalCriacao(false)}
                                     >
                                         Cancelar
                                     </button>
                                     <button
                                         type="submit"
                                         className="grupos-botao grupos-botao-principal"
-                                        disabled={criandoGrupo}
+                                        disabled={atualizando}
                                     >
-                                        {criandoGrupo ? (
-                                            <LoaderCircle
-                                                size={17}
-                                                className="grupos-girando"
-                                            />
+                                        {atualizando ? (
+                                            <LoaderCircle size={17} className="grupos-girando" />
                                         ) : (
-                                            <Plus size={17} />
+                                            <Plus size={18} />
                                         )}
                                         Criar grupo
                                     </button>
